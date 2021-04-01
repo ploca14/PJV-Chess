@@ -17,7 +17,7 @@ Main Class programu bude Class **Game**. Tato třída se spustí při spuštení
 
 ## /Model/ - Package
 ### **/Chestpieces/ - Package**
-#### **Bishop.java - Class:** je Třída s pravidly tahů pro figurku **Bishop**
+⋅⋅⋅#### **Bishop.java - Class:** je Třída s pravidly tahů pro figurku **Bishop**
 #### **King.java - Class:** je Třída s pravidly tahů pro figurku **King**
 #### **Knight.java - Class:** je Třída s pravidly tahů pro figurku **Knight**
 #### **Pawn.java - Class:** je Třída s pravidly tahů pro figurku **Pawn**
