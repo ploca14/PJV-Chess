@@ -1,4 +1,4 @@
 package cz.cvut.fel.pjv.model.player;
 
-public class Player {
+public interface Player {
 }
