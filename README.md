@@ -12,7 +12,7 @@ Po spuštení programu se hráč ocitne v menu. Zde si bude moct vytvořit novou
 Main Class programu bude Class **Game**. Tato třída se spustí při spuštení programu, vytvoří instance hráčů a bude se v ní nacházet smyčka, která bude ovládat logiku hry (kola, user input, konec hry...). 
 
 ## /Controller/ - Package
-⋅⋅⋅ **Board - Class:** je Třída, která bude vykonávat změny na šachovnici.
+... **Board - Class:** je Třída, která bude vykonávat změny na šachovnici.
 ⋅⋅⋅ **GameControl - Class:** je Třída, která bude kontrolovat ukončení hry (Win, Lose, Draw).
 
 ## /Model/ - Package
