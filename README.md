@@ -44,3 +44,4 @@ Main Class programu bude Class **Game**. Tato třída se spustí při spuštení
 6. ukončení cyklu
 7. určení vítěze, vypsání statistik
 
+![Class diagram](https://lh5.googleusercontent.com/mkDrOcIJTqXN1StJLBmVuZ-40HBebEtOX8gx9vLDYWZ0Ext9zza8EpSfSNvUlcJz3BOCBnPzxYQofA=w1920-h937-rw "Class diagram")
