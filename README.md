@@ -3,7 +3,7 @@ Kryštof Müller, Vojtěch Plocica
 # Téma semestrální práce: Šachy
 
 # Cíl projektu
-Cílem projektu je vytvoření Šachové hry. Budou zde možnosti hry člověk proti člověku na jednom zařízení, nebo člověk proti počítači. Hra počítače bude realizována pomocí generování náhodných tahů. Budou možné pouze tahy podle pravidel hry. Hra bude moct začít se základním nebo vlastním rozestavením figurek na šachovnici.  
+Cílem projektu je vytvoření Šachové hry. Budou zde možnosti hry člověk proti člověku na jednom zařízení, člověk proti počítači, nebo hra po síti. Hra počítače bude realizována pomocí generování náhodných tahů. Budou možné pouze tahy podle pravidel hry. Hra bude moct začít se základním nebo vlastním rozestavením figurek na šachovnici.  
 
 # Manuál pro hráče
 Po spuštení programu se hráč ocitne v menu. Zde si bude moct vytvořit novou hru, proti jinému člověku, nebo proti počítači. Neukončenou hru si může hráč uložit a nahrát. Hra probíhá podle oficiálních šachových pravidel.   
