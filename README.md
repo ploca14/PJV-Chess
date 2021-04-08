@@ -1,3 +1,5 @@
+Kryštof Müller, Vojtěch Plocica
+
 # Téma semestrální práce: Šachy
 
 # Cíl projektu
