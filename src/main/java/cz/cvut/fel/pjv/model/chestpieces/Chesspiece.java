@@ -10,6 +10,7 @@ public abstract class Chesspiece {
 
     public Chesspiece(String color, Tile currentPosition) {
         this.color = color;
+        this.currentPosition = currentPosition;
     }
 
     public void move() {
@@ -26,10 +27,7 @@ public abstract class Chesspiece {
     }
 
     public boolean isOccupied(Tile[][]board, int x, int y) {
-        if (board[x][y].getCurrentChessPiece() != null) {
-            return true;
-        }
-        return false;
+        return board[y][x].currentChessPiece != null;
     }
 
     public boolean isOutOfRange(int x, int y) {
@@ -37,6 +35,6 @@ public abstract class Chesspiece {
     }
 
     public boolean isTeammate(Tile[][] b, int x, int y, String color) {
-        return b[x][y].getColor().equals(color);
+        return (b[y][x].currentChessPiece.getColor()).equals(color);
     }
 }

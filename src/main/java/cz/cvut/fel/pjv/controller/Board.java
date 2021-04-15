@@ -8,6 +8,10 @@ public class Board {
 
     private Tile[][] board;
 
+    public Tile[][] getBoard() {
+        return board;
+    }
+
     public Board() {
         // board representation, white pieces representation, black pieces representation
         board = new Tile[8][8];
@@ -31,8 +35,8 @@ public class Board {
     public void placeChessPieces() {
         // pawn placements, first blacks, then whites
         for (int i = 0; i < 8; i++) {
-            board[6][i].setCurrentChessPiece(new Pawn("Black",board[6][i]));
-            board[1][i].setCurrentChessPiece(new Pawn("White",board[1][i]));
+            board[1][i].setCurrentChessPiece(new Pawn("Black",board[1][i]));
+            board[6][i].setCurrentChessPiece(new Pawn("White",board[6][i]));
         }
 
         // rook placements, first blacks, then whites

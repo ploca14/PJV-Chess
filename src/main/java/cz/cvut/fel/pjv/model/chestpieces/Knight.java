@@ -21,19 +21,14 @@ public class Knight extends Chesspiece {
         int[] ys = {y-2, y-1, y+1, y+2, y+2, y+1, y-1, y-2};
 
         for (int i = 0; i < 8; i++) {
-            if(isOutOfRange(xs[i], ys[i])) { continue; }
+            if(isOutOfRange(ys[i], xs[i])) { continue; }
 
-            if(isEmpty(board, xs[i], ys[i])) {
-                moves.add(board[xs[i]][ys[i]]);
-            } else if (isOccupied(board, xs[i], ys[i]) && !isTeammate(board, xs[i], ys[i], color)) {
-                moves.add(board[xs[i]][ys[i]]);
+            if(!isOccupied(board, xs[i], ys[i])) {
+                moves.add(board[ys[i]][xs[i]]);
+            } else if (isOccupied(board, ys[i], xs[i]) && !isTeammate(board,ys[i], xs[i], currentPosition.getCurrentChessPiece().getColor())) {
+                moves.add(board[ys[i]][ys[i]]);
             }
         }
         return moves;
     }
-
-    public boolean isEmpty(Tile[][]b, int x, int y) {
-        return !isOccupied(b, x, y);
-    }
-
 }

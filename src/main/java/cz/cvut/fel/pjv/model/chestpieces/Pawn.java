@@ -10,7 +10,6 @@ public class Pawn extends Chesspiece{
         super(color, currentPosition);
     }
 
-
     @Override
     public void move() {
         super.move();

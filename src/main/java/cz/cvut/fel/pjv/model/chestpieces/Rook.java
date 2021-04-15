@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 public class Rook extends Chesspiece{
     private String color;
+
     public Rook(String color, Tile currentPosition) {
         super(color, currentPosition);
+        color = getColor() ;
     }
 
     @Override
@@ -23,12 +25,12 @@ public class Rook extends Chesspiece{
         for (int i = 1; i < 8; i++) {
             if(isOutOfRange(x+i,y)) {
                 break;
-            } else if (isOccupied(board, x+i, y) && isTeammate(board, x+i,y,color)) {
+            } else if (isOccupied(board, x+i, y) && isTeammate(board, x+i,y,currentPosition.getCurrentChessPiece().getColor())) {
                 break;
             } else if(!isOccupied(board, x+i, y)) {
-                moves.add(board[x+i][y]);
-            } else if (isOccupied(board, x+i, y) && !isTeammate(board, x+i, y, color)) {
-                moves.add(board[x+i][y]);
+                moves.add(board[y][x+i]);
+            } else if (isOccupied(board, x+i, y) && !isTeammate(board, x+i, y, currentPosition.getCurrentChessPiece().getColor())) {
+                moves.add(board[y][x+i]);
                 break;
             }
         }
@@ -37,25 +39,25 @@ public class Rook extends Chesspiece{
         for (int i = 1; i < 8; i++) {
             if(isOutOfRange(x-i,y)) {
                 break;
-            } else if (isOccupied(board, x-i, y) && isTeammate(board, x-i,y,color)) {
+            } else if (isOccupied(board, x-i, y) && isTeammate(board, x-i,y,currentPosition.getCurrentChessPiece().getColor())) {
                 break;
             } else if(!isOccupied(board, x-i, y)) {
-                moves.add(board[x-i][y]);
-            } else if (isOccupied(board, x-i, y) && !isTeammate(board, x-i, y, color)) {
-                moves.add(board[x-i][y]);
+                moves.add(board[y][x-i]);
+            } else if (isOccupied(board, x-i, y) && !isTeammate(board, x-i, y, currentPosition.getCurrentChessPiece().getColor())) {
+                moves.add(board[y][x-i]);
                 break;
             }
         }
         // vertical up
-        for (int i = 1; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             if(isOutOfRange(x,y-i)) {
                 break;
-            } else if (isOccupied(board, x, y-i) && isTeammate(board, x,y-i,color)) {
+            } else if (isOccupied(board, x, y-i) && isTeammate(board, x,y-i,currentPosition.getCurrentChessPiece().getColor())) {
                 break;
             } else if(!isOccupied(board, x-i, y)) {
-                moves.add(board[x][y-i]);
-            } else if (isOccupied(board, x,y-i) && !isTeammate(board, x,y-i, color)) {
-                moves.add(board[x][y-i]);
+                moves.add(board[y-i][x]);
+            } else if (isOccupied(board, x,y-i) && !isTeammate(board, x,y-i, currentPosition.getCurrentChessPiece().getColor())) {
+                moves.add(board[y-i][x]);
                 break;
             }
         }
@@ -64,12 +66,12 @@ public class Rook extends Chesspiece{
         for (int i = 1; i < 8; i++) {
             if(isOutOfRange(x,y+i)) {
                 break;
-            } else if (isOccupied(board, x, y+i) && isTeammate(board, x,y+i,color)) {
+            } else if (isOccupied(board, x, y+i) && isTeammate(board, x,y+i, currentPosition.getCurrentChessPiece().getColor())) {
                 break;
-            } else if(!isOccupied(board, x+i, y)) {
-                moves.add(board[x][y+i]);
-            } else if (isOccupied(board, x,y+i) && !isTeammate(board, x,y+i, color)) {
-                moves.add(board[x][y+i]);
+            } else if(!isOccupied(board, x, y+i)) {
+                moves.add(board[y+i][x]);
+            } else if (isOccupied(board, x,y+i) && !isTeammate(board, x,y+i, currentPosition.getCurrentChessPiece().getColor())) {
+                moves.add(board[y+i][x]);
                 break;
             }
         }
