@@ -1,60 +1,69 @@
 package cz.cvut.fel.pjv.controller;
 
-import java.awt.desktop.AboutEvent;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import cz.cvut.fel.pjv.model.chestpieces.*;
+
+import java.util.ArrayList;
 
 public class Board {
-    // empty Board Tile: 0
 
-    // white Pawn: 1
-    // white Knight: 2
-    // white Bishop: 3
-    // white Rook: 4
-    // white Queen: 5
-    // white King: 6
-
-    // black Pawn: -1
-    // black Knight: -2
-    // black Bishop: -3
-    // black Rook: -4
-    // black Queen: -5
-    // black King: -6
-
-    // default board: white figures down, black figures up
-    int[][] board = {
-            {-4, -2, -3, -5, -6, -3, -2, -4},
-            {-1, -1, -1, -1, -1, -1, -1, -1},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {1, 1, 1, 1, 1, 1, 1, 1},
-            {4, 2, 3, 5, 6, 3, 2, 4}
-    };
+    private Tile[][] board;
 
     public Board() {
+        // board representation, white pieces representation, black pieces representation
+        board = new Tile[8][8];
+
+        // coloring tiles
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                int xMod = x % 2;
+                int yMod = y % 2;
+
+                if ((xMod == 0 && yMod == 0) || (xMod == 1 && yMod == 1)) {
+                    board[x][y] = new Tile( 1, y, x);
+                } else {
+                    board[x][y] = new Tile( 0, y, x);
+                }
+            }
+        }
 
     }
 
-    // preset board from PGN code
-    public void presetBoard(String board) {
-        // PGN => board
-    }
+    public void placeChessPieces() {
+        // pawn placements, first blacks, then whites
+        for (int i = 0; i < 8; i++) {
+            board[6][i].setCurrentChessPiece(new Pawn("Black",board[6][i]));
+            board[1][i].setCurrentChessPiece(new Pawn("White",board[1][i]));
+        }
 
-    // turn board if player selects black figures (vs computer)
-    public void turnBoard() {
-        Collections.reverse(Arrays.asList(board));
+        // rook placements, first blacks, then whites
+        board[0][0].setCurrentChessPiece(new Rook("Black",board[0][0]));
+        board[0][7].setCurrentChessPiece(new Rook("Black",board[0][7]));
 
-        int queen = board[0][3];
-        int king = board[0][4];
-        board[0][4] = queen;
-        board[0][3] = king;
+        board[7][0].setCurrentChessPiece(new Rook("White",board[7][0]));
+        board[7][7].setCurrentChessPiece(new Rook("White",board[7][7]));
 
-        queen = board[7][3];
-        king = board[7][4];
-        board[7][3] = king;
-        board[7][4] = queen;
+        // knight placements, first blacks, then whites
+        board[0][1].setCurrentChessPiece(new Knight("Black",board[0][1]));
+        board[0][6].setCurrentChessPiece(new Knight("Black",board[0][6]));
+
+        board[7][1].setCurrentChessPiece(new Knight("White",board[7][1]));
+        board[7][6].setCurrentChessPiece(new Knight("White",board[7][6]));
+
+        // bishop placements, first blacks, then whites
+        board[0][2].setCurrentChessPiece(new Bishop("Black",board[0][2]));;
+        board[0][5].setCurrentChessPiece(new Bishop("Black",board[0][5]));;
+
+        board[7][2].setCurrentChessPiece(new Bishop("White",board[7][2]));;
+        board[7][5].setCurrentChessPiece(new Bishop("White",board[7][5]));;
+
+        // queen placements, first black, then white
+        board[0][3].setCurrentChessPiece(new Queen("Black",board[0][3]));
+
+        board[7][3].setCurrentChessPiece(new Queen("White",board[7][3]));
+
+        // king placements, first black, then white
+        board[0][4].setCurrentChessPiece(new King("Black",board[0][4]));
+
+        board[7][4].setCurrentChessPiece(new King("White",board[7][4]));
     }
 }
