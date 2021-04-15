@@ -41,7 +41,6 @@
                 <version>0.0.3</version>
                 <configuration>
                     <mainClass>org.openjfx.App</mainClass>
-                    <executable>C:\Users\Vojta\.jdks\openjdk-15.0.2\bin/java</executable>
                 </configuration>
             </plugin>
         </plugins>
