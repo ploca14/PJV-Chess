@@ -1,7 +1,9 @@
+Kryštof Müller, Vojtěch Plocica
+
 # Téma semestrální práce: Šachy
 
 # Cíl projektu
-Cílem projektu je vytvoření Šachové hry. Budou zde možnosti hry člověk proti člověku na jednom zařízení, nebo člověk proti počítači. Hra počítače bude realizována pomocí generování náhodných tahů. Budou možné pouze tahy podle pravidel hry. Hra bude moct začít se základním nebo vlastním rozestavením figurek na šachovnici.  
+Cílem projektu je vytvoření Šachové hry. Budou zde možnosti hry člověk proti člověku na jednom zařízení, člověk proti počítači, nebo hra po síti. Hra počítače bude realizována pomocí generování náhodných tahů. Budou možné pouze tahy podle pravidel hry. Hra bude moct začít se základním nebo vlastním rozestavením figurek na šachovnici.  
 
 # Manuál pro hráče
 Po spuštení programu se hráč ocitne v menu. Zde si bude moct vytvořit novou hru, proti jinému člověku, nebo proti počítači. Neukončenou hru si může hráč uložit a nahrát. Hra probíhá podle oficiálních šachových pravidel.   
@@ -44,3 +46,9 @@ Main Class programu bude Class **Game**. Tato třída se spustí při spuštení
 6. ukončení cyklu
 7. určení vítěze, vypsání statistik
 
+# Client-server architekruta 
+Na straně chce hráč provést tah, jakmile vytvoří svůj tah, tak se na server odešle pomocí TCP souřadnice původního políčka a souřadnice cílového políčka. Server tento tah zvaliduje a pokud je validní tak provede změny v Boardu. Poté server pošle všem klientům serializovaný (PGN?) aktualizovaný Board, klient Board deserializuje, aktualizuje a vykreslí.
+
+TCP protokol - 4 integery - první dva souřadnice původu tahu, další dva souřadnice cíle tahu.
+
+![Class diagram](https://i.imgur.com/efHgpvE.png "Class diagram")
