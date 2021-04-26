@@ -11,7 +11,8 @@ public class Game {
         Board b = new Board();
         b.placeChessPieces();
         Tile[][] board = b.getBoard();
-        Bishop k = new Bishop("Black",board[5][5]);
+        Queen k = new Queen("White",board[4][4]);
+        board[4][4].setCurrentChessPiece(k);
         ArrayList<Tile> rookList = k.getLegalMoves(k.getCurrentPosition(), board);
         System.out.println(rookList);
     }

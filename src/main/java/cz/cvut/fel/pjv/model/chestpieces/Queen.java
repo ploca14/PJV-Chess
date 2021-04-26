@@ -30,6 +30,6 @@ public class Queen extends Chesspiece {
         moves.addAll(bishopMoves);
         moves.addAll(rookMoves);
 
-        return null;
+        return moves;
     }
 }

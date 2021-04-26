@@ -17,25 +17,28 @@ public class Bishop extends Chesspiece{
         int y = currentPosition.getY();
 
         // top right direction
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x+i,y-i)) { break; }
             if(!isOccupied(board, x+i, y-i)) {
                 moves.add(board[y-i][x+i]);
             }
             if(isOccupied(board,x+i,y-i)) {
-                if (isTeammate(board,x+i,y-i,color)) { break; }
-                else { moves.add(board[y-i][x+i]); break; }
+                if (isTeammate(board,x+i,y-i, currentPosition.getCurrentChessPiece().getColor())) { break; }
+                else {
+                    moves.add(board[y-i][x+i]);
+                    break;
+                }
             }
         }
 
         // top left direction
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x-i,y-i)) { break; }
             if(!isOccupied(board, x-i, y-i)) {
                 moves.add(board[y-i][x-i]);
             }
             if(isOccupied(board,x-i,y-i)) {
-                if (!isTeammate(board,x-i,y-i,color)) { break; }
+                if (isTeammate(board,x-i,y-i, currentPosition.getCurrentChessPiece().getColor())) { break; }
                 else {
                     moves.add(board[y-i][x-i]);
                     break;
@@ -44,21 +47,21 @@ public class Bishop extends Chesspiece{
         }
 
         // bot left direction
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x-i,y+i)) { break; }
             if(!isOccupied(board, x-i, y+i)) { moves.add(board[y+i][x-i]); }
             if(isOccupied(board,x-i,y+i)) {
-                if (isTeammate(board,x-i,y+i,color)) { break; }
+                if (isTeammate(board,x-i,y+i, currentPosition.getCurrentChessPiece().getColor())) { break; }
                 else { moves.add(board[y+i][x-i]); break; }
             }
         }
 
         // bot right direction
-        for (int i = 0; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x+i,y+i)) { break; }
             if(!isOccupied(board, x+i, y+i)) { moves.add(board[y+i][x+i]); }
             if(isOccupied(board,x+i,y+i)) {
-                if (isTeammate(board,x+i,y+i,color)) { break; }
+                if (isTeammate(board,x+i,y+i, currentPosition.getCurrentChessPiece().getColor())) { break; }
                 else { moves.add(board[y+i][x+i]); break; }
             }
         }

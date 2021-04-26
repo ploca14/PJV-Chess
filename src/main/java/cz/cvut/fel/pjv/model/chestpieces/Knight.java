@@ -25,8 +25,10 @@ public class Knight extends Chesspiece {
 
             if(!isOccupied(board, xs[i], ys[i])) {
                 moves.add(board[ys[i]][xs[i]]);
-            } else if (isOccupied(board, ys[i], xs[i]) && !isTeammate(board,ys[i], xs[i], currentPosition.getCurrentChessPiece().getColor())) {
-                moves.add(board[ys[i]][ys[i]]);
+            } else if (isOccupied(board,  xs[i],ys[i])) {
+                if (!isTeammate(board, xs[i],ys[i], currentPosition.getCurrentChessPiece().getColor())) {
+                    moves.add(board[ys[i]][xs[i]]);
+                }
             }
         }
         return moves;

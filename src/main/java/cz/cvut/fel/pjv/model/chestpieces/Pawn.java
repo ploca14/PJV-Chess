@@ -26,21 +26,21 @@ public class Pawn extends Chesspiece{
         // if checks starting position
         // moves when not taking enemy figure
         if (startingPosition) {
-             if(board[x][y-1].currentChessPiece == null) { moves.add(board[x][y-1]); }
-             if(board[x][y-2].currentChessPiece == null) { moves.add(board[x][y-2]); }
+             if(board[y-1][x].currentChessPiece == null) { moves.add(board[y-1][x]); }
+             if(board[y-2][x].currentChessPiece == null) { moves.add(board[y-2][x]); }
         } else {
             // first condition checks if Tile is not occupied, second checks if its on board
             if(!isOccupied(board, x, y) && !isOutOfRange(x,y)) {
-                moves.add(board[x][y-1]);
+                moves.add(board[y-1][x]);
             }
         }
 
         // taking enemy figure {x+1, y-1}, {x-1, y-1}
         if(isOccupied(board,x+1,y-1) && !isOutOfRange(x+1,y-1) && !isTeammate(board,x,y,color)) {
-            moves.add(board[x+1][y+1]);
+            moves.add(board[y-1][x+1]);
         }
         if(isOccupied(board,x-1,y-1) && !isOutOfRange(x-1,y-1) && !isTeammate(board,x,y,color)) {
-            moves.add(board[x+1][y-1]);
+            moves.add(board[y+1][x-1]);
         }
         return moves;
     }
