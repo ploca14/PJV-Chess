@@ -26,6 +26,10 @@ public class Lobby {
         this.connectedPlayersCount.set(getConnectedPlayersCount() + 1);
     }
 
+    public void decreaseConnectedPlayersCount() {
+        this.connectedPlayersCount.set(getConnectedPlayersCount() - 1);
+    }
+
     public IntegerProperty getConnectedPlayersCountProperty() {
         return connectedPlayersCount;
     }
