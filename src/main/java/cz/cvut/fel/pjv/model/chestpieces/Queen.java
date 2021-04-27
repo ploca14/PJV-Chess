@@ -12,23 +12,15 @@ public class Queen extends Chesspiece {
     @Override
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board) {
         ArrayList<Tile> moves = new ArrayList<Tile>();
-
+        String color = currentPosition.getCurrentChessPiece().getColor();
         int x = currentPosition.getX();
         int y = currentPosition.getY();
 
         // bishopmoves
-        ArrayList<Tile> bishopMoves = new ArrayList<Tile>();
-        Bishop b = new Bishop(color, currentPosition);
-        bishopMoves = b.getLegalMoves(currentPosition, board);
+        bishopMoves(color, x, y, board, moves);
 
         // rook moves
-        ArrayList<Tile> rookMoves = new ArrayList<Tile>();
-        Rook r = new Rook(color, currentPosition);
-        rookMoves = r.getLegalMoves(currentPosition, board);
-
-        // connect
-        moves.addAll(bishopMoves);
-        moves.addAll(rookMoves);
+        rookMoves(color, x, y, board, moves);
 
         return moves;
     }
