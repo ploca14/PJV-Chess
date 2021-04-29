@@ -25,15 +25,15 @@ public class ServerController {
                     String nameValue = view.getNameField().getText();
                     int portValue = Integer.parseInt(view.getPortField().getText());
 
-                    validateName(nameValue);
-                    validatePort(portValue);
+                    if (validateName(nameValue) && validatePort(portValue)) {
+                        Lobby lobby = new Lobby(nameValue, portValue);
+                        LobbyController lobbyController = new LobbyController(lobby, model);
+                        Thread thread = new Thread(lobbyController);
+                        thread.start();
 
-                    Lobby lobby = new Lobby(nameValue, portValue);
-                    LobbyController lobbyController = new LobbyController(lobby, model);
-                    Thread thread = new Thread(lobbyController);
-                    thread.start();
+                        model.addLobby(lobby);
+                    }
 
-                    model.addLobby(lobby);
                 } catch (NumberFormatException e) {
                     new Alert(Alert.AlertType.ERROR, "The port must be a number").show();
                 }
@@ -44,16 +44,22 @@ public class ServerController {
         view.getTable().setItems(model.getLobbies());
     }
 
-    private void validatePort(Integer port) {
+    private boolean validatePort(Integer port) {
         if (port < 1  || port > 65535) {
             new Alert(Alert.AlertType.ERROR, "The port must be between 1 and 65535").show();
+            return false;
         }
+
+        return true;
     }
 
-    private void validateName(String name) {
+    private boolean validateName(String name) {
         if (name.isEmpty()) {
             new Alert(Alert.AlertType.ERROR, "You must specify a name").show();
+            return false;
         }
+
+        return true;
     }
 
 }

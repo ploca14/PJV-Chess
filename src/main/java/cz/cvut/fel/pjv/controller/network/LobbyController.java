@@ -1,17 +1,14 @@
 package cz.cvut.fel.pjv.controller.network;
 
 import cz.cvut.fel.pjv.model.network.Lobby;
+import cz.cvut.fel.pjv.model.network.Packet;
 import cz.cvut.fel.pjv.model.network.Server;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.PushbackInputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class LobbyController implements Runnable {
@@ -42,34 +39,51 @@ public class LobbyController implements Runnable {
             startGame();
 
             // Once the game finishes - remove the lobby from active lobbies
-            logger.info("Lobby " + lobby.getName() + " has finished");
-            serverSocket.close();
-            serverModel.removeLobby(lobby);
+
+            endLobby();
         } catch (IOException e) {
             Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Port already in use").show());
             logger.info("Lobby: " + lobby.getName() + " cannot be created. Port " + lobby.getPort() + " is already in use");
         }
     }
 
+    private void endLobby() {
+        // Stop all client threads
+        for (Thread playerThread: lobby.getConnectedPlayers()) {
+            ((ClientThread) playerThread).stopRunning();
+        }
+
+        // Stop the server socket
+        try {
+            serverSocket.close();
+        } catch (IOException exception) {
+            logger.info("Unable to close socket.");
+        }
+
+        serverModel.removeLobby(lobby);
+        logger.info("Lobby " + lobby.getName() + " has finished");
+    }
+
     private void acceptConnections() {
         try {
             while (lobby.getConnectedPlayersCount() < 2) {
                 Socket clientSocket =  serverSocket.accept();
-                lobby.increaseConnectedPlayersCount();
+                logger.info("Player " + lobby.getConnectedPlayersCount() + " has connected to lobby " + lobby.getName());
                 ClientThread clientThread = new ClientThread(clientSocket, lobby.getConnectedPlayersCount());
                 clientThread.start();
-                logger.info("Player #" + lobby.getConnectedPlayersCount() + " has connected to lobby " + lobby.getName());
+                lobby.addPlayer(clientThread);
             }
 
             logger.info("Lobby " + lobby.getName() + " has started");
         } catch (IOException e) {
-            logger.warning("Connection failed");
+            logger.info("Connection failed");
         }
     }
 
     private void startGame() {
         gameRunning = true;
         while (gameRunning) {
+            // This simulates the game running for 10 seconds and then ending
             try { Thread.sleep(10000); }
             catch(InterruptedException ex) { Thread.currentThread().interrupt(); }
             gameRunning = false;
@@ -77,40 +91,57 @@ public class LobbyController implements Runnable {
     }
 
     private class ClientThread extends Thread {
-        private Socket socket;
-        private Scanner scanner;
-        private DataOutputStream dataOutputStream;
-        private int playerID;
+        private final Socket socket;
+        private final ObjectOutputStream outputStream;
+        private final ObjectInputStream inputStream;
+        private final int playerID;
+        private boolean stopRunning;
 
-        public ClientThread(Socket socket, int playerID) {
+        public ClientThread(Socket socket, int playerID) throws IOException {
             this.socket = socket;
             this.playerID = playerID;
-            try {
-                scanner = new Scanner(socket.getInputStream());
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            } catch (IOException e) {
-                logger.warning("Unable to setup communication");
-            }
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
         }
 
         @Override
         public void run() {
             try {
-                dataOutputStream.writeInt(playerID);
-                dataOutputStream.flush();
+                outputStream.writeInt(playerID);
+                outputStream.flush();
 
-                String message = "";
-                while (!message.equals("q")) {
-                    message = scanner.nextLine();
-                    System.out.println("Player #" + playerID + " said: " + message);
-                    dataOutputStream.writeBoolean(true);
-                    dataOutputStream.flush();
+                while (!stopRunning) {
+                    try {
+                        Packet packet = (Packet) inputStream.readObject();
+                        System.out.println(packet.getMove());
+                        outputStream.writeBoolean(true);
+                        outputStream.flush();
+                    } catch (ClassNotFoundException e) {
+                        logger.warning("Packet could not be deserialized");
+                        outputStream.writeBoolean(false);
+                        outputStream.flush();
+                    }
+
                 }
+            } catch (IOException exception) {
+                logger.info("Player " + lobby.getConnectedPlayersCount() + " has disconnected from lobby " + lobby.getName());
+                lobby.removePlayer(this);
+                closeConnection();
+            }
+        }
 
-                System.out.println("Connection dropped");
-                lobby.decreaseConnectedPlayersCount();
-            } catch (IOException e) {
-                logger.warning("Unable to communicate");
+        public synchronized void stopRunning() {
+            stopRunning = true;
+            closeConnection();
+        }
+
+        private void closeConnection() {
+            try {
+                inputStream.close();
+                outputStream.close();
+                socket.close();
+            } catch (IOException exception) {
+                logger.info("Unable to close socket.");
             }
         }
     }

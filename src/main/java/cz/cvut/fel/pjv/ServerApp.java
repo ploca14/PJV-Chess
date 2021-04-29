@@ -4,7 +4,6 @@ import cz.cvut.fel.pjv.controller.network.ServerController;
 import cz.cvut.fel.pjv.model.network.Server;
 import cz.cvut.fel.pjv.view.ServerView;
 import javafx.application.Application;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 public class ServerApp extends Application {

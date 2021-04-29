@@ -1,9 +1,8 @@
 package cz.cvut.fel.pjv.controller.network;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import cz.cvut.fel.pjv.model.network.Packet;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -11,26 +10,24 @@ public class ClientController {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter server port: ");
-        int port = scanner.nextInt();
-
         try {
-            Socket socket = new Socket("localhost", port);
-            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            int port = Integer.parseInt(scanner.nextLine());
 
-            int playerID = dataInputStream.readInt();
+            Socket socket = new Socket("localhost", port);
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+
+            int playerID = inputStream.readInt();
             System.out.println("Connected to server as player #" + playerID);
 
-            String userInput = "";
+            String userInput = scanner.nextLine();
             while (!userInput.equals("q")) {
+                outputStream.writeObject(new Packet(userInput));
+                outputStream.flush();
+                System.out.println("Response from server: " + inputStream.readBoolean());
                 userInput = scanner.nextLine();
-                printWriter.println(userInput);
-                printWriter.flush();
-                System.out.println("echo: " + dataInputStream.readBoolean());
             }
-
-
-        } catch (IOException e) {
+        } catch (NumberFormatException | IOException e) {
             e.printStackTrace();
         }
 
