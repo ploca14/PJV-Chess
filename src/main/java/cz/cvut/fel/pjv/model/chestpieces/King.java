@@ -1,15 +1,17 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 
 public class King extends Chesspiece {
-    public King(String color, Tile currentPosition) {
+    public King(Color color, Tile currentPosition) {
         super(color, currentPosition);
     }
 
     @Override
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board) {
-        String color = currentPosition.getCurrentChessPiece().getColor();
+        Color color = currentPosition.getCurrentChessPiece().getColor();
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         ArrayList<Tile> moves = new ArrayList<>();
@@ -75,5 +77,10 @@ public class King extends Chesspiece {
         }
 
         return moves;
+    }
+
+    @Override
+    public String toString() {
+        return "\u265A";
     }
 }

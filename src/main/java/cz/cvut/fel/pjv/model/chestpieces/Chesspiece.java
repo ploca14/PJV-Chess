@@ -1,14 +1,14 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
-import cz.cvut.fel.pjv.controller.Board;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
 public abstract class Chesspiece {
     private Tile currentPosition;
-    private String color;
+    private Color color;
 
-    public Chesspiece(String color, Tile currentPosition) {
+    public Chesspiece(Color color, Tile currentPosition) {
         this.color = color;
         this.currentPosition = currentPosition;
     }
@@ -23,7 +23,7 @@ public abstract class Chesspiece {
         return currentPosition;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -35,11 +35,11 @@ public abstract class Chesspiece {
         return (x > 7 || x < 0 || y > 7 || y < 0);
     }
 
-    public boolean isTeammate(Tile[][] b, int x, int y, String color) {
+    public boolean isTeammate(Tile[][] b, int x, int y, Color color) {
         return (b[y][x].currentChessPiece.getColor()).equals(color);
     }
 
-    public void knightMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
+    public void knightMoves(Color color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
 
 
         // all combinations:
@@ -59,7 +59,7 @@ public abstract class Chesspiece {
             }
         }
     }
-    public void bishopMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
+    public void bishopMoves(Color color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
         // top right direction
         for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x+i,y-i)) { break; }
@@ -111,7 +111,7 @@ public abstract class Chesspiece {
         }
 
     }
-    public void rookMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
+    public void rookMoves(Color color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
 
         // horizontal right
         for (int i = 0; i < 8; i++) {
@@ -171,8 +171,8 @@ public abstract class Chesspiece {
             }
         }
     }
-    public void pawnMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves, boolean startingPosition) {
-        if(color.equals("White")) {
+    public void pawnMoves(Color color, int x , int y, Tile[][] board, ArrayList<Tile> moves, boolean startingPosition) {
+        if(color.equals(Color.WHITE)) {
             // startingPostition moves are different then notStarting
             // if checks starting position
             // moves when not taking enemy figure
@@ -207,7 +207,7 @@ public abstract class Chesspiece {
                 if (board[y+1][x].currentChessPiece == null) {
                     moves.add(board[y+1][x]);
                 }
-                if (board[y - 2][x].currentChessPiece == null) {
+                if (board[y + 2][x].currentChessPiece == null) {
                     moves.add(board[y+2][x]);
                 }
             } else {

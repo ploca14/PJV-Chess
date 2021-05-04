@@ -1,6 +1,7 @@
-package cz.cvut.fel.pjv.controller;
+package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.model.chestpieces.*;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
@@ -28,17 +29,10 @@ public class Board {
         whitePieces = new ArrayList<Chesspiece>();
         blackPieces = new ArrayList<Chesspiece>();
 
-        // coloring tiles
+        // Creating board
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-                int xMod = x % 2;
-                int yMod = y % 2;
-
-                if ((xMod == 0 && yMod == 0) || (xMod == 1 && yMod == 1)) {
-                    board[x][y] = new Tile( 1, y, x);
-                } else {
-                    board[x][y] = new Tile( 0, y, x);
-                }
+                board[y][x] = new Tile(x, y);
             }
         }
 
@@ -47,57 +41,57 @@ public class Board {
     public void placeChessPieces() {
         // pawn placements, first blacks, then whites
         for (int i = 0; i < 8; i++) {
-            board[1][i].setCurrentChessPiece(new Pawn("Black",board[1][i]));
+            board[1][i].setCurrentChessPiece(new Pawn(Color.BLACK,board[1][i]));
             blackPieces.add(board[1][i].getCurrentChessPiece());
-            board[6][i].setCurrentChessPiece(new Pawn("White",board[6][i]));
+            board[6][i].setCurrentChessPiece(new Pawn(Color.WHITE,board[6][i]));
             whitePieces.add(board[6][i].getCurrentChessPiece());
         }
 
         // rook placements, first blacks, then whites
-        board[0][0].setCurrentChessPiece(new Rook("Black",board[0][0]));
+        board[0][0].setCurrentChessPiece(new Rook(Color.BLACK,board[0][0]));
         blackPieces.add(board[0][0].getCurrentChessPiece());
-        board[0][7].setCurrentChessPiece(new Rook("Black",board[0][7]));
+        board[0][7].setCurrentChessPiece(new Rook(Color.BLACK,board[0][7]));
         blackPieces.add(board[0][7].getCurrentChessPiece());
 
-        board[7][0].setCurrentChessPiece(new Rook("White",board[7][0]));
+        board[7][0].setCurrentChessPiece(new Rook(Color.WHITE,board[7][0]));
         whitePieces.add(board[7][0].getCurrentChessPiece());
-        board[7][7].setCurrentChessPiece(new Rook("White",board[7][7]));
+        board[7][7].setCurrentChessPiece(new Rook(Color.WHITE,board[7][7]));
         whitePieces.add(board[7][7].getCurrentChessPiece());
 
         // knight placements, first blacks, then whites
-        board[0][1].setCurrentChessPiece(new Knight("Black",board[0][1]));
+        board[0][1].setCurrentChessPiece(new Knight(Color.BLACK,board[0][1]));
         blackPieces.add(board[0][1].getCurrentChessPiece());
-        board[0][6].setCurrentChessPiece(new Knight("Black",board[0][6]));
+        board[0][6].setCurrentChessPiece(new Knight(Color.BLACK,board[0][6]));
         blackPieces.add(board[0][6].getCurrentChessPiece());
 
-        board[7][1].setCurrentChessPiece(new Knight("White",board[7][1]));
+        board[7][1].setCurrentChessPiece(new Knight(Color.WHITE,board[7][1]));
         whitePieces.add(board[7][1].getCurrentChessPiece());
-        board[7][6].setCurrentChessPiece(new Knight("White",board[7][6]));
+        board[7][6].setCurrentChessPiece(new Knight(Color.WHITE,board[7][6]));
         whitePieces.add(board[7][6].getCurrentChessPiece());
 
         // bishop placements, first blacks, then whites
-        board[0][2].setCurrentChessPiece(new Bishop("Black",board[0][2]));;
+        board[0][2].setCurrentChessPiece(new Bishop(Color.BLACK,board[0][2]));;
         blackPieces.add(board[0][2].getCurrentChessPiece());
-        board[0][5].setCurrentChessPiece(new Bishop("Black",board[0][5]));;
+        board[0][5].setCurrentChessPiece(new Bishop(Color.BLACK,board[0][5]));;
         blackPieces.add(board[0][5].getCurrentChessPiece());
 
-        board[7][2].setCurrentChessPiece(new Bishop("White",board[7][2]));;
+        board[7][2].setCurrentChessPiece(new Bishop(Color.WHITE,board[7][2]));;
         whitePieces.add(board[7][2].getCurrentChessPiece());
-        board[7][5].setCurrentChessPiece(new Bishop("White",board[7][5]));;
+        board[7][5].setCurrentChessPiece(new Bishop(Color.WHITE,board[7][5]));;
         whitePieces.add(board[7][5].getCurrentChessPiece());
 
         // queen placements, first black, then white
-        board[0][3].setCurrentChessPiece(new Queen("Black",board[0][3]));
+        board[0][3].setCurrentChessPiece(new Queen(Color.BLACK,board[0][3]));
         blackPieces.add(board[0][3].getCurrentChessPiece());
 
-        board[7][3].setCurrentChessPiece(new Queen("White",board[7][3]));
+        board[7][3].setCurrentChessPiece(new Queen(Color.WHITE,board[7][3]));
         whitePieces.add(board[7][3].getCurrentChessPiece());
 
         // king placements, first black, then white
-        board[0][4].setCurrentChessPiece(new King("Black",board[0][4]));
+        board[0][4].setCurrentChessPiece(new King(Color.BLACK,board[0][4]));
         blackPieces.add(board[0][4].getCurrentChessPiece());
 
-        board[7][4].setCurrentChessPiece(new King("White",board[7][4]));
+        board[7][4].setCurrentChessPiece(new King(Color.WHITE,board[7][4]));
         whitePieces.add(board[7][4].getCurrentChessPiece());
     }
 }
