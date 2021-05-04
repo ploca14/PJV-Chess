@@ -8,6 +8,12 @@ public class Tile {
     private final int y;
     public Chesspiece currentChessPiece;
 
+    /**
+     * ctor of Tile, set color and coordinates
+     * @param color color of Tile
+     * @param x x coordinate of Tile
+     * @param y y coordinate of Tile
+     */
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;

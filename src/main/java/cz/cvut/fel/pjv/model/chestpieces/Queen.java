@@ -16,10 +16,10 @@ public class Queen extends Chesspiece {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
 
-        // bishopmoves
+        /**
+         * fill list of legal moves with moves for types Bishop and Rook
+         */
         bishopMoves(color, x, y, board, moves);
-
-        // rook moves
         rookMoves(color, x, y, board, moves);
 
         return moves;

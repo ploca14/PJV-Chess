@@ -16,9 +16,17 @@ public class King extends Chesspiece {
         int y = currentPosition.getY();
         ArrayList<Tile> moves = new ArrayList<>();
 
+        /**
+         * xs: array of x coordinates clockwise
+         * ys: array of y coordinates clockwise
+         */
         int[] xs = {x , x+1, x+1, x+1, x, x-1, x-1, x-1};
         int[] ys = {y-1, y-1, y, y+1, y+1, y+1, y, y-1};
 
+        /**
+         * checking rules for every (x;y)
+         * adding legal moves to passed array
+         */
         for (int i = 0; i < 8; i++) {;
             ArrayList<Tile> knightMovesList = new ArrayList<>();
             ArrayList<Tile> bishopMovesList = new ArrayList<>();
@@ -30,6 +38,12 @@ public class King extends Chesspiece {
                 continueChecking = false;
             }
 
+            /**
+             * filling array with legal moves for Chesspiece of type Knight for coordinates (y[i];x[i])
+             * for every move from array of legal moves check if there's enemy Chesspiece of type Knight
+             * if there is enemy Chesspiece of type Knight, move is not legal anymore
+             * stop further testing: bool "continueChecking": true->false
+             */
             if(continueChecking) {
                 knightMoves(color, xs[i], ys[i], board, knightMovesList);
                 for (Tile t : knightMovesList
@@ -40,6 +54,12 @@ public class King extends Chesspiece {
                 }
             }
 
+            /**
+             * filling array with legal moves for Chesspiece of type Bishop for coordinates (y[i];x[i])
+             * for every move from array of legal moves check if there's enemy Chesspiece of type Bishop/Queen
+             * if there is enemy Chesspiece of type Bishop/Queen, move is not legal anymore
+             * stop further testing: bool "continueChecking": true->false
+             */
             if(continueChecking) {
                 bishopMoves(color, xs[i], ys[i], board, bishopMovesList);
                 for (Tile t: bishopMovesList
@@ -50,6 +70,12 @@ public class King extends Chesspiece {
                 }
             }
 
+            /**
+             * filling array with legal moves for Chesspiece of type Rook for coordinates (y[i];x[i])
+             * for every move from array of legal moves check if there's enemy Chesspiece of type Rook/Queen
+             * if there is enemy Chesspiece of type Rook/Queen, move is not legal anymore
+             * stop further testing: bool "continueChecking": true->false
+             */
             if(continueChecking) {
                 rookMoves(color, xs[i], ys[i], board, rookMovesList);
                 for (Tile t: rookMovesList
@@ -60,6 +86,12 @@ public class King extends Chesspiece {
                 }
             }
 
+            /**
+             * filling array with legal moves for Chesspiece of type Pawn for coordinates (y[i];x[i])
+             * for every move from array of legal moves check if there's enemy Chesspiece of type Pawn
+             * if there is enemy Chesspiece of type Pawn, move is not legal anymore
+             * stop further testing: bool "continueChecking": true->false
+             */
             if(continueChecking) {
                 pawnMoves(color, xs[i], ys[i], board, pawnMovesList, false);
                 for (Tile t: pawnMovesList
@@ -69,7 +101,6 @@ public class King extends Chesspiece {
                     }
                 }
             }
-
 
             if(continueChecking) {
                 moves.add(board[ys[i]][xs[i]]);

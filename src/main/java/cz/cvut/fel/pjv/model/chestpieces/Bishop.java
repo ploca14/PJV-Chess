@@ -1,11 +1,8 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
 public class Bishop extends Chesspiece{
-    private Color color;
 
     public Bishop(Color color, Tile currentPosition) {
         super(color, currentPosition);
