@@ -10,7 +10,6 @@ public class Tile {
 
     /**
      * ctor of Tile, set color and coordinates
-     * @param color color of Tile
      * @param x x coordinate of Tile
      * @param y y coordinate of Tile
      */
@@ -38,6 +37,13 @@ public class Tile {
 
     public void setCurrentChessPiece(Chesspiece currentChessPiece) {
         this.currentChessPiece = currentChessPiece;
+        if (currentChessPiece != null) {
+            currentChessPiece.setCurrentPosition(this);
+        }
     }
 
+    public void movePiece(Chesspiece chesspiece) {
+        this.currentChessPiece = chesspiece;
+        currentChessPiece.move(this);
+    }
 }

@@ -10,6 +10,10 @@ public class GameRules {
 
     Board b;
 
+    public GameRules(Board board) {
+        b = board;
+    }
+
     public GameRules() {
         Board b = new Board();
     }

@@ -2,6 +2,7 @@ package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
+import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
 public class BoardView extends GridPane {
@@ -25,7 +26,9 @@ public class BoardView extends GridPane {
     }
 
     public void rerenderBoard() {
-        this.getChildren().clear();
-        renderBoard();;
+        for (Node node:
+                this.getChildren()) {
+            ((TileView) node).rerender();
+        }
     }
 }

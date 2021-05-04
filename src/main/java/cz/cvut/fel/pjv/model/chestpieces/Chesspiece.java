@@ -13,7 +13,8 @@ public abstract class Chesspiece {
         this.currentPosition = currentPosition;
     }
 
-    public void move() {
+    public void move(Tile endingPosition) {
+        this.currentPosition = endingPosition;
     }
 
     /**
@@ -327,5 +328,9 @@ public abstract class Chesspiece {
                 }
             }
         }
+    }
+
+    public void setCurrentPosition(Tile tile) {
+        currentPosition = tile;
     }
 }

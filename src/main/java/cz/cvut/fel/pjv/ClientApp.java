@@ -1,6 +1,6 @@
 package cz.cvut.fel.pjv;
 
-import cz.cvut.fel.pjv.controller.BoardController;
+import cz.cvut.fel.pjv.controller.GameController;
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.view.GameView;
 import javafx.application.Application;
@@ -33,7 +33,7 @@ public class ClientApp extends Application {
             Game game = new Game();
             game.getBoard().placeChessPieces();
             GameView gameView = new GameView(game);
-            new BoardController(game.getBoard(), gameView.getBoardView());
+            new GameController(game, gameView);
             stage.setScene(gameView.getScene());
         });
     }
