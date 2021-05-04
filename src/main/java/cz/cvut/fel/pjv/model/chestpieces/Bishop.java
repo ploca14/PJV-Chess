@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 
 public class Bishop extends Chesspiece{
