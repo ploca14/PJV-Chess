@@ -3,7 +3,6 @@ package cz.cvut.fel.pjv.model.chestpieces;
 import java.util.ArrayList;
 
 public class Bishop extends Chesspiece{
-    private String color;
 
     public Bishop(String color, Tile currentPosition) {
         super(color, currentPosition);

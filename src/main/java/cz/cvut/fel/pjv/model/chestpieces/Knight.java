@@ -3,7 +3,6 @@ package cz.cvut.fel.pjv.model.chestpieces;
 import java.util.ArrayList;
 
 public class Knight extends Chesspiece {
-    private String color;
     public Knight(String color, Tile currentPosition) {
         super(color, currentPosition);
     }

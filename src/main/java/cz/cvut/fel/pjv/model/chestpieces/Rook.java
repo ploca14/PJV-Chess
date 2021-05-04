@@ -6,7 +6,6 @@ public class Rook extends Chesspiece{
 
     public Rook(String color, Tile currentPosition) {
         super(color, currentPosition);
-        color = getColor() ;
     }
 
     @Override

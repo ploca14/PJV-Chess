@@ -16,6 +16,12 @@ public abstract class Chesspiece {
     public void move() {
     }
 
+    /**
+     *
+     * @param currentPosition: currentPosition of Chesspiece
+     * @param board: board of Tiles
+     * @return ArrayList of legal moves for Bishop
+     */
     public abstract ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board);
 
 
@@ -27,26 +33,60 @@ public abstract class Chesspiece {
         return color;
     }
 
+    /**
+     * checks if Tile with coordinates (y;x) is occupied
+     * @param board board of Tiles
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return true if Tile is occupied by some figure
+     */
     public boolean isOccupied(Tile[][]board, int x, int y) {
         return board[y][x].currentChessPiece != null;
     }
 
+    /**
+     * checks if indexes are out of range
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return true if location with coordinates (y;x) are out of range
+     */
     public boolean isOutOfRange(int x, int y) {
         return (x > 7 || x < 0 || y > 7 || y < 0);
     }
 
+    /**
+     * check if figure on Tile with coordiantes (y;x) is same Color
+     * @param b board of tiles
+     * @param x x coordinate of tested Tile
+     * @param y y coordinate of tested Tile
+     * @param color color of Chesspiece compared to Chesspiece on Tile with coordinates (y;x)
+     * @return true if compared figures have same color. if the color is differen, returns false
+     */
     public boolean isTeammate(Tile[][] b, int x, int y, String color) {
         return (b[y][x].currentChessPiece.getColor()).equals(color);
     }
 
+    /**
+     * fills inserted ArrayList<Tile> with legal moves for Chesspiece of type Knight
+     * @param color color of Chesspiece
+     * @param x x location of Chesspiece
+     * @param y y location of Chesspiece
+     * @param board board of Tiles
+     * @param moves ArrayList<Tile> of moves for Chesspiece. Can be empty or contain some data
+     */
     public void knightMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
 
-
-        // all combinations:
-        // x+1 y-2, x+2 y-1...
+        /**
+         * xs: array of x coordinates clockwise
+         * ys: array of y coordinates clockwise
+         */
         int[] xs = {x+1, x+2, x+2, x+1, x-1, x-2, x-2, x-1};
         int[] ys = {y-2, y-1, y+1, y+2, y+2, y+1, y-1, y-2};
 
+        /**
+         * checking rules for every (x;y)
+         * adding legal moves to passed array
+         */
         for (int i = 0; i < 8; i++) {
             if(isOutOfRange(ys[i], xs[i])) { continue; }
 
@@ -59,8 +99,19 @@ public abstract class Chesspiece {
             }
         }
     }
+
+    /**
+     * fills inserted ArrayList<Tile> with legal moves for Chesspiece of type Bishop
+     * @param color color of Chesspiece
+     * @param x x location of Chesspiece
+     * @param y y location of Chesspiece
+     * @param board board of Tiles
+     * @param moves ArrayList<Tile> of moves for Chesspiece. Can be empty or contain some data
+     */
     public void bishopMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
-        // top right direction
+        /**
+         * moves with direction: top right
+         */
         for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x+i,y-i)) { break; }
             if(!isOccupied(board, x+i, y-i)) {
@@ -75,7 +126,9 @@ public abstract class Chesspiece {
             }
         }
 
-        // top left direction
+        /**
+         * moves with direction: top left
+         */
         for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x-i,y-i)) { break; }
             if(!isOccupied(board, x-i, y-i)) {
@@ -90,7 +143,9 @@ public abstract class Chesspiece {
             }
         }
 
-        // bot left direction
+        /**
+         * moves with direction: bot left
+         */
         for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x-i,y+i)) { break; }
             if(!isOccupied(board, x-i, y+i)) { moves.add(board[y+i][x-i]); }
@@ -100,7 +155,9 @@ public abstract class Chesspiece {
             }
         }
 
-        // bot right direction
+        /**
+         * moves with direction: bot right
+         */
         for (int i = 1; i < 10; i++) {
             if(isOutOfRange(x+i,y+i)) { break; }
             if(!isOccupied(board, x+i, y+i)) { moves.add(board[y+i][x+i]); }
@@ -111,9 +168,19 @@ public abstract class Chesspiece {
         }
 
     }
-    public void rookMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
 
-        // horizontal right
+    /**
+     * fills inserted ArrayList<Tile> with legal moves for Chesspiece of type Rook
+     * @param color color of Chesspiece
+     * @param x x location of Chesspiece
+     * @param y y location of Chesspiece
+     * @param board board of Tiles
+     * @param moves ArrayList<Tile> of moves for Chesspiece. Can be empty or contain some data
+     */
+    public void rookMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves) {
+        /**
+         * moves with direction: horizontal right
+         */
         for (int i = 0; i < 8; i++) {
             if(i == 0) { continue; }
             if(isOutOfRange(x+i,y)) {
@@ -128,7 +195,9 @@ public abstract class Chesspiece {
             }
         }
 
-        // horizontal left
+        /**
+         * moves with direction: horizontal left
+         */
         for (int i = 0; i < 8; i++) {
             if(i == 0) { continue; }
             if(isOutOfRange(x-i,y)) {
@@ -142,7 +211,10 @@ public abstract class Chesspiece {
                 break;
             }
         }
-        // vertical up
+
+        /**
+         * moves with direction: vertical up
+         */
         for (int i = 0; i < 8; i++) {
             if(i == 0) { continue; }
             if(isOutOfRange(x,y-i)) {
@@ -157,7 +229,9 @@ public abstract class Chesspiece {
             }
         }
 
-        // vertical down
+        /**
+         * moves with direction: vertical down
+         */
         for (int i = 1; i < 8; i++) {
             if(isOutOfRange(x,y+i)) {
                 break;
@@ -171,22 +245,43 @@ public abstract class Chesspiece {
             }
         }
     }
+
+    /**
+     * fills inserted ArrayList<Tile> with legal moves for Chesspiece of type Bishop
+     * @param color color of Chesspiece
+     * @param x x location of Chesspiece
+     * @param y y location of Chesspiece
+     * @param board board of Tiles
+     * @param moves ArrayList<Tile> of moves for Chesspiece. Can be empty or contain some data
+     * @param startingPosition boolean checking if Pawn was moved
+     */
     public void pawnMoves(String color, int x , int y, Tile[][] board, ArrayList<Tile> moves, boolean startingPosition) {
+        /**
+         * if statement chooses how the array of legal moves will be filled
+         * black figures: y coordinate +
+         * white figures: y coordinate -
+         */
         if(color.equals("White")) {
-            // startingPostition moves are different then notStarting
-            // if checks starting position
-            // moves when not taking enemy figure
+            /**
+             * if starting position is true, Pawn can be moved +1 or +2 in the straight direction
+             * if starting position is false, Pawn can be moved +1
+             */
             if (startingPosition) {
-                if(board[y-1][x].currentChessPiece == null) { moves.add(board[y-1][x]); }
-                if(board[y-2][x].currentChessPiece == null) { moves.add(board[y-2][x]); }
+                if(board[y-1][x].currentChessPiece == null) {
+                    moves.add(board[y-1][x]);
+                }
+                if(board[y-2][x].currentChessPiece == null) {
+                    moves.add(board[y-2][x]);
+                }
             } else {
-                // first condition checks if Tile is not occupied, second checks if its on board
                 if(!isOutOfRange(x, y-1) && !isOccupied(board, x, y-1)) {
                     moves.add(board[y-1][x]);
                 }
             }
 
-            // taking enemy figure {x+1, y-1}, {x-1, y-1}
+            /**
+             * moves for taking enemy figures
+             */
             if(!isOutOfRange(x+1, y-1)) {
                 if(isOccupied(board,x+1, y-1) && !isTeammate(board, x+1, y-1, currentPosition.getCurrentChessPiece().getColor())) {
                     moves.add(board[y-1][x+1]);
@@ -200,9 +295,10 @@ public abstract class Chesspiece {
             }
 
         } else {
-            // startingPostition moves are different then notStarting
-            // if checks starting position
-            // moves when not taking enemy figure
+            /**
+             * if starting position is true, Pawn can be moved +1 or +2 in the straight direction
+             * if starting position is false, Pawn can be moved +1
+             */
             if (startingPosition) {
                 if (board[y+1][x].currentChessPiece == null) {
                     moves.add(board[y+1][x]);
@@ -211,13 +307,14 @@ public abstract class Chesspiece {
                     moves.add(board[y+2][x]);
                 }
             } else {
-                // first condition checks if Tile is not occupied, second checks if its on board
                 if (!isOutOfRange(x, y+1) && !isOccupied(board, x, y+1)) {
                     moves.add(board[y+1][x]);
                 }
             }
 
-            // taking enemy figures
+            /**
+             * moves for taking enemy figures
+             */
             if (!isOutOfRange(x + 1, y+1)) {
                 if (isOccupied(board, x + 1, y+1) && !isTeammate(board, x + 1, y+1, currentPosition.getCurrentChessPiece().getColor())) {
                     moves.add(board[y+1][x + 1]);
