@@ -19,4 +19,8 @@ public class Game {
     public void switchPlayer() {
         currentPlayer = currentPlayer.equals(Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
+
+    public GameRules getRules() {
+        return rules;
+    }
 }

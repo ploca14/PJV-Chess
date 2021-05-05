@@ -114,4 +114,12 @@ public class Board {
         board[7][4].setCurrentChessPiece(new King(Color.WHITE,board[7][4]));
         whitePieces.add(board[7][4].getCurrentChessPiece());
     }
+
+    public void removePiece(Chesspiece currentChessPiece) {
+        if (currentChessPiece.getColor().equals(Color.WHITE)) {
+            whitePieces.remove(currentChessPiece);
+        } else {
+            blackPieces.remove(currentChessPiece);
+        }
+    }
 }

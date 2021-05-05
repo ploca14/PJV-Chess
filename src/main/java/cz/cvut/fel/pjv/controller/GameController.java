@@ -36,7 +36,17 @@ public class GameController {
     }
 
     public void makeMove(Move move) {
+        // Remove the current piece from the starting position
         move.getStartingPosition().setCurrentChessPiece(null);
+
+        // Check if the ending position is occupied
+        Chesspiece endingPositionChesspiece = move.getEndingPosition().getCurrentChessPiece();
+        if (endingPositionChesspiece != null) {
+            // If it is occupied then remove the occupying piece
+            gameModel.getBoard().removePiece(endingPositionChesspiece);
+        }
+
+        // Move the current piece to the ending position and rerender the board
         move.getEndingPosition().movePiece(move.getChesspiece());
         gameView.getBoardView().rerenderBoard();
     }

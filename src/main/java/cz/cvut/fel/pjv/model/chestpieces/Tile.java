@@ -43,7 +43,14 @@ public class Tile {
     }
 
     public void movePiece(Chesspiece chesspiece) {
+        // If the current tile is occupied then clear the current pieces position
+        if (this.currentChessPiece != null) {
+            this.currentChessPiece.setCurrentPosition(null);
+        }
+
+        // Overwrite the current piece with the moving piece
         this.currentChessPiece = chesspiece;
+        // Set the position of the moving piece to this tile
         currentChessPiece.move(this);
     }
 }
