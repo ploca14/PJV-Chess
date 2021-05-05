@@ -103,7 +103,14 @@ public class King extends Chesspiece {
             }
 
             if(continueChecking) {
-                moves.add(board[ys[i]][xs[i]]);
+                if(isOccupied(board, xs[i], ys[i])) {
+                    if(isTeammate(board, xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
+                        continueChecking = false;
+                    }
+                    if(!isTeammate(board, xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
+                        moves.add(board[ys[i]][xs[i]]);
+                    }
+                }
             }
         }
 

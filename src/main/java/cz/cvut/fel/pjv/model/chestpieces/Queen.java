@@ -24,7 +24,7 @@ public class Queen extends Chesspiece {
 
         return moves;
     }
-    // asdfsadfasdfsafsadfsa
+    // :W
 
     @Override
     public String toString() {
