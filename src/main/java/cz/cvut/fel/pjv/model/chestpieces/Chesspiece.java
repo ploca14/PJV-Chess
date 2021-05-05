@@ -51,7 +51,7 @@ public abstract class Chesspiece {
      * @param y y coordinate
      * @return true if location with coordinates (y;x) are out of range
      */
-    public boolean isOutOfRange(int x, int y) {
+    public boolean isOutOfRange(int x, int y) { 
         return (x > 7 || x < 0 || y > 7 || y < 0);
     }
 
