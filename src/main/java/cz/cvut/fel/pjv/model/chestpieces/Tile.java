@@ -10,7 +10,6 @@ public class Tile {
 
     /**
      * ctor of Tile, set color and coordinates
-     * @param color color of Tile
      * @param x x coordinate of Tile
      * @param y y coordinate of Tile
      */
@@ -38,6 +37,20 @@ public class Tile {
 
     public void setCurrentChessPiece(Chesspiece currentChessPiece) {
         this.currentChessPiece = currentChessPiece;
+        if (currentChessPiece != null) {
+            currentChessPiece.setCurrentPosition(this);
+        }
     }
 
+    public void movePiece(Chesspiece chesspiece) {
+        // If the current tile is occupied then clear the current pieces position
+        if (this.currentChessPiece != null) {
+            this.currentChessPiece.setCurrentPosition(null);
+        }
+
+        // Overwrite the current piece with the moving piece
+        this.currentChessPiece = chesspiece;
+        // Set the position of the moving piece to this tile
+        currentChessPiece.move(this);
+    }
 }

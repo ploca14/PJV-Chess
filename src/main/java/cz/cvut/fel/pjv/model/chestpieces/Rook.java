@@ -10,11 +10,6 @@ public class Rook extends Chesspiece{
         super(color, currentPosition);
     }
 
-    @Override
-    public void move() {
-        super.move();
-    }
-
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board) {
         ArrayList<Tile> moves = new ArrayList<Tile>();
         Color color = currentPosition.getCurrentChessPiece().getColor();

@@ -12,10 +12,11 @@ public class Pawn extends Chesspiece{
     }
 
     @Override
-    public void move() {
-        super.move();
+    public void move(Tile endingPosition) {
+        super.move(endingPosition);
         startingPosition = false;
     }
+
     @Override
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board) {
         ArrayList<Tile> moves = new ArrayList<Tile>();

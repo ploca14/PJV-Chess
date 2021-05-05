@@ -12,7 +12,7 @@ public class Main {
         b.placeChessPieces();
         Tile[][] board = b.getBoard();
         Queen k = new Queen(Color.WHITE,board[7][3]);
-        k.move();
+        //k.move();
         board[7][3].setCurrentChessPiece(k);
         ArrayList<Tile> queenMovesList = k.getLegalMoves(k.getCurrentPosition(), board);
         System.out.println(queenMovesList);

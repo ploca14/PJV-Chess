@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.controller;
 
 import cz.cvut.fel.pjv.model.Board;
+import cz.cvut.fel.pjv.model.Move;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
 import cz.cvut.fel.pjv.view.BoardView;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 public class BoardController {
     private final Board boardModel;
     private final BoardView boardView;
+    private GameController gameController;
 
     public BoardController(Board boardModel, BoardView boardView) {
         this.boardModel = boardModel;
@@ -33,12 +35,10 @@ public class BoardController {
             EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    System.out.println("Y: " + tileView.getTileModel().getY() + " X: " + tileView.getTileModel().getX());
-                    Chesspiece currentChesspiece = tileView.getTileModel().getCurrentChessPiece();
-                    if (currentChesspiece != null) {
-                        Tile tileModel = tileView.getTileModel();
-                        Tile[][] tiles = boardModel.getBoard();
-                        showLegalMoves(currentChesspiece.getLegalMoves(tileView.getTileModel(), boardModel.getBoard()));
+                    if (tileView.isLegalMove()) {
+                        makeMove(tileView);
+                    } else {
+                        selectPiece(tileView);
                     }
                 }
             };
@@ -47,11 +47,42 @@ public class BoardController {
         }
     }
 
+    private void makeMove(TileView tile) {
+        Move move = new Move(gameController.getSelectedPiece().getCurrentPosition(), tile.getTileModel());
+        gameController.makeMove(move);
+        gameController.setSelectedPiece(null);
+        clearLegalMoves();
+
+        gameController.getGameModel().switchPlayer();
+    }
+
+    private void selectPiece(TileView tile) {
+        Chesspiece currentChesspiece = tile.getTileModel().getCurrentChessPiece();
+        if (currentChesspiece == null) return;
+
+        if (currentChesspiece.getColor().equals(gameController.getGameModel().getCurrentPlayer())) {
+            showLegalMoves(currentChesspiece.getLegalMoves(tile.getTileModel(), boardModel.getBoard()));
+            gameController.setSelectedPiece(currentChesspiece);
+        }
+    }
+
     private void showLegalMoves(ArrayList<Tile> legalMoves) {
         for (Node node : boardView.getChildren()) {
             TileView tileView = (TileView) node;
 
-            tileView.showLegalMode(legalMoves.contains(tileView.getTileModel()));
+            tileView.setLegalMove(legalMoves.contains(tileView.getTileModel()));
         }
+    }
+
+    private void clearLegalMoves() {
+        for (Node node : boardView.getChildren()) {
+            TileView tileView = (TileView) node;
+
+            tileView.setLegalMove(false);
+        }
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
     }
 }

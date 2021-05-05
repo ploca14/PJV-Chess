@@ -14,16 +14,16 @@ public class TileView extends StackPane {
     private final Text chessPieceText = new Text();
     private final Rectangle rectangle = new Rectangle();
     private final Circle circle = new Circle();
+    private boolean isLegalMove;
 
     public TileView(Tile tileModel) {
         super();
         this.tileModel = tileModel;
 
-        createTile();
+        renderTile();
     }
 
-    private void createTile() {
-        //chessPieceText.setText(tileModel.getY() + ", " + tileModel.getX());
+    private void renderTile() {
         if (tileModel.getCurrentChessPiece() != null) {
             chessPieceText.setText(tileModel.getCurrentChessPiece().toString());
             chessPieceText.setFill(tileModel.getCurrentChessPiece().getColor());
@@ -47,12 +47,31 @@ public class TileView extends StackPane {
         return tileModel;
     }
 
-    public void showLegalMode(boolean shouldLegalMoveBeRendered) {
-        if (shouldLegalMoveBeRendered) {
+    public boolean isLegalMove() {
+        return isLegalMove;
+    }
+
+    public void setLegalMove(boolean isLegalMove) {
+        this.isLegalMove = isLegalMove;
+
+        showLegalMove();
+    }
+
+    public void showLegalMove() {
+        if (isLegalMove) {
             if (this.getChildren().contains(circle)) return;
             this.getChildren().add(circle);
         } else {
             this.getChildren().remove(circle);
+        }
+    }
+
+    public void rerender() {
+        if (tileModel.getCurrentChessPiece() == null) {
+            chessPieceText.setText(null);
+        } else {
+            chessPieceText.setText(tileModel.getCurrentChessPiece().toString());
+            chessPieceText.setFill(tileModel.getCurrentChessPiece().getColor());
         }
     }
 }
