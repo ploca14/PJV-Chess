@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
+import cz.cvut.fel.pjv.model.Board;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -22,7 +24,7 @@ public abstract class Chesspiece implements Serializable {
      * @param board: board of Tiles
      * @return ArrayList of legal moves for Bishop
      */
-    public abstract ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board);
+    public abstract ArrayList<Tile> getLegalMoves(Tile currentPosition, Board board);
 
 
     public Tile getCurrentPosition() {

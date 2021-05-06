@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
+import cz.cvut.fel.pjv.model.Board;
+
 import java.util.ArrayList;
 
 public class King extends Chesspiece {
@@ -8,7 +10,7 @@ public class King extends Chesspiece {
     }
 
     @Override
-    public ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board) {
+    public ArrayList<Tile> getLegalMoves(Tile currentPosition, Board board) {
         Color color = currentPosition.getCurrentChessPiece().getColor();
         int x = currentPosition.getX();
         int y = currentPosition.getY();
@@ -43,10 +45,10 @@ public class King extends Chesspiece {
              * stop further testing: bool "continueChecking": true->false
              */
             if(continueChecking) {
-                knightMoves(color, xs[i], ys[i], board, knightMovesList);
+                knightMoves(color, xs[i], ys[i], board.getBoard(), knightMovesList);
                 for (Tile t : knightMovesList
                 ) {
-                    if (t.currentChessPiece instanceof Knight && !isTeammate(board, x, y, t.getCurrentChessPiece().getColor())) {
+                    if (t.currentChessPiece instanceof Knight && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) {
                         continueChecking = false;
                     }
                 }
@@ -59,10 +61,10 @@ public class King extends Chesspiece {
              * stop further testing: bool "continueChecking": true->false
              */
             if(continueChecking) {
-                bishopMoves(color, xs[i], ys[i], board, bishopMovesList);
+                bishopMoves(color, xs[i], ys[i], board.getBoard(), bishopMovesList);
                 for (Tile t: bishopMovesList
                 ) {
-                    if ((t.currentChessPiece instanceof Bishop && !isTeammate(board, x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen && !isTeammate(board, x, y, t.getCurrentChessPiece().getColor()))) {
+                    if ((t.currentChessPiece instanceof Bishop && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor()))) {
                         continueChecking = false;
                     }
                 }
@@ -75,10 +77,10 @@ public class King extends Chesspiece {
              * stop further testing: bool "continueChecking": true->false
              */
             if(continueChecking) {
-                rookMoves(color, xs[i], ys[i], board, rookMovesList);
+                rookMoves(color, xs[i], ys[i], board.getBoard(), rookMovesList);
                 for (Tile t: rookMovesList
                 ) {
-                    if ((t.currentChessPiece instanceof Rook && !isTeammate(board, x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen && !isTeammate(board, x, y, t.getCurrentChessPiece().getColor()))) {
+                    if ((t.currentChessPiece instanceof Rook && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor()))) {
                         continueChecking = false;
                     }
                 }
@@ -91,22 +93,22 @@ public class King extends Chesspiece {
              * stop further testing: bool "continueChecking": true->false
              */
             if(continueChecking) {
-                pawnMoves(color, xs[i], ys[i], board, pawnMovesList, false);
+                pawnMoves(color, xs[i], ys[i], board.getBoard(), pawnMovesList, false);
                 for (Tile t: pawnMovesList
                 ) {
-                    if ((t.currentChessPiece instanceof Pawn && !isTeammate(board, x, y, t.getCurrentChessPiece().getColor()))) {
+                    if ((t.currentChessPiece instanceof Pawn && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor()))) {
                         continueChecking = false;
                     }
                 }
             }
 
             if(continueChecking) {
-                if(isOccupied(board, xs[i], ys[i])) {
-                    if(isTeammate(board, xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
+                if(isOccupied(board.getBoard(), xs[i], ys[i])) {
+                    if(isTeammate(board.getBoard(), xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
                         continueChecking = false;
                     }
-                    if(!isTeammate(board, xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
-                        moves.add(board[ys[i]][xs[i]]);
+                    if(!isTeammate(board.getBoard(), xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
+                        moves.add(board.getBoard()[ys[i]][xs[i]]);
                     }
                 }
             }

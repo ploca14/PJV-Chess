@@ -1,5 +1,7 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
+import cz.cvut.fel.pjv.model.Board;
+
 import java.util.ArrayList;
 
 public class Queen extends Chesspiece {
@@ -8,7 +10,7 @@ public class Queen extends Chesspiece {
     }
 
     @Override
-    public ArrayList<Tile> getLegalMoves(Tile currentPosition, Tile[][] board) {
+    public ArrayList<Tile> getLegalMoves(Tile currentPosition, Board board) {
         ArrayList<Tile> moves = new ArrayList<Tile>();
         Color color = currentPosition.getCurrentChessPiece().getColor();
         int x = currentPosition.getX();
@@ -17,8 +19,8 @@ public class Queen extends Chesspiece {
         /**
          * fill list of legal moves with moves for types Bishop and Rook
          */
-        bishopMoves(color, x, y, board, moves);
-        rookMoves(color, x, y, board, moves);
+        bishopMoves(color, x, y, board.getBoard(), moves);
+        rookMoves(color, x, y, board.getBoard(), moves);
 
         return moves;
     }
