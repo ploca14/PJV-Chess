@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.controller.network.LobbyController;
+import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.model.network.Lobby;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,7 +33,6 @@ public class ServerView {
 
         root.setSpacing(10);
         root.setPadding(new Insets(20));
-
         return scene;
     }
 

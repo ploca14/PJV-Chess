@@ -24,6 +24,11 @@ public class Queen extends Chesspiece {
 
         return moves;
     }
+
+    @Override
+    protected Integer getLastRoundMoved() {
+        return null;
+    }
     // :W
 
     @Override

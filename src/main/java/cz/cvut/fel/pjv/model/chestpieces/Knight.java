@@ -20,6 +20,11 @@ public class Knight extends Chesspiece {
     }
 
     @Override
+    protected Integer getLastRoundMoved() {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return "\u265E";
     }
