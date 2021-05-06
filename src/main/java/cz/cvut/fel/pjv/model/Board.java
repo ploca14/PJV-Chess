@@ -11,9 +11,18 @@ public class Board implements Serializable {
      * representation of board and black/white chesspieces
      */
     private Tile[][] board;
+    private boolean isEditable = false;
     public ArrayList<Chesspiece> whitePieces;
     public ArrayList<Chesspiece> blackPieces;
     private final Game game;
+
+    public boolean isEditable() {
+        return isEditable;
+    }
+
+    public void setEditable(boolean editable) {
+        isEditable = editable;
+    }
 
     public ArrayList<Chesspiece> getWhitePieces() {
         return whitePieces;

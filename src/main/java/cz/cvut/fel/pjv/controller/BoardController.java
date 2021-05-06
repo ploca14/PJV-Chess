@@ -8,7 +8,13 @@ import cz.cvut.fel.pjv.view.BoardView;
 import cz.cvut.fel.pjv.view.TileView;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 
@@ -35,6 +41,20 @@ public class BoardController {
             EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
+                    if(boardModel.isEditable()) {
+
+                        Label testLabel = new Label("MODAL");
+                        HBox hBox = new HBox();
+                        hBox.getChildren().add(testLabel);
+                        Scene scene = new Scene(hBox);
+                        Stage newWindow = new Stage();
+                        newWindow.setTitle("pick chesspiece");
+                        newWindow.setScene(scene);
+                        newWindow.initModality(Modality.WINDOW_MODAL);
+                        newWindow.initOwner(boardView.getScene().getWindow());
+                        newWindow.initStyle(StageStyle.UNDECORATED);
+                        newWindow.show();
+                    }
                     if (tileView.isLegalMove()) {
                         makeMove(tileView);
                     } else {
