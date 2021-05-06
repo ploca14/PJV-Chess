@@ -4,10 +4,17 @@ import cz.cvut.fel.pjv.controller.GameController;
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.view.GameView;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class ClientApp extends Application {
 
@@ -20,13 +27,16 @@ public class ClientApp extends Application {
         stage.setTitle("Chess Game");
         stage.setWidth(615);
         stage.setHeight(700);
+        stage.setResizable(false);
         stage.show();
 
         // This is just temporary
-        BorderPane pane = new BorderPane();
         Button startGame = new Button("Start local game");
-        pane.setCenter(startGame);
-        Scene scene = new Scene(pane);
+        Button loadGame = new Button("Load local game");
+        VBox vBox = new VBox(10);
+        vBox.getChildren().addAll(startGame, loadGame);
+        vBox.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(vBox);
         stage.setScene(scene);
 
         startGame.setOnAction((event) -> {
@@ -34,7 +44,27 @@ public class ClientApp extends Application {
             game.getBoard().placeChessPieces();
             GameView gameView = new GameView(game);
             new GameController(game, gameView);
-            stage.setScene(gameView.getScene());
+            stage.setScene(gameView.createScene());
         });
+
+        loadGame.setOnAction((actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Load Game");
+            fileChooser.setInitialFileName("Game");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Serialized Game File", "*.ser"));
+
+            File file = fileChooser.showOpenDialog(stage);
+
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                Game game = (Game) objectInputStream.readObject();
+                GameView gameView = new GameView(game);
+                new GameController(game, gameView);
+                stage.setScene(gameView.createScene());
+            } catch (IOException | ClassNotFoundException exception) {
+                exception.printStackTrace();
+            }
+        }));
     }
 }

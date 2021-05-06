@@ -2,7 +2,6 @@ package cz.cvut.fel.pjv;
 
 import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.chestpieces.*;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 

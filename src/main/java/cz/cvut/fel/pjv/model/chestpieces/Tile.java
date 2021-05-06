@@ -1,8 +1,8 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
-import javafx.scene.paint.Color;
+import java.io.Serializable;
 
-public class Tile {
+public class Tile implements Serializable {
     private final Color color;
     private final int x;
     private final int y;
@@ -16,7 +16,7 @@ public class Tile {
     public Tile(int x, int y) {
         this.x = x;
         this.y = y;
-        color = ((x + y) % 2) == 0 ? Color.BEIGE : Color.TAN;
+        color = ((x + y) % 2) == 0 ? Color.LIGHT : Color.DARK;
     }
 
     public Color getColor() {

@@ -1,11 +1,11 @@
 package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.model.chestpieces.*;
-import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Serializable {
 
     /**
      * representation of board and black/white chesspieces

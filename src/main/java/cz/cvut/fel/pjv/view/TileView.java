@@ -26,14 +26,14 @@ public class TileView extends StackPane {
     private void renderTile() {
         if (tileModel.getCurrentChessPiece() != null) {
             chessPieceText.setText(tileModel.getCurrentChessPiece().toString());
-            chessPieceText.setFill(tileModel.getCurrentChessPiece().getColor());
+            chessPieceText.setFill(tileModel.getCurrentChessPiece().getColor().getPaintColor());
         }
         chessPieceText.setFont(Font.font(50));
 
         DropShadow dropShadow = new DropShadow(2.5, Color.rgb(32,32,32));
         chessPieceText.setEffect(dropShadow);
 
-        rectangle.setFill(tileModel.getColor());
+        rectangle.setFill(tileModel.getColor().getPaintColor());
         rectangle.setHeight(75); // Should not be a magic number
         rectangle.setWidth(75); // Should not be a magic number
 
@@ -71,7 +71,7 @@ public class TileView extends StackPane {
             chessPieceText.setText(null);
         } else {
             chessPieceText.setText(tileModel.getCurrentChessPiece().toString());
-            chessPieceText.setFill(tileModel.getCurrentChessPiece().getColor());
+            chessPieceText.setFill(tileModel.getCurrentChessPiece().getColor().getPaintColor());
         }
     }
 }

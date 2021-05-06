@@ -1,10 +1,9 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
-import javafx.scene.paint.Color;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Chesspiece {
+public abstract class Chesspiece implements Serializable {
     private Tile currentPosition;
     private Color color;
 
