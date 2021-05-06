@@ -4,11 +4,16 @@ import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.Move;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.view.GameView;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
+
+import java.io.*;
 
 public class GameController {
     private final Game gameModel;
     private final GameView gameView;
     private final BoardController boardController;
+    private final FileChooser fileChooser = new FileChooser();
     private Chesspiece selectedPiece;
 
     public GameController(Game gameModel, GameView gameView) {
@@ -17,6 +22,37 @@ public class GameController {
 
         boardController = new BoardController(gameModel.getBoard(), gameView.getBoardView());
         boardController.setGameController(this);
+
+        initController();
+    }
+
+    private void initController() {
+        createEventListeners();
+
+        fileChooser.setTitle("Save Game");
+        fileChooser.setInitialFileName("Game");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Serialized Game File", "*.ser"));
+    }
+
+    private void createEventListeners() {
+        gameView.getSaveButton().setOnAction((event) -> {
+            Window stage = gameView.getScene().getWindow();
+            File file = fileChooser.showSaveDialog(stage);
+
+            saveGameToFile(file);
+        });
+    }
+
+    private void saveGameToFile(File file) {
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(gameModel);
+            objectOutputStream.close();
+        } catch (IOException ioException) {
+            // TODO: Logging
+            ioException.printStackTrace();
+        }
     }
 
     public Game getGameModel() {

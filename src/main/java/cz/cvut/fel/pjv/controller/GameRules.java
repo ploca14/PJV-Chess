@@ -6,7 +6,9 @@ import cz.cvut.fel.pjv.model.chestpieces.King;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
 import javafx.scene.paint.Color;
 
-public class GameRules {
+import java.io.Serializable;
+
+public class GameRules implements Serializable {
 
     Board b;
 

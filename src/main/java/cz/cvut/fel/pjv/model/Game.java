@@ -1,9 +1,11 @@
 package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.controller.GameRules;
-import javafx.scene.paint.Color;
+import cz.cvut.fel.pjv.model.chestpieces.Color;
 
-public class Game {
+import java.io.Serializable;
+
+public class Game implements Serializable {
     private final Board board = new Board();
     private final GameRules rules = new GameRules(board);
     private Color currentPlayer = Color.WHITE;

@@ -1,10 +1,8 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
-public class Pawn extends Chesspiece{
+public class Pawn extends Chesspiece {
     private boolean startingPosition = true;
 
     public Pawn(Color color, Tile currentPosition) {
