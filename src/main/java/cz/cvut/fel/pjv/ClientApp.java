@@ -33,11 +33,13 @@ public class ClientApp extends Application {
         // This is just temporary
         Button startGame = new Button("Start local game");
         Button loadGame = new Button("Load local game");
+        Button customGame = new Button("Start custom game");
         VBox vBox = new VBox(10);
-        vBox.getChildren().addAll(startGame, loadGame);
+        vBox.getChildren().addAll(startGame, loadGame, customGame);
         vBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(vBox);
         stage.setScene(scene);
+
 
         startGame.setOnAction((event) -> {
             Game game = new Game();
@@ -66,5 +68,13 @@ public class ClientApp extends Application {
                 exception.printStackTrace();
             }
         }));
+
+        customGame.setOnAction(actionEvent -> {
+            Game game = new Game();
+            game.getBoard().setEditable(true);
+            GameView gameView = new GameView(game);
+            new GameController(game, gameView);
+            stage.setScene(gameView.createScene());
+        });
     }
 }

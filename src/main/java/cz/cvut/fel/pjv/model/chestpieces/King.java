@@ -5,8 +5,11 @@ import cz.cvut.fel.pjv.model.Board;
 import java.util.ArrayList;
 
 public class King extends Chesspiece {
+    private boolean startingPosition;
+
     public King(Color color, Tile currentPosition) {
         super(color, currentPosition);
+        startingPosition = true;
     }
 
     @Override
@@ -48,7 +51,8 @@ public class King extends Chesspiece {
                 knightMoves(color, xs[i], ys[i], board.getBoard(), knightMovesList);
                 for (Tile t : knightMovesList
                 ) {
-                    if (t.currentChessPiece instanceof Knight && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) {
+                    if (t.currentChessPiece instanceof Knight
+                            && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) {
                         continueChecking = false;
                     }
                 }
@@ -64,7 +68,9 @@ public class King extends Chesspiece {
                 bishopMoves(color, xs[i], ys[i], board.getBoard(), bishopMovesList);
                 for (Tile t: bishopMovesList
                 ) {
-                    if ((t.currentChessPiece instanceof Bishop && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor()))) {
+                    if ((t.currentChessPiece instanceof Bishop
+                            && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen
+                            && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor()))) {
                         continueChecking = false;
                     }
                 }
@@ -80,7 +86,9 @@ public class King extends Chesspiece {
                 rookMoves(color, xs[i], ys[i], board.getBoard(), rookMovesList);
                 for (Tile t: rookMovesList
                 ) {
-                    if ((t.currentChessPiece instanceof Rook && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor()))) {
+                    if ((t.currentChessPiece instanceof Rook
+                            && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor())) || (t.currentChessPiece instanceof Queen
+                            && !isTeammate(board.getBoard(), x, y, t.getCurrentChessPiece().getColor()))) {
                         continueChecking = false;
                     }
                 }
@@ -110,9 +118,15 @@ public class King extends Chesspiece {
                     if(!isTeammate(board.getBoard(), xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
                         moves.add(board.getBoard()[ys[i]][xs[i]]);
                     }
+                } else if (!isOccupied(board.getBoard(), xs[i], ys[i])) {
+                    moves.add(board.getBoard()[ys[i]][xs[i]]);
                 }
             }
         }
+
+        canDoShortRosada(currentPosition, board.getBoard(), moves);
+
+        canDoLongRosada(currentPosition, board.getBoard(), moves);
 
         return moves;
     }
@@ -120,5 +134,36 @@ public class King extends Chesspiece {
     @Override
     public String toString() {
         return "\u265A";
+    }
+
+    private void canDoShortRosada(Tile currentPosition, Tile[][] board, ArrayList<Tile> moves) {
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
+        if(startingPosition) {
+            if(!isOutOfRange(x+3,y)) {
+                if(board[y][x+3].getCurrentChessPiece() instanceof Rook
+                        && ((Rook) board[y][x+3].getCurrentChessPiece()).isStartingPosition()
+                        && !isOccupied(board, x+1, y)
+                        && !isOccupied(board, x+2, y)) {
+                    moves.add(board[y][x+3]);
+                }
+            }
+        }
+    }
+
+    private void canDoLongRosada(Tile currentPosition, Tile[][] board, ArrayList<Tile> moves) {
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
+        if(startingPosition) {
+            if(!isOutOfRange(x-4,y)) {
+                if(board[y][x-4].getCurrentChessPiece() instanceof Rook
+                        && ((Rook) board[y][x-4].getCurrentChessPiece()).isStartingPosition()
+                        && !isOccupied(board, x-1, y)
+                        && !isOccupied(board, x-2, y)
+                        && !isOccupied(board, x-3, y))  {
+                    moves.add(board[y][x+3]);
+                }
+            }
+        }
     }
 }
