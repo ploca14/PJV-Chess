@@ -16,10 +16,6 @@ public class GameRules implements Serializable {
         b = board;
     }
 
-    public GameRules() {
-        Board b = new Board();
-    }
-
     /**
      *
      * @param color: color which is to move
@@ -48,7 +44,7 @@ public class GameRules implements Serializable {
              */
             for (Chesspiece c : b.getWhitePieces()
             ) {
-                for (Tile t : c.getLegalMoves(c.getCurrentPosition(), b.getBoard())
+                for (Tile t : c.getLegalMoves(c.getCurrentPosition(), b)
                 ) {
                     if (t.getX() == kingPosition.getX() && t.getY() == kingPosition.getY()) {
                         return true;
@@ -74,7 +70,7 @@ public class GameRules implements Serializable {
              */
             for (Chesspiece c: b.getBlackPieces()
             ) {
-                for (Tile t: c.getLegalMoves(c.getCurrentPosition(), b.getBoard())
+                for (Tile t: c.getLegalMoves(c.getCurrentPosition(), b)
                 ) {
                     if (t.getX() == kingPosition.getX() && t.getY() == kingPosition.getY()) {
                         return true;

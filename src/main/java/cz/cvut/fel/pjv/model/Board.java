@@ -13,6 +13,7 @@ public class Board implements Serializable {
     private Tile[][] board;
     public ArrayList<Chesspiece> whitePieces;
     public ArrayList<Chesspiece> blackPieces;
+    private final Game game;
 
     public ArrayList<Chesspiece> getWhitePieces() {
         return whitePieces;
@@ -22,6 +23,10 @@ public class Board implements Serializable {
         return blackPieces;
     }
 
+    public Game getGame() {
+        return game;
+    }
+
     public Tile[][] getBoard() {
         return board;
     }
@@ -29,7 +34,8 @@ public class Board implements Serializable {
     /**
      * board ctor
      */
-    public Board() {
+    public Board(Game game) {
+        this.game = game;
         board = new Tile[8][8];
         whitePieces = new ArrayList<>();
         blackPieces = new ArrayList<>();

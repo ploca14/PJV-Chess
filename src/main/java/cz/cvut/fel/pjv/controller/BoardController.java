@@ -61,7 +61,7 @@ public class BoardController {
         if (currentChesspiece == null) return;
 
         if (currentChesspiece.getColor().equals(gameController.getGameModel().getCurrentPlayer())) {
-            showLegalMoves(currentChesspiece.getLegalMoves(tile.getTileModel(), boardModel.getBoard()));
+            showLegalMoves(currentChesspiece.getLegalMoves(tile.getTileModel(), boardModel));
             gameController.setSelectedPiece(currentChesspiece);
         }
     }
