@@ -90,8 +90,4 @@ public class GameController {
         move.getEndingPosition().movePiece(move.getChesspiece());
         gameView.getBoardView().rerenderBoard();
     }
-
-    public void makeRosadaMove(Move move) {
-
-    }
 }
