@@ -166,7 +166,7 @@ public class King extends Chesspiece {
                         && !isOccupied(board, x-1, y)
                         && !isOccupied(board, x-2, y)
                         && !isOccupied(board, x-3, y))  {
-                    moves.add(board[y][x+3]);
+                    moves.add(board[y][x-4]);
                 }
             }
         }
