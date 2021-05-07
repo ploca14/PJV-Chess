@@ -130,11 +130,27 @@ public class Board implements Serializable {
         whitePieces.add(board[7][4].getCurrentChessPiece());
     }
 
-    public void removePiece(Chesspiece currentChessPiece) {
-        if (currentChessPiece.getColor().equals(Color.WHITE)) {
-            whitePieces.remove(currentChessPiece);
+    /**
+     * This method is used to remove a chesspiece from the board
+     * @param chesspiece The chesspiece to remove from the board
+     */
+    public void removePiece(Chesspiece chesspiece) {
+        if (chesspiece.getColor().equals(Color.WHITE)) {
+            whitePieces.remove(chesspiece);
         } else {
-            blackPieces.remove(currentChessPiece);
+            blackPieces.remove(chesspiece);
+        }
+    }
+
+    /**
+     * This method is used to add a new chesspiece to the board
+     * @param chesspiece The chess piece to add to the board
+     */
+    public void addPiece(Chesspiece chesspiece) {
+        if (chesspiece.getColor().equals(Color.WHITE)) {
+            whitePieces.add(chesspiece);
+        } else {
+            blackPieces.add(chesspiece);
         }
     }
 }
