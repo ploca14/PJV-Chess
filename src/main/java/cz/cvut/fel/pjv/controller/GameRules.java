@@ -7,10 +7,11 @@ import cz.cvut.fel.pjv.model.chestpieces.Tile;
 import javafx.scene.paint.Color;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class GameRules implements Serializable {
 
-    Board b;
+    private Board b;
 
     public GameRules(Board board) {
         b = board;
@@ -68,7 +69,7 @@ public class GameRules implements Serializable {
              * searching if any of enemy Chesspieces has King's position as it's legal move
              * if a match is found, fun returns true
              */
-            for (Chesspiece c: b.getBlackPieces()
+            for  (Chesspiece c: b.getBlackPieces()
             ) {
                 for (Tile t: c.getLegalMoves(c.getCurrentPosition(), b)
                 ) {
@@ -80,5 +81,67 @@ public class GameRules implements Serializable {
         }
 
         return false;
+    }
+
+    public ArrayList<Chesspiece> getMoveableChesspieces(Color color) {
+        ArrayList<Chesspiece> result = new ArrayList<>();
+        ArrayList<Chesspiece> checkedArrayList;
+        ArrayList<Tile> allLegalMoves;
+
+        if(color.equals(Color.WHITE)) {
+            if(isCheck(color)) {
+                checkedArrayList = b.whitePieces;
+                for (Chesspiece cp: checkedArrayList
+                     ) {
+                    allLegalMoves = cp.getLegalMoves(cp.getCurrentPosition(), b);
+                    for (Tile t: allLegalMoves
+                         ) {
+                        Tile oldPosition = cp.getCurrentPosition();
+                        cp.setCurrentPosition(t);
+                        if(!isCheck(Color.WHITE)) {
+                            result.add(cp);
+                        }
+                        cp.setCurrentPosition(oldPosition);
+                    }
+                }
+            }
+        } else {
+            if(isCheck(color)) {
+                checkedArrayList = b.blackPieces;
+                for (Chesspiece cp: checkedArrayList
+                ) {
+                    allLegalMoves = cp.getLegalMoves(cp.getCurrentPosition(), b);
+                    for (Tile t: allLegalMoves
+                    ) {
+                        Tile oldPosition = cp.getCurrentPosition();
+                        cp.setCurrentPosition(t);
+                        if(!isCheck(Color.BLACK)) {
+                            result.add(cp);
+                        }
+                        cp.setCurrentPosition(oldPosition);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<Tile> getLegalMovesForBlockingCheck(Chesspiece cp) {
+        ArrayList<Tile> moves;
+        ArrayList<Tile> movesFiltered = new ArrayList<>();
+
+        moves = cp.getLegalMoves(cp.getCurrentPosition(), b);
+
+        for (Tile t: moves
+             ) {
+            Tile oldPosition = t;
+            cp.setCurrentPosition(t);
+            if(!isCheck(cp.getColor().getPaintColor())) {
+                movesFiltered.add(t);
+            }
+            cp.setCurrentPosition(oldPosition);
+        }
+
+        return movesFiltered;
     }
 }

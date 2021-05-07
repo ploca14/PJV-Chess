@@ -8,6 +8,16 @@ import java.util.ArrayList;
 public abstract class Chesspiece implements Serializable {
     private Tile currentPosition;
     private Color color;
+    private int moveCount;
+    private Tile lastPosition;
+
+    public int getMoveCount() {
+        return moveCount;
+    }
+
+    public Tile getLastPosition() {
+        return lastPosition;
+    }
 
     public Chesspiece(Color color, Tile currentPosition) {
         this.color = color;
@@ -334,4 +344,6 @@ public abstract class Chesspiece implements Serializable {
     public void setCurrentPosition(Tile tile) {
         currentPosition = tile;
     }
+
+    protected abstract Integer getLastRoundMoved();
 }
