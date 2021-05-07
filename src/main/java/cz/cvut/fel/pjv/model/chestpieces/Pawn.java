@@ -92,8 +92,7 @@ public class Pawn extends Chesspiece {
                 }
             }
         }
-
-        return moves;
+    return moves;
     }
 
     @Override

@@ -100,7 +100,7 @@ public class King extends Chesspiece {
              * if there is enemy Chesspiece of type Pawn, move is not legal anymore
              * stop further testing: bool "continueChecking": true->false
              */
-            if(continueChecking) {
+            if(continueChecking && !isOutOfRange(xs[i], ys[i])) {
                 pawnMoves(color, xs[i], ys[i], board.getBoard(), pawnMovesList, false);
                 for (Tile t: pawnMovesList
                 ) {

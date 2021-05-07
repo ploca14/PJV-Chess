@@ -22,7 +22,7 @@ public class GameRules implements Serializable {
      * @param color: color which is to move
      * @return: if player to move is in Check, returns true
      */
-    public boolean isCheck(Color color) {
+    public boolean isCheck(Color color, Board b) {
         Chesspiece king = null;
         Tile kingPosition = null;
         if(color.equals(Color.BLACK)) {
@@ -83,6 +83,7 @@ public class GameRules implements Serializable {
         return false;
     }
 
+    /*
     public ArrayList<Chesspiece> getMoveableChesspieces(Color color) {
         ArrayList<Chesspiece> result = new ArrayList<>();
         ArrayList<Chesspiece> checkedArrayList;
@@ -124,22 +125,26 @@ public class GameRules implements Serializable {
             }
         }
         return result;
-    }
+    } */
 
-    public ArrayList<Tile> getLegalMovesForBlockingCheck(Chesspiece cp) {
+    public ArrayList<Tile> getLegalNotCheckMoves(Chesspiece cp) {
         ArrayList<Tile> moves;
         ArrayList<Tile> movesFiltered = new ArrayList<>();
+        Tile oldPosition = cp.getCurrentPosition();
+        Board controlBoard = b;
 
-        moves = cp.getLegalMoves(cp.getCurrentPosition(), b);
+        moves = cp.getLegalMoves(cp.getCurrentPosition(), controlBoard);
 
         for (Tile t: moves
              ) {
-            Tile oldPosition = t;
-            cp.setCurrentPosition(t);
-            if(!isCheck(cp.getColor())) {
+            //cp.setCurrentPosition(t);
+            Chesspiece oldCp = controlBoard.getBoard()[t.getY()][t.getX()].currentChessPiece;
+            controlBoard.getBoard()[t.getY()][t.getX()].currentChessPiece = cp;
+            if(!isCheck(cp.getColor(), controlBoard)) {
                 movesFiltered.add(t);
             }
-            cp.setCurrentPosition(oldPosition);
+            cp.setCurrentPosition(controlBoard.getBoard()[oldPosition.getY()][oldPosition.getX()]);
+            controlBoard.getBoard()[t.getY()][t.getX()].currentChessPiece = oldCp;
         }
 
         return movesFiltered;

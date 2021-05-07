@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
+import cz.cvut.fel.pjv.controller.GameRules;
 import cz.cvut.fel.pjv.model.Board;
 
 import java.io.Serializable;
@@ -279,10 +280,10 @@ public abstract class Chesspiece implements Serializable {
              * if starting position is false, Pawn can be moved +1
              */
             if (startingPosition) {
-                if(board[y-1][x].currentChessPiece == null) {
+                if(!isOutOfRange(x, y-1) && board[y-1][x].currentChessPiece == null) {
                     moves.add(board[y-1][x]);
                 }
-                if(board[y-2][x].currentChessPiece == null) {
+                if(!isOutOfRange(x, y-2) && board[y-2][x].currentChessPiece == null &&  !isOccupied(board, x, y-1)) {
                     moves.add(board[y-2][x]);
                 }
             } else {
@@ -312,10 +313,10 @@ public abstract class Chesspiece implements Serializable {
              * if starting position is false, Pawn can be moved +1
              */
             if (startingPosition) {
-                if (board[y+1][x].currentChessPiece == null) {
+                if (!isOutOfRange(x, y+1) && board[y+1][x].currentChessPiece == null) {
                     moves.add(board[y+1][x]);
                 }
-                if (board[y + 2][x].currentChessPiece == null) {
+                if (!isOutOfRange(x, y+2) &&board[y + 2][x].currentChessPiece == null &&  !isOccupied(board, x, y+1)) {
                     moves.add(board[y+2][x]);
                 }
             } else {
@@ -346,4 +347,18 @@ public abstract class Chesspiece implements Serializable {
     }
 
     protected abstract Integer getLastRoundMoved();
+
+    public boolean wouldntCauseCheck(Color color, Board board, Chesspiece cp, int x, int y) {
+        GameRules gameRules = new GameRules(board);
+        Board testBoard = board;
+
+        testBoard.getBoard()[y][x].setCurrentChessPiece(cp);
+        cp.setCurrentPosition(testBoard.getBoard()[y][x]);
+
+        if(gameRules.isCheck(color, testBoard)) {
+            return false;
+        }
+
+        return true;
+    }
 }
