@@ -4,7 +4,7 @@ import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.King;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
-import javafx.scene.paint.Color;
+import cz.cvut.fel.pjv.model.chestpieces.Color;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -136,7 +136,7 @@ public class GameRules implements Serializable {
              ) {
             Tile oldPosition = t;
             cp.setCurrentPosition(t);
-            if(!isCheck(cp.getColor().getPaintColor())) {
+            if(!isCheck(cp.getColor())) {
                 movesFiltered.add(t);
             }
             cp.setCurrentPosition(oldPosition);

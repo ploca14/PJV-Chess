@@ -168,9 +168,11 @@ public class BoardController {
 
         // If there is a chess piece we check whether the chess is the same color as the current player
         if (currentChesspiece.getColor().equals(gameController.getGameModel().getCurrentPlayer())) {
-            // If it is we generate all the legal moves for that piece and render them
-            showLegalMoves(currentChesspiece.getLegalMoves(tile.getTileModel(), boardModel));
-            // We also set the chess piece as the selected chess piece
+            if(gameController.getGameModel().getRules().isCheck(gameController.getGameModel().getCurrentPlayer())) {
+                showLegalMoves(gameController.getGameModel().getRules().getLegalMovesForBlockingCheck(currentChesspiece));
+            } else {
+                showLegalMoves(currentChesspiece.getLegalMoves(tile.getTileModel(), boardModel));
+            }
             gameController.setSelectedPiece(currentChesspiece);
         }
     }
