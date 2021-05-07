@@ -3,10 +3,11 @@ package cz.cvut.fel.pjv.controller;
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.Move;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
-import cz.cvut.fel.pjv.model.chestpieces.King;
-import cz.cvut.fel.pjv.model.chestpieces.Rook;
+import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.view.GameView;
+import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.*;
@@ -42,6 +43,21 @@ public class GameController {
             File file = fileChooser.showSaveDialog(stage);
 
             saveGameToFile(file);
+        });
+
+        gameView.getChooseSide().setOnAction((actionEvent -> {
+            if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
+                gameModel.switchPlayer();
+                ((Button) actionEvent.getSource()).setText("Add white pieces");
+            } else {
+                gameModel.switchPlayer();
+                ((Button) actionEvent.getSource()).setText("Add black pieces");
+            }
+        }));
+
+        gameView.getStartGame().setOnAction((event) -> {
+            gameModel.getBoard().setEditable(false);
+            ((Stage) gameView.getScene().getWindow()).setScene(gameView.createScene());
         });
     }
 

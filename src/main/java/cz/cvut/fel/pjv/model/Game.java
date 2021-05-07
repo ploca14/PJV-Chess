@@ -19,8 +19,18 @@ public class Game implements Serializable {
         return currentPlayer;
     }
 
+    /**
+     * This method is used to switch the current player
+     */
     public void switchPlayer() {
         currentPlayer = currentPlayer.equals(Color.WHITE) ? Color.BLACK : Color.WHITE;
+    }
+
+    /**
+     * This method switches the current player and increases the turn count
+     */
+    public void takeTurn() {
+        switchPlayer();
         turnCount++;
     }
 
