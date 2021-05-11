@@ -1,7 +1,9 @@
 package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.model.chestpieces.*;
+import cz.cvut.fel.pjv.model.chestpieces.Color;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -152,5 +154,20 @@ public class Board implements Serializable {
         } else {
             blackPieces.add(chesspiece);
         }
+    }
+
+    public int getNumberOfKings() {
+        ArrayList<Chesspiece> chesspieces = new ArrayList<>();
+        chesspieces.addAll(whitePieces);
+        chesspieces.addAll(blackPieces);
+
+        int frequency = 0;
+        for (Chesspiece chesspiece:
+                chesspieces) {
+            if (chesspiece.getClass().equals(King.class)) {
+                frequency++;
+            }
+        }
+        return frequency;
     }
 }

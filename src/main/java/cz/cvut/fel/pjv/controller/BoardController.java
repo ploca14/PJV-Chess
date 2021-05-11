@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.controller;
 
 import cz.cvut.fel.pjv.model.Board;
+import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.Move;
 import cz.cvut.fel.pjv.model.chestpieces.*;
 import cz.cvut.fel.pjv.view.BoardView;
@@ -8,6 +9,7 @@ import cz.cvut.fel.pjv.view.PiecePickerView;
 import cz.cvut.fel.pjv.view.TileView;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
@@ -17,10 +19,12 @@ public class BoardController {
     private final Board boardModel;
     private final BoardView boardView;
     private GameController gameController;
+    private final ChessPieceFactory chessPieceFactory;
 
     public BoardController(Board boardModel, BoardView boardView) {
         this.boardModel = boardModel;
         this.boardView = boardView;
+        this.chessPieceFactory = new ChessPieceFactory(boardModel);
 
         initController();
     }
@@ -41,7 +45,6 @@ public class BoardController {
                     // Check if the board is editable
                     if(boardModel.isEditable()) {
                         handleEdit(mouseEvent);
-
                     } else {
                         handleTurn();
                     }
@@ -54,7 +57,11 @@ public class BoardController {
                         removePiece(tileView);
                         // If the mouse event is a left click we choose a new piece
                     } else if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                        // If it is choose a piece for this tile
+                        // first we check if we didnt reach the maximum amount of chess pieces, if we did, we do nothing and return
+                        Game gameModel = gameController.getGameModel();
+                        if (gameModel.getCurrentPlayer().equals(Color.WHITE) && gameModel.getBoard().getWhitePieces().size() >= 16) return;
+                        if (gameModel.getCurrentPlayer().equals(Color.BLACK) && gameModel.getBoard().getBlackPieces().size() >= 16) return;
+                        // if we didnt we choose a piece for this tile
                         choosePieceForTile(tileView, true);
                     }
                 }
@@ -103,6 +110,7 @@ public class BoardController {
         // Create a modal window with the piece picker
         PiecePickerView piecePickerView = new PiecePickerView();
         piecePickerView.initOwner(boardView.getScene().getWindow());
+        piecePickerView.setChessPieceFactory(chessPieceFactory);
 
         // Get the current player
         Color currentPlayer = gameController.getGameModel().getCurrentPlayer();
@@ -110,7 +118,11 @@ public class BoardController {
         Chesspiece pickedPiece = piecePickerView.showPickDialog(tileView, currentPlayer, showAll);
 
         // Add the pickedPiece from the Picker modal to the board model
-        boardModel.addPiece(pickedPiece);
+        if (pickedPiece != null) {
+            boardModel.addPiece(pickedPiece);
+        } else {
+            new Alert(Alert.AlertType.ERROR, "You can't add any more of these pieces").show();
+        }
         // Set the picked piece position to this tile
         tileView.getTileModel().setCurrentChessPiece(pickedPiece);
         tileView.rerender();

@@ -16,7 +16,7 @@ public class Move {
         this.chesspiece = startingPosition.currentChessPiece;
 
         // Check if the move is a Pawn promoting move
-        if (chesspiece instanceof Pawn && endingPosition.getY() == 0 || endingPosition.getY() == 7) {
+        if (chesspiece.getClass().equals(Pawn.class) && (endingPosition.getY() == 0 || endingPosition.getY() == 7)) {
             isPawnPromoting = true;
         }
     }
