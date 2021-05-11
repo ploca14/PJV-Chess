@@ -141,28 +141,48 @@ public class BoardController {
         gameController.getGameModel().takeTurn();
     }
 
+    /**
+     * This method is used to select a chess piece from a specific tile, if there is one
+     * @param tile The tile from which we want to select a piece
+     */
     private void selectPiece(TileView tile) {
+        // First we get the current chess piece from the tile
         Chesspiece currentChesspiece = tile.getTileModel().getCurrentChessPiece();
+        // If there isn't one the do nothing and return
         if (currentChesspiece == null) return;
 
+        // If there is a chess piece we check whether the chess is the same color as the current player
         if (currentChesspiece.getColor().equals(gameController.getGameModel().getCurrentPlayer())) {
+            // If it is we generate all the legal moves for that piece and render them
             showLegalMoves(currentChesspiece.getLegalMoves(tile.getTileModel(), boardModel));
+            // We also set the chess piece as the selected chess piece
             gameController.setSelectedPiece(currentChesspiece);
         }
     }
 
+    /**
+     * This method is used to show al the provided legal moves on the board
+     * @param legalMoves The legal moves to show
+     */
     private void showLegalMoves(ArrayList<Tile> legalMoves) {
+        // We go through all the tiles in the board
         for (Node node : boardView.getChildren()) {
             TileView tileView = (TileView) node;
 
+            // And we set the tile to be a legal move if the tile is in the provided legal moves list
             tileView.setLegalMove(legalMoves.contains(tileView.getTileModel()));
         }
     }
 
+    /**
+     * This method is used to hide all the legal moves
+     */
     private void clearLegalMoves() {
+        // We go throud all the tiles in the board
         for (Node node : boardView.getChildren()) {
             TileView tileView = (TileView) node;
 
+            // And we set the tile to not be a legal move
             tileView.setLegalMove(false);
         }
     }

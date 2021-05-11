@@ -26,11 +26,19 @@ public class Lobby {
         return name;
     }
 
+    /**
+     * This method is used to add a player to the lobby
+     * @param playerThread The client socket thread of the player
+     */
     public void addPlayer(Thread playerThread) {
         connectedPlayers.add(playerThread);
         this.connectedPlayersCount.set(getConnectedPlayersCount() + 1);
     }
 
+    /**
+     * This method is used to remove a player from the lobby
+     * @param playerThread The client socket thread of the player
+     */
     public void removePlayer(Thread playerThread) {
         connectedPlayers.remove(playerThread);
         this.connectedPlayersCount.set(getConnectedPlayersCount() - 1);
