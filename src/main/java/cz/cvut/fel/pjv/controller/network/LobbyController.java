@@ -64,13 +64,21 @@ public class LobbyController implements Runnable {
         logger.info("Lobby " + lobby.getName() + " has finished");
     }
 
+    /**
+     * This method is used to wait for the two players to connect to the lobby
+     */
     private void acceptConnections() {
         try {
             while (lobby.getConnectedPlayersCount() < 2) {
-                Socket clientSocket =  serverSocket.accept();
+                Socket clientSocket =  serverSocket.accept(); // Here we wait for a player to connect
+
+                // Once a player connects to the lobby
                 logger.info("Player " + lobby.getConnectedPlayersCount() + " has connected to lobby " + lobby.getName());
+                // We create a new ClientThread from the client socket
                 ClientThread clientThread = new ClientThread(clientSocket, lobby.getConnectedPlayersCount());
                 clientThread.start();
+
+                // And we add the player to the lobby
                 lobby.addPlayer(clientThread);
             }
 
@@ -80,6 +88,9 @@ public class LobbyController implements Runnable {
         }
     }
 
+    /**
+     * This method is used to start the game and it will run until the game finishes
+     */
     private void startGame() {
         gameRunning = true;
         while (gameRunning) {
@@ -107,11 +118,14 @@ public class LobbyController implements Runnable {
         @Override
         public void run() {
             try {
+                // Once the player connects we send him his ID (TODO: We could send him the color instead)
                 outputStream.writeInt(playerID);
                 outputStream.flush();
 
+                // This makes sure the thread runs until the lobby is stopped
                 while (!stopRunning) {
                     try {
+                        // We wait for the user to send a move
                         Packet packet = (Packet) inputStream.readObject();
                         System.out.println(packet.getMove());
                         outputStream.writeBoolean(true);
@@ -130,11 +144,17 @@ public class LobbyController implements Runnable {
             }
         }
 
+        /**
+         * This method is used to stop the client thread once the lobby is stopped
+         */
         public synchronized void stopRunning() {
             stopRunning = true;
             closeConnection();
         }
 
+        /**
+         * This method is used to close the streams and the client socket
+         */
         private void closeConnection() {
             try {
                 inputStream.close();

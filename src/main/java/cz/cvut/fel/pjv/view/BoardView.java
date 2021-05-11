@@ -25,6 +25,9 @@ public class BoardView extends GridPane {
         }
     }
 
+    /**
+     * This method is used to rerender all the tiles in the board
+     */
     public void rerenderBoard() {
         for (Node node:
                 this.getChildren()) {

@@ -47,16 +47,25 @@ public class TileView extends StackPane {
         return tileModel;
     }
 
+    /**
+     * @return Whether this tile is a legal move of the selected chess piece
+     */
     public boolean isLegalMove() {
         return isLegalMove;
     }
 
+    /**
+     * @param isLegalMove Whether this tile should be rendered as a legal move of the selected chess piece
+     */
     public void setLegalMove(boolean isLegalMove) {
         this.isLegalMove = isLegalMove;
 
         showLegalMove();
     }
 
+    /**
+     * This method is used to render the legal move indicator (green circle)
+     */
     public void showLegalMove() {
         if (isLegalMove) {
             if (this.getChildren().contains(circle)) return;
@@ -66,6 +75,9 @@ public class TileView extends StackPane {
         }
     }
 
+    /**
+     * This method is used to rerender the tile
+     */
     public void rerender() {
         if (tileModel.getCurrentChessPiece() == null) {
             chessPieceText.setText(null);

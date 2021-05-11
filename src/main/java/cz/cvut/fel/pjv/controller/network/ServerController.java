@@ -17,20 +17,29 @@ public class ServerController {
         initController();
     }
 
+    /**
+     * This method is used to initialize the controller
+     */
     private void initController() {
+        // First we create the neccesary event listeners
         EventHandler<ActionEvent> buttonHandler = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                // When the user click on create lobby
                 try {
+                    // We get the values from the UI
                     String nameValue = view.getNameField().getText();
                     int portValue = Integer.parseInt(view.getPortField().getText());
 
+                    // We validate those values
                     if (validateName(nameValue) && validatePort(portValue)) {
+                        // If all the values are valid we create a new lobby
                         Lobby lobby = new Lobby(nameValue, portValue);
                         LobbyController lobbyController = new LobbyController(lobby, model);
-                        Thread thread = new Thread(lobbyController);
+                        Thread thread = new Thread(lobbyController); // Each lobby runs on its own thread
                         thread.start();
 
+                        // We add the lobby the the model so it gets represented in the UI
                         model.addLobby(lobby);
                     }
 
@@ -41,6 +50,8 @@ public class ServerController {
         };
 
         view.getCreateButton().setOnAction(buttonHandler);
+
+        // And we set the data source for our active lobbies table
         view.getTable().setItems(model.getLobbies());
     }
 
