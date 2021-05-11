@@ -5,6 +5,7 @@ import cz.cvut.fel.pjv.model.Move;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.view.GameView;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -53,16 +54,18 @@ public class GameController {
             File file = fileChooser.showSaveDialog(stage);
 
             // Then we save the game to the chosen file
-            saveGameToFile(file);
+            if (file != null) {
+                saveGameToFile(file);
+            }
         });
 
         //When the user clicks the switch sides button
         gameView.getChooseSide().setOnAction((actionEvent -> {
             // We change the button text
             if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
-                ((Button) actionEvent.getSource()).setText("Add white pieces");
+                gameView.getCurrentlyEditing().setText("Editing black pieces, black will start");
             } else {
-                ((Button) actionEvent.getSource()).setText("Add black pieces");
+                gameView.getCurrentlyEditing().setText("Editing white pieces, white will start");
             }
 
             // And then we switch the current player
@@ -71,6 +74,12 @@ public class GameController {
 
         // When the user click the start game button
         gameView.getStartGame().setOnAction((event) -> {
+            // First we check if there are two kings on the board, if not we show an error and return
+            if (gameModel.getBoard().getNumberOfKings() < 2) {
+                new Alert(Alert.AlertType.ERROR, "Game cannot be started, there must be two kings on the board").show();
+                return;
+            }
+
             // We set the board to not be editable
             gameModel.getBoard().setEditable(false);
             // And then we recreate the scene and switch the current window to the recreated scene

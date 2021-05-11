@@ -27,7 +27,7 @@ public class ClientApp extends Application {
     public void start(Stage stage) {
         stage.setTitle("Chess Game");
         stage.setWidth(615);
-        stage.setHeight(700);
+        stage.setMinHeight(615);
         stage.setResizable(false);
         stage.show();
 
@@ -58,15 +58,17 @@ public class ClientApp extends Application {
 
             File file = fileChooser.showOpenDialog(stage);
 
-            try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-                Game game = (Game) objectInputStream.readObject();
-                GameView gameView = new GameView(game);
-                new GameController(game, gameView);
-                stage.setScene(gameView.createScene());
-            } catch (IOException | ClassNotFoundException exception) {
-                exception.printStackTrace();
+            if (file != null) {
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(file);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                    Game game = (Game) objectInputStream.readObject();
+                    GameView gameView = new GameView(game);
+                    new GameController(game, gameView);
+                    stage.setScene(gameView.createScene());
+                } catch (IOException | ClassNotFoundException exception) {
+                    exception.printStackTrace();
+                }
             }
         }));
 

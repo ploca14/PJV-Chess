@@ -24,6 +24,7 @@ public class PiecePickerView extends Stage {
     Chesspiece chosenPiece;
     private TileView tile;
     private Color pieceColor;
+    private ChessPieceFactory chessPieceFactory;
 
     public PiecePickerView() {
         super(StageStyle.UNDECORATED);
@@ -37,27 +38,27 @@ public class PiecePickerView extends Stage {
         hBox.setPadding(new Insets(10));
 
         addPawn.setOnAction((event) -> {
-            chosenPiece = new Pawn(pieceColor, tile.getTileModel());
+            chosenPiece = chessPieceFactory.createPawn(pieceColor, tile.getTileModel());
             this.close();
         });
         addKnight.setOnAction((event) -> {
-            chosenPiece = new Knight(pieceColor, tile.getTileModel());
+            chosenPiece = chessPieceFactory.createKnight(pieceColor, tile.getTileModel());
             this.close();
         });
         addBishop.setOnAction((event) -> {
-            chosenPiece = new Bishop(pieceColor, tile.getTileModel());
+            chosenPiece = chessPieceFactory.createBishop(pieceColor, tile.getTileModel());
             this.close();
         });
         addRook.setOnAction((event) -> {
-            chosenPiece = new Rook(pieceColor, tile.getTileModel());
+            chosenPiece = chessPieceFactory.createRook(pieceColor, tile.getTileModel());
             this.close();
         });
         addQueen.setOnAction((event) -> {
-            chosenPiece = new Queen(pieceColor, tile.getTileModel());
+            chosenPiece = chessPieceFactory.createQueen(pieceColor, tile.getTileModel());
             this.close();
         });
         addKing.setOnAction((event) -> {
-            chosenPiece = new King(pieceColor, tile.getTileModel());
+            chosenPiece = chessPieceFactory.createKing(pieceColor, tile.getTileModel());
             this.close();
         });
 
@@ -86,5 +87,9 @@ public class PiecePickerView extends Stage {
         this.setScene(createScene(showAll));
         this.showAndWait();
         return chosenPiece;
+    }
+
+    public void setChessPieceFactory(ChessPieceFactory chessPieceFactory) {
+        this.chessPieceFactory = chessPieceFactory;
     }
 }

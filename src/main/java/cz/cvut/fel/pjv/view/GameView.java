@@ -1,11 +1,13 @@
 package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.model.Game;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class GameView {
     private final Game game;
@@ -14,7 +16,8 @@ public class GameView {
     private final TimerView timerView = new TimerView();
     private final Button saveButton = new Button("Save game");
     private final Button startGame = new Button("Start game");
-    private final Button chooseSide = new Button("Add black pieces");
+    private final Button chooseSide = new Button("Switch colors");
+    private final Text currentlyEditing = new Text("Editing white pieces, white will start");
     private VBox root;
 
     public GameView(Game game) {
@@ -31,6 +34,7 @@ public class GameView {
         scene = new Scene(root);
 
         root.setSpacing(10);
+        root.setPadding(new Insets(10));
         root.setAlignment(Pos.CENTER);
         root.getChildren().add(boardView);
 
@@ -38,7 +42,7 @@ public class GameView {
             HBox hBox = new HBox(startGame, chooseSide);
             hBox.setSpacing(10);
             hBox.setAlignment(Pos.CENTER);
-            root.getChildren().add(hBox);
+            root.getChildren().addAll(hBox, currentlyEditing);
         } else {
             root.getChildren().add(saveButton);
         }
@@ -80,5 +84,9 @@ public class GameView {
      */
     public Scene getScene() {
         return scene;
+    }
+
+    public Text getCurrentlyEditing() {
+        return currentlyEditing;
     }
 }
