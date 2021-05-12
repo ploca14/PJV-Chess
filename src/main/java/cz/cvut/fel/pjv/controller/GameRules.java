@@ -1,10 +1,7 @@
 package cz.cvut.fel.pjv.controller;
 
 import cz.cvut.fel.pjv.model.Board;
-import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
-import cz.cvut.fel.pjv.model.chestpieces.King;
-import cz.cvut.fel.pjv.model.chestpieces.Tile;
-import cz.cvut.fel.pjv.model.chestpieces.Color;
+import cz.cvut.fel.pjv.model.chestpieces.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -136,17 +133,19 @@ public class GameRules implements Serializable {
         moves = cp.getLegalMoves(cp.getCurrentPosition(), controlBoard);
 
         for (Tile t: moves
-             ) {
-            //cp.setCurrentPosition(t);
-            Chesspiece oldCp = controlBoard.getBoard()[t.getY()][t.getX()].currentChessPiece;
+        ) {
+            controlBoard.getBoard()[t.getY()][t.getX()].setCurrentChessPiece(cp);
+            controlBoard.getBoard()[oldPosition.getY()][oldPosition.getX()].setCurrentChessPiece(null);
+            cp.setCurrentPosition(controlBoard.getBoard()[t.getY()][t.getX()]);
             controlBoard.getBoard()[t.getY()][t.getX()].currentChessPiece = cp;
             if(!isCheck(cp.getColor(), controlBoard)) {
                 movesFiltered.add(t);
             }
-            cp.setCurrentPosition(controlBoard.getBoard()[oldPosition.getY()][oldPosition.getX()]);
-            controlBoard.getBoard()[t.getY()][t.getX()].currentChessPiece = oldCp;
+            controlBoard.getBoard()[t.getY()][t.getX()].currentChessPiece = null;
         }
 
+        cp.setCurrentPosition(oldPosition);
+        b.getBoard()[oldPosition.getY()][oldPosition.getX()].setCurrentChessPiece(cp);
         return movesFiltered;
     }
 }

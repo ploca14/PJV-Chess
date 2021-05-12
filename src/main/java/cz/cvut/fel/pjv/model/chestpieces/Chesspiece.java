@@ -280,14 +280,19 @@ public abstract class Chesspiece implements Serializable {
              * if starting position is false, Pawn can be moved +1
              */
             if (startingPosition) {
-                if(!isOutOfRange(x, y-1) && board[y-1][x].currentChessPiece == null) {
+                if(     !isOutOfRange(x, y-1)
+                        && board[y-1][x].currentChessPiece == null)
+                {
                     moves.add(board[y-1][x]);
                 }
-                if(!isOutOfRange(x, y-2) && board[y-2][x].currentChessPiece == null &&  !isOccupied(board, x, y-1)) {
+                if(     !isOutOfRange(x, y-2)
+                        && board[y-2][x].currentChessPiece == null
+                        && !isOccupied(board, x, y-1)) {
                     moves.add(board[y-2][x]);
                 }
             } else {
-                if(!isOutOfRange(x, y-1) && !isOccupied(board, x, y-1)) {
+                if(     !isOutOfRange(x, y-1)
+                        && !isOccupied(board, x, y-1)) {
                     moves.add(board[y-1][x]);
                 }
             }
@@ -296,13 +301,17 @@ public abstract class Chesspiece implements Serializable {
              * moves for taking enemy figures
              */
             if(!isOutOfRange(x+1, y-1)) {
-                if(isOccupied(board,x+1, y-1) && !isTeammate(board, x+1, y-1, currentPosition.getCurrentChessPiece().getColor())) {
+                if(     isOccupied(board,x+1, y-1)
+                        && !isTeammate(board, x+1, y-1, currentPosition.getCurrentChessPiece().getColor())
+                ) {
                     moves.add(board[y-1][x+1]);
                 }
             }
 
             if(!isOutOfRange(x-1, y-1)) {
-                if(isOccupied(board,x-1, y-1) && !isTeammate(board, x-1, y-1, currentPosition.getCurrentChessPiece().getColor())) {
+                if(     isOccupied(board,x-1, y-1)
+                        && !isTeammate(board, x-1, y-1, currentPosition.getCurrentChessPiece().getColor())
+                        ) {
                     moves.add(board[y-1][x-1]);
                 }
             }
@@ -313,14 +322,21 @@ public abstract class Chesspiece implements Serializable {
              * if starting position is false, Pawn can be moved +1
              */
             if (startingPosition) {
-                if (!isOutOfRange(x, y+1) && board[y+1][x].currentChessPiece == null) {
+                if (    !isOutOfRange(x, y+1)
+                        && board[y+1][x].currentChessPiece == null
+                        ) {
                     moves.add(board[y+1][x]);
                 }
-                if (!isOutOfRange(x, y+2) &&board[y + 2][x].currentChessPiece == null &&  !isOccupied(board, x, y+1)) {
+                if (    !isOutOfRange(x, y+2)
+                        && board[y + 2][x].currentChessPiece == null
+                        && !isOccupied(board, x, y+1)
+                        ) {
                     moves.add(board[y+2][x]);
                 }
             } else {
-                if (!isOutOfRange(x, y+1) && !isOccupied(board, x, y+1)) {
+                if (    !isOutOfRange(x, y+1)
+                        && !isOccupied(board, x, y+1)
+                        ) {
                     moves.add(board[y+1][x]);
                 }
             }
@@ -329,13 +345,17 @@ public abstract class Chesspiece implements Serializable {
              * moves for taking enemy figures
              */
             if (!isOutOfRange(x + 1, y+1)) {
-                if (isOccupied(board, x + 1, y+1) && !isTeammate(board, x + 1, y+1, currentPosition.getCurrentChessPiece().getColor())) {
+                if (    isOccupied(board, x + 1, y+1)
+                        && !isTeammate(board, x + 1, y+1, currentPosition.getCurrentChessPiece().getColor())
+                        ) {
                     moves.add(board[y+1][x + 1]);
                 }
             }
 
             if (!isOutOfRange(x - 1, y+1)) {
-                if (isOccupied(board, x - 1, y+1) && !isTeammate(board, x - 1, y+1, currentPosition.getCurrentChessPiece().getColor())) {
+                if (    isOccupied(board, x - 1, y+1)
+                        && !isTeammate(board, x - 1, y+1, currentPosition.getCurrentChessPiece().getColor())
+                        ) {
                     moves.add(board[y+1][x - 1]);
                 }
             }
@@ -347,18 +367,4 @@ public abstract class Chesspiece implements Serializable {
     }
 
     protected abstract Integer getLastRoundMoved();
-
-    public boolean wouldntCauseCheck(Color color, Board board, Chesspiece cp, int x, int y) {
-        GameRules gameRules = new GameRules(board);
-        Board testBoard = board;
-
-        testBoard.getBoard()[y][x].setCurrentChessPiece(cp);
-        cp.setCurrentPosition(testBoard.getBoard()[y][x]);
-
-        if(gameRules.isCheck(color, testBoard)) {
-            return false;
-        }
-
-        return true;
-    }
 }

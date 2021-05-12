@@ -47,7 +47,7 @@ public class Pawn extends Chesspiece {
         lastPosition = currentPosition;
 
         ArrayList<Tile> moves = new ArrayList<Tile>();
-        Color color = currentPosition.getCurrentChessPiece().getColor();
+        Color color = getCurrentPosition().getCurrentChessPiece().getColor();
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         pawnMoves(color, x, y, board.getBoard(), moves, startingPosition);

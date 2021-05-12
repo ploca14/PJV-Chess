@@ -170,6 +170,8 @@ public class BoardController {
         if (currentChesspiece.getColor().equals(gameController.getGameModel().getCurrentPlayer())) {
             if(gameController.getGameModel().getRules().isCheck(gameController.getGameModel().getCurrentPlayer(), boardModel) && currentChesspiece instanceof King) {
                 showLegalMoves(currentChesspiece.getLegalMoves(tile.getTileModel(), boardModel));
+            } else if(gameController.getGameModel().getRules().isCheck(gameController.getGameModel().getCurrentPlayer(), boardModel) ) {
+                showLegalMoves(gameController.getGameModel().getRules().getLegalNotCheckMoves(currentChesspiece));
             } else {
                 showLegalMoves(gameController.getGameModel().getRules().getLegalNotCheckMoves(currentChesspiece));
             }
