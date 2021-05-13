@@ -5,8 +5,8 @@ import cz.cvut.fel.pjv.model.Move;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.view.GameView;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -17,6 +17,8 @@ public class GameController {
     private final Game gameModel;
     private final GameView gameView;
     private final BoardController boardController;
+    private final TimerController whiteTimerController;
+    private final TimerController blackTimerController;
     private final FileChooser fileChooser = new FileChooser();
     private Chesspiece selectedPiece;
 
@@ -26,6 +28,14 @@ public class GameController {
 
         boardController = new BoardController(gameModel.getBoard(), gameView.getBoardView());
         boardController.setGameController(this);
+
+        whiteTimerController = new TimerController(gameModel.getWhiteTimer(), gameView.getWhiteTimerView(), this);
+        blackTimerController = new TimerController(gameModel.getBlackTimer(), gameView.getBlackTimerView(), this);
+
+        Thread whiteTimerThread = new Thread(whiteTimerController);
+        whiteTimerThread.start();
+        Thread blackTimerThread = new Thread(blackTimerController);
+        blackTimerThread.start();
 
         initController();
     }
@@ -41,6 +51,9 @@ public class GameController {
         fileChooser.setTitle("Save Game");
         fileChooser.setInitialFileName("Game");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Serialized Game File", "*.ser"));
+
+        // Start the clock
+        startClock();
     }
 
     /**
@@ -49,6 +62,10 @@ public class GameController {
     private void createEventListeners() {
         // When the user clicks on the save button
         gameView.getSaveButton().setOnAction((event) -> {
+            // Stop the timers
+            whiteTimerController.getTimer().setRunning(false);
+            blackTimerController.getTimer().setRunning(false);
+
             // We open the fileChooser save dialog and let the user choose where to save the current game
             Window stage = gameView.getScene().getWindow();
             File file = fileChooser.showSaveDialog(stage);
@@ -129,7 +146,6 @@ public class GameController {
      */
     public void makeMove(Move move) {
         // Remove the current piece from the starting position
-        Chesspiece startingPosition = move.getStartingPosition().getCurrentChessPiece();
         move.getStartingPosition().setCurrentChessPiece(null);
 
         // Check if the ending position is occupied
@@ -143,5 +159,36 @@ public class GameController {
         // Move the current piece to the ending position and rerender the board
         move.getEndingPosition().movePiece(move.getChesspiece());
         gameView.getBoardView().rerenderBoard();
+    }
+
+    public void takeTurn() {
+        gameModel.takeTurn();
+        startClock();
+    }
+
+    private void startClock() {
+        if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
+            whiteTimerController.start();
+            blackTimerController.pause();
+        } else {
+            whiteTimerController.pause();
+            blackTimerController.start();
+        }
+    }
+
+    public void playerRunOutOfTime() {
+        gameModel.setFinished(true);
+
+        if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
+            announceWinner("Black wins! White has run out of time!");
+        } else {
+            announceWinner("White wins! Black has run out of time!");
+        }
+    }
+
+    private void announceWinner(String message) {
+        Platform.runLater(() -> {
+            new Alert(Alert.AlertType.INFORMATION, message).show();
+        });
     }
 }

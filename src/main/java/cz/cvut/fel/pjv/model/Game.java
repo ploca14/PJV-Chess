@@ -10,6 +10,9 @@ public class Game implements Serializable {
     private final GameRules rules = new GameRules(board);
     private Color currentPlayer = Color.WHITE;
     private Integer turnCount = 0;
+    private final Timer whiteTimer = new Timer();
+    private final Timer blackTimer = new Timer();
+    private boolean finished = false;
 
     public Board getBoard() {
         return board;
@@ -40,5 +43,21 @@ public class Game implements Serializable {
 
     public Integer getTurnCount() {
         return turnCount;
+    }
+
+    public Timer getWhiteTimer() {
+        return whiteTimer;
+    }
+
+    public Timer getBlackTimer() {
+        return blackTimer;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public boolean getFinished() {
+        return finished;
     }
 }

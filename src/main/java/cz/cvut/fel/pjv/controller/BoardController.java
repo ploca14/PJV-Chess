@@ -67,6 +67,9 @@ public class BoardController {
                 }
 
                 private void handleTurn() {
+                    // If the game has already finished, do nothing and return
+                    if (gameController.getGameModel().getFinished()) return;
+
                     // If its not editable check if this tile is a legal move of the currenttly selected piece
                     if (gameController.getSelectedPiece() != null && tileView.isLegalMove()) {
                         // If it is then make a move to this tile
@@ -150,7 +153,7 @@ public class BoardController {
 
         // The we reset the selected piece and switch players
         gameController.setSelectedPiece(null);
-        gameController.getGameModel().takeTurn();
+        gameController.takeTurn();
     }
 
     /**
