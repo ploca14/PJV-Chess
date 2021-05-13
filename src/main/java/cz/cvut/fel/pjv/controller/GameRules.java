@@ -110,4 +110,25 @@ public class GameRules implements Serializable {
         board.getBoard()[oldPosition.getY()][oldPosition.getX()].setCurrentChessPiece(cp);
         return movesFiltered;
     }
+
+    public boolean ísCheckMate(Color color, Board b) {
+        ArrayList<Chesspiece> chesspieces;
+        if(color.equals(Color.BLACK)) {
+            chesspieces = b.getBlackPieces();
+
+        } else {
+            chesspieces = b.getBlackPieces();
+        }
+
+        for (Chesspiece c: chesspieces
+        ) {
+            {
+                ArrayList<Tile> moves = c.getLegalMoves(c.getCurrentPosition(), b);
+                if(moves.size() == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
