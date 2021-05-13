@@ -13,6 +13,12 @@ public class King extends Chesspiece {
     }
 
     @Override
+    public void move(Tile endingPosition) {
+        super.move(endingPosition);
+        startingPosition = false;
+    }
+
+    @Override
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Board board) {
         Color color = currentPosition.getCurrentChessPiece().getColor();
         int x = currentPosition.getX();
@@ -110,6 +116,12 @@ public class King extends Chesspiece {
                 }
             }
 
+            if(continueChecking && !isOutOfRange(xs[i], ys[i])) {
+                if(isKingAround(board.getBoard()[ys[i]][xs[i]], board, color)) {
+                    continueChecking = false;
+                }
+            }
+
             if(continueChecking) {
                 if(isOccupied(board.getBoard(), xs[i], ys[i])) {
                     if(isTeammate(board.getBoard(), xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
@@ -129,6 +141,23 @@ public class King extends Chesspiece {
         canDoLongRosada(currentPosition, board.getBoard(), moves);
 
         return moves;
+    }
+    private boolean isKingAround(Tile currentPosition, Board board, Color color) {
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
+
+        int[] xs = {x , x+1, x+1, x+1, x, x-1, x-1, x-1};
+        int[] ys = {y-1, y-1, y, y+1, y+1, y+1, y, y-1};
+
+        for (int i = 0; i < 8; i++) {
+            if(!isOutOfRange(xs[i], ys[i])) {
+                Tile position = board.getBoard()[ys[i]][xs[i]];
+                if(position.getCurrentChessPiece() instanceof King && !position.getCurrentChessPiece().getColor().equals(color)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -150,7 +179,7 @@ public class King extends Chesspiece {
                         && ((Rook) board[y][x+3].getCurrentChessPiece()).isStartingPosition()
                         && !isOccupied(board, x+1, y)
                         && !isOccupied(board, x+2, y)) {
-                    moves.add(board[y][x+3]);
+                    moves.add(board[y][x+2]);
                 }
             }
         }
@@ -160,13 +189,13 @@ public class King extends Chesspiece {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         if(startingPosition) {
-            if(!isOutOfRange(x-4,y)) {
+            if(!isOutOfRange(x-3,y) && !isOutOfRange(x-4, y)) {
                 if(board[y][x-4].getCurrentChessPiece() instanceof Rook
                         && ((Rook) board[y][x-4].getCurrentChessPiece()).isStartingPosition()
                         && !isOccupied(board, x-1, y)
                         && !isOccupied(board, x-2, y)
                         && !isOccupied(board, x-3, y))  {
-                    moves.add(board[y][x-4]);
+                    moves.add(board[y][x-2]);
                 }
             }
         }

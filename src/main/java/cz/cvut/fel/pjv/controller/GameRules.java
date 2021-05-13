@@ -111,24 +111,24 @@ public class GameRules implements Serializable {
         return movesFiltered;
     }
 
-    public boolean ísCheckMate(Color color, Board b) {
+    public boolean isEndgame(Color color, Board b) {
         ArrayList<Chesspiece> chesspieces;
+
         if(color.equals(Color.BLACK)) {
             chesspieces = b.getBlackPieces();
-
         } else {
-            chesspieces = b.getBlackPieces();
+            chesspieces = b.getWhitePieces();
         }
 
+        int sum = 0;
         for (Chesspiece c: chesspieces
         ) {
             {
-                ArrayList<Tile> moves = c.getLegalMoves(c.getCurrentPosition(), b);
-                if(moves.size() == 0) {
-                    return false;
-                }
+                ArrayList<Tile> moves = getLegalNotCheckMoves(c);
+                sum += moves.size();
             }
         }
-        return true;
+        System.out.println(sum+"");
+        return sum == 0;
     }
 }

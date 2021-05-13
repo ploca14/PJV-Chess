@@ -149,11 +149,33 @@ public class BoardController {
             gameController.getGameModel().getBoard().removePiece(gameController.getSelectedPiece());
             // And then we choose a new piece
             choosePieceForTile(tile, false);
+        } else if(move.isShortRosada()) {
+            Tile startingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()+1];
+            Tile endingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()-1];
+            Move shortRosadaMove = new Move(startingTile, endingTile);
+            gameController.makeMove(shortRosadaMove);
+        } else if(move.isLongRosada()) {
+            Tile startingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()-2];
+            Tile endingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()+1];
+            Move longRosadaMove = new Move(startingTile, endingTile);
+            gameController.makeMove(longRosadaMove);
+        } else if(move.isEnPassant()) {
+            //Tile tileToRemove = boardModel.getBoard()[move.getStartingPosition().getY()][tile.getTileModel().getX()];
+            TileView tileToRemove = boardView.getNodeByRowColumnIndex(move.getStartingPosition().getY(), tile.getTileModel().getX());
+            removePiece(tileToRemove);
         }
 
         // The we reset the selected piece and switch players
         gameController.setSelectedPiece(null);
         gameController.takeTurn();
+
+        if(gameController.getGameModel().getRules().isEndgame(gameController.getGameModel().getCurrentPlayer(), boardModel)) {
+            if(gameController.getGameModel().getRules().isCheck(gameController.getGameModel().getCurrentPlayer(), boardModel)) {
+                gameController.playerWon();
+            } else {
+                gameController.playerDraw();
+            }
+        }
     }
 
     /**

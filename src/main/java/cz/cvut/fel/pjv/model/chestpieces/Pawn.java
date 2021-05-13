@@ -42,8 +42,6 @@ public class Pawn extends Chesspiece {
     @Override
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Board board) {
         playingBoard = board;
-        System.out.println(board.getGame().getCurrentPlayer());
-        System.out.println(board.getGame().getTurnCount());
         lastPosition = currentPosition;
 
         ArrayList<Tile> moves = new ArrayList<Tile>();

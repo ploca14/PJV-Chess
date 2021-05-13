@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.model;
 
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
+import cz.cvut.fel.pjv.model.chestpieces.King;
 import cz.cvut.fel.pjv.model.chestpieces.Pawn;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
 
@@ -9,6 +10,9 @@ public class Move {
     private final Tile endingPosition;
     private final Chesspiece chesspiece;
     private boolean isPawnPromoting = false;
+    private boolean isShortRosada = false;
+    private boolean isLongRosada = false;
+    private boolean isEnPassant = false;
 
     public Move(Tile startingPosition, Tile endingPosition) {
         this.startingPosition = startingPosition;
@@ -18,8 +22,18 @@ public class Move {
         // Check if the move is a Pawn promoting move
         if (chesspiece.getClass().equals(Pawn.class) && (endingPosition.getY() == 0 || endingPosition.getY() == 7)) {
             isPawnPromoting = true;
+        } else if(chesspiece.getClass().equals(King.class) && endingPosition.getY() == startingPosition.getY() && endingPosition.getX() - 2 == startingPosition.getX()) {
+            isShortRosada = true;
+        } else if(chesspiece.getClass().equals(King.class) && endingPosition.getY() == startingPosition.getY() && endingPosition.getX() + 2 == startingPosition.getX()) {
+            isLongRosada = true;
+        } else if(chesspiece.getClass().equals(Pawn.class) && endingPosition.getX() != startingPosition.getX() && endingPosition.getCurrentChessPiece() == null) {
+            isEnPassant = true;
         }
     }
+
+    public boolean isEnPassant() { return isEnPassant; }
+    public boolean isShortRosada() { return isShortRosada; }
+    public boolean isLongRosada() { return isLongRosada; }
 
     public Tile getStartingPosition() {
         return startingPosition;

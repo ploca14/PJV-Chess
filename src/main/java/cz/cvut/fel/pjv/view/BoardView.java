@@ -2,6 +2,7 @@ package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.model.Board;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
@@ -33,5 +34,18 @@ public class BoardView extends GridPane {
                 this.getChildren()) {
             ((TileView) node).rerender();
         }
+    }
+    public TileView getNodeByRowColumnIndex (final int row, final int column) {
+        Node result = null;
+        ObservableList<Node> childrens = this.getChildren();
+
+        for (Node node : childrens) {
+            if(this.getRowIndex(node) == row && this.getColumnIndex(node) == column) {
+                result = node;
+                break;
+            }
+        }
+
+        return (TileView)result;
     }
 }
