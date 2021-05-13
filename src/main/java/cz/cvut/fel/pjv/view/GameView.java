@@ -38,7 +38,7 @@ public class GameView {
         scene = new Scene(root);
 
         root.setSpacing(10);
-        root.setPadding(new Insets(10));
+        root.setPadding(new Insets(10, 0, 10, 0));
         root.setAlignment(Pos.CENTER);
         root.getChildren().add(blackTimerView);
         root.getChildren().add(boardView);

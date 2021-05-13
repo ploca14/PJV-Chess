@@ -53,7 +53,9 @@ public class GameController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Serialized Game File", "*.ser"));
 
         // Start the clock
-        startClock();
+        if (!gameModel.getBoard().isEditable()) {
+            startClock();
+        }
     }
 
     /**
@@ -99,8 +101,10 @@ public class GameController {
 
             // We set the board to not be editable
             gameModel.getBoard().setEditable(false);
-            // And then we recreate the scene and switch the current window to the recreated scene
+            // Then we recreate the scene and switch the current window to the recreated scene
             ((Stage) gameView.getScene().getWindow()).setScene(gameView.createScene());
+            // Then we start the clock
+            startClock();
         });
     }
 
