@@ -42,12 +42,10 @@ public class Pawn extends Chesspiece {
     @Override
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Board board) {
         playingBoard = board;
-        System.out.println(board.getGame().getCurrentPlayer());
-        System.out.println(board.getGame().getTurnCount());
         lastPosition = currentPosition;
 
         ArrayList<Tile> moves = new ArrayList<Tile>();
-        Color color = currentPosition.getCurrentChessPiece().getColor();
+        Color color = getCurrentPosition().getCurrentChessPiece().getColor();
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         pawnMoves(color, x, y, board.getBoard(), moves, startingPosition);
@@ -92,8 +90,7 @@ public class Pawn extends Chesspiece {
                 }
             }
         }
-
-        return moves;
+    return moves;
     }
 
     @Override

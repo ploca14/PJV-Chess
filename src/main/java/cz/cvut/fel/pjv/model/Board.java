@@ -34,12 +34,24 @@ public class Board implements Serializable {
         return blackPieces;
     }
 
+    public void setWhitePieces(ArrayList<Chesspiece> whitePieces) {
+        this.whitePieces = whitePieces;
+    }
+
+    public void setBlackPieces(ArrayList<Chesspiece> blackPieces) {
+        this.blackPieces = blackPieces;
+    }
+
     public Game getGame() {
         return game;
     }
 
     public Tile[][] getBoard() {
         return board;
+    }
+
+    public void setBoard(Tile[][] board) {
+        this.board = board;
     }
 
     /**

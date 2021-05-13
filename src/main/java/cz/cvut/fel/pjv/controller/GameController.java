@@ -195,4 +195,17 @@ public class GameController {
             new Alert(Alert.AlertType.INFORMATION, message).show();
         });
     }
+
+    public void playerWon() {
+        gameModel.setFinished(true);
+        if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
+            announceWinner("Black wins!");
+        } else {
+            announceWinner("White wins!");
+        }
+    }
+
+    public void playerDraw() {
+        announceWinner("draw");
+    }
 }
