@@ -13,8 +13,10 @@ public class GameView {
     private final Game game;
     private final BoardView boardView;
     private Scene scene;
-    private final TimerView timerView = new TimerView();
+    private final TimerView whiteTimerView;
+    private final TimerView blackTimerView;
     private final Button saveButton = new Button("Save game");
+    private final Button mainMenuButton = new Button("Main menu");
     private final Button startGame = new Button("Start game");
     private final Button chooseSide = new Button("Switch colors");
     private final Text currentlyEditing = new Text("Editing white pieces, white will start");
@@ -23,6 +25,8 @@ public class GameView {
     public GameView(Game game) {
         this.game = game;
         boardView = new BoardView(game.getBoard());
+        whiteTimerView = new TimerView(game.getWhiteTimer());
+        blackTimerView = new TimerView((game.getBlackTimer()));
     }
 
     /**
@@ -36,16 +40,19 @@ public class GameView {
         root.setSpacing(10);
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.CENTER);
+        root.getChildren().add(blackTimerView);
         root.getChildren().add(boardView);
+        root.getChildren().add(whiteTimerView);
 
+        HBox hBox = new HBox();
+        hBox.setSpacing(10);
+        hBox.setAlignment(Pos.CENTER);
         if (game.getBoard().isEditable()) {
-            HBox hBox = new HBox(startGame, chooseSide);
-            hBox.setSpacing(10);
-            hBox.setAlignment(Pos.CENTER);
-            root.getChildren().addAll(hBox, currentlyEditing);
+            hBox.getChildren().addAll(currentlyEditing, startGame, chooseSide);
         } else {
-            root.getChildren().add(saveButton);
+            hBox.getChildren().addAll(saveButton, mainMenuButton);
         }
+        root.getChildren().add(hBox);
 
         return scene;
     }
@@ -56,7 +63,6 @@ public class GameView {
     public BoardView getBoardView() {
         return boardView;
     }
-
 
     /**
      * @return The save button
@@ -70,6 +76,13 @@ public class GameView {
      */
     public Button getStartGame() {
         return startGame;
+    }
+
+    /**
+     * @return The main menu button
+     */
+    public Button getMainMenuButton() {
+        return mainMenuButton;
     }
 
     /**
@@ -88,5 +101,13 @@ public class GameView {
 
     public Text getCurrentlyEditing() {
         return currentlyEditing;
+    }
+
+    public TimerView getWhiteTimerView() {
+        return whiteTimerView;
+    }
+
+    public TimerView getBlackTimerView() {
+        return blackTimerView;
     }
 }
