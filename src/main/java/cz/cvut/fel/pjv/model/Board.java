@@ -149,7 +149,7 @@ public class Board implements Serializable {
      * @param chesspiece The chesspiece to remove from the board
      */
     public void removePiece(Chesspiece chesspiece) {
-        if (chesspiece.getColor().equals(Color.WHITE)) {
+        if ( chesspiece.getColor().equals(Color.WHITE)) {
             whitePieces.remove(chesspiece);
         } else {
             blackPieces.remove(chesspiece);

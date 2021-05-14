@@ -2,9 +2,14 @@ package cz.cvut.fel.pjv.controller;
 
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.Move;
+import cz.cvut.fel.pjv.model.chestpieces.ChessPieceFactory;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
+import cz.cvut.fel.pjv.model.chestpieces.Tile;
+import cz.cvut.fel.pjv.model.player.Ai;
+import cz.cvut.fel.pjv.view.BoardView;
 import cz.cvut.fel.pjv.view.GameView;
+import cz.cvut.fel.pjv.view.TileView;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
@@ -17,10 +22,11 @@ public class GameController {
     private final Game gameModel;
     private final GameView gameView;
     private final BoardController boardController;
-    private final TimerController whiteTimerController;
-    private final TimerController blackTimerController;
+    private TimerController whiteTimerController;
+    private TimerController blackTimerController;
     private final FileChooser fileChooser = new FileChooser();
     private Chesspiece selectedPiece;
+    private Ai ai;
 
     public GameController(Game gameModel, GameView gameView) {
         this.gameModel = gameModel;
@@ -29,13 +35,17 @@ public class GameController {
         boardController = new BoardController(gameModel.getBoard(), gameView.getBoardView());
         boardController.setGameController(this);
 
-        whiteTimerController = new TimerController(gameModel.getWhiteTimer(), gameView.getWhiteTimerView(), this);
-        blackTimerController = new TimerController(gameModel.getBlackTimer(), gameView.getBlackTimerView(), this);
+        if (gameModel.isVersusAi()) {
+            ai = new Ai(gameModel.getRules());
+        } else {
+            whiteTimerController = new TimerController(gameModel.getWhiteTimer(), gameView.getWhiteTimerView(), this);
+            blackTimerController = new TimerController(gameModel.getBlackTimer(), gameView.getBlackTimerView(), this);
 
-        Thread whiteTimerThread = new Thread(whiteTimerController);
-        whiteTimerThread.start();
-        Thread blackTimerThread = new Thread(blackTimerController);
-        blackTimerThread.start();
+            Thread whiteTimerThread = new Thread(whiteTimerController);
+            whiteTimerThread.start();
+            Thread blackTimerThread = new Thread(blackTimerController);
+            blackTimerThread.start();
+        }
 
         initController();
     }
@@ -53,7 +63,7 @@ public class GameController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Serialized Game File", "*.ser"));
 
         // Start the clock
-        if (!gameModel.getBoard().isEditable()) {
+        if (!(gameModel.getBoard().isEditable() || gameModel.isVersusAi())) {
             startClock();
         }
     }
@@ -167,7 +177,25 @@ public class GameController {
 
     public void takeTurn() {
         gameModel.takeTurn();
-        startClock();
+        checkGameState();
+        if (gameModel.isVersusAi()) {
+            Move move = ai.chooseRandomMove(gameModel.getCurrentPlayer(), gameModel.getBoard());
+            boardController.makeAiMove(move);
+            gameModel.takeTurn();
+            checkGameState();
+        } else {
+            startClock();
+        }
+    }
+
+    public void checkGameState() {
+        if(gameModel.getRules().isEndgame(gameModel.getCurrentPlayer(), gameModel.getBoard())) {
+            if(gameModel.getRules().isCheck(gameModel.getCurrentPlayer(), gameModel.getBoard())) {
+                playerWon();
+            } else {
+                playerDraw();
+            }
+        }
     }
 
     private void startClock() {
@@ -191,9 +219,10 @@ public class GameController {
     }
 
     private void announceWinner(String message) {
-        Platform.runLater(() -> {
-            new Alert(Alert.AlertType.INFORMATION, message).show();
-        });
+        // Show alert with winner
+        new Alert(Alert.AlertType.INFORMATION, message).show();
+
+        gameView.getSaveButton().setDisable(true);
     }
 
     public void playerWon() {
@@ -207,5 +236,9 @@ public class GameController {
 
     public void playerDraw() {
         announceWinner("draw");
+    }
+
+    public Chesspiece getRandomPiece(TileView forTileView, Color color, ChessPieceFactory chessPieceFactory) {
+        return ai.chooseRandomPiece(forTileView.getTileModel(), color, chessPieceFactory);
     }
 }

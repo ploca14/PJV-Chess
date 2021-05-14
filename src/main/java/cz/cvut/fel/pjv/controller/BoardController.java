@@ -118,7 +118,12 @@ public class BoardController {
         // Get the current player
         Color currentPlayer = gameController.getGameModel().getCurrentPlayer();
         // Show the dialog for this tile and current player
-        Chesspiece pickedPiece = piecePickerView.showPickDialog(tileView, currentPlayer, showAll);
+        Chesspiece pickedPiece;
+        if (gameController.getGameModel().isVersusAi() && gameController.getGameModel().getCurrentPlayer().equals(Color.BLACK)) {
+            pickedPiece = gameController.getRandomPiece(tileView, currentPlayer, chessPieceFactory);
+        } else {
+            pickedPiece = piecePickerView.showPickDialog(tileView, currentPlayer, showAll);
+        }
 
         // Add the pickedPiece from the Picker modal to the board model
         if (pickedPiece != null) {
@@ -135,7 +140,7 @@ public class BoardController {
      * This method is used to perform a move on the board
      * @param tile The ending tile for the move
      */
-    private void makeMove(TileView tile) {
+    public void makeMove(TileView tile) {
         // First we instantiate a new Move with the current and ending position
         Move move = new Move(gameController.getSelectedPiece().getCurrentPosition(), tile.getTileModel());
         // Then we tell the gameController to perform the move
@@ -143,38 +148,47 @@ public class BoardController {
         // Then we hide the legal moves of the moving piece
         clearLegalMoves();
 
+        checkSpecialMoves(move);
+
+        // The we reset the selected piece and switch players
+        gameController.setSelectedPiece(null);
+        gameController.takeTurn();
+    }
+
+    public void makeAiMove(Move move) {
+        // Set the random move chess piece as selected
+        gameController.setSelectedPiece(move.getChesspiece());
+
+        // We tell the gameController to perform the move
+        gameController.makeMove(move);
+
+        checkSpecialMoves(move);
+
+        // The we reset the selected piece
+        gameController.setSelectedPiece(null);
+    }
+
+    private void checkSpecialMoves(Move move) {
         // Then we check if the move is a pawn promoting move
         if (move.isPawnPromoting()) {
             // If it is a pawn promoting move we delete the pawn
             gameController.getGameModel().getBoard().removePiece(gameController.getSelectedPiece());
             // And then we choose a new piece
-            choosePieceForTile(tile, false);
+            TileView tileToChoose = boardView.getNodeByRowColumnIndex(move.getEndingPosition().getY(), move.getEndingPosition().getX());
+            choosePieceForTile(tileToChoose, false);
         } else if(move.isShortRosada()) {
-            Tile startingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()+1];
-            Tile endingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()-1];
+            Tile startingTile = boardModel.getBoard()[move.getEndingPosition().getY()][move.getEndingPosition().getX()+1];
+            Tile endingTile = boardModel.getBoard()[move.getEndingPosition().getY()][move.getEndingPosition().getX()-1];
             Move shortRosadaMove = new Move(startingTile, endingTile);
             gameController.makeMove(shortRosadaMove);
         } else if(move.isLongRosada()) {
-            Tile startingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()-2];
-            Tile endingTile = boardModel.getBoard()[tile.getTileModel().getY()][tile.getTileModel().getX()+1];
+            Tile startingTile = boardModel.getBoard()[move.getEndingPosition().getY()][move.getEndingPosition().getX()-2];
+            Tile endingTile = boardModel.getBoard()[move.getEndingPosition().getY()][move.getEndingPosition().getX()+1];
             Move longRosadaMove = new Move(startingTile, endingTile);
             gameController.makeMove(longRosadaMove);
         } else if(move.isEnPassant()) {
-            //Tile tileToRemove = boardModel.getBoard()[move.getStartingPosition().getY()][tile.getTileModel().getX()];
-            TileView tileToRemove = boardView.getNodeByRowColumnIndex(move.getStartingPosition().getY(), tile.getTileModel().getX());
+            TileView tileToRemove = boardView.getNodeByRowColumnIndex(move.getStartingPosition().getY(), move.getEndingPosition().getX());
             removePiece(tileToRemove);
-        }
-
-        // The we reset the selected piece and switch players
-        gameController.setSelectedPiece(null);
-        gameController.takeTurn();
-
-        if(gameController.getGameModel().getRules().isEndgame(gameController.getGameModel().getCurrentPlayer(), boardModel)) {
-            if(gameController.getGameModel().getRules().isCheck(gameController.getGameModel().getCurrentPlayer(), boardModel)) {
-                gameController.playerWon();
-            } else {
-                gameController.playerDraw();
-            }
         }
     }
 
