@@ -1,7 +1,9 @@
 package cz.cvut.fel.pjv.model.player;
 
+import cz.cvut.fel.pjv.controller.GameRules;
 import cz.cvut.fel.pjv.model.Board;
-import cz.cvut.fel.pjv.model.Game;
+import cz.cvut.fel.pjv.model.Move;
+import cz.cvut.fel.pjv.model.chestpieces.ChessPieceFactory;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
@@ -9,36 +11,53 @@ import cz.cvut.fel.pjv.model.chestpieces.Tile;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Ai extends Board {
+public class Ai {
+    private final Random random = new Random();
+    private final GameRules gameRules;
 
-    public Ai(Game game) {
-        super(game);
+    public Ai(GameRules gameRules) {
+        this.gameRules = gameRules;
     }
 
-    public Tile chooseRandomMove(Color color, Board board) {
+    public Move chooseRandomMove(Color color, Board board) {
         ArrayList<Chesspiece> movedArray;
 
         if(color.equals(Color.WHITE)) {
-            movedArray = getWhitePieces();
+            movedArray = board.getWhitePieces();
         } else {
-            movedArray = getBlackPieces();
+            movedArray = board.getBlackPieces();
         }
 
         int i = index(movedArray);
         Chesspiece cp = movedArray.get(i);
 
-        ArrayList<Tile> legalMoves = cp.getLegalMoves(cp.getCurrentPosition(), board);
+        ArrayList<Tile> legalMoves = gameRules.getLegalNotCheckMoves(cp);
+
+        while (legalMoves.size() == 0) {
+            cp = movedArray.get(index(movedArray));
+            legalMoves = gameRules.getLegalNotCheckMoves(cp);
+        }
+
         i = index(legalMoves);
         Tile move = legalMoves.get(i);
 
-        return move;
+        return new Move(cp.getCurrentPosition(), move);
    }
 
-   public int index(ArrayList<?> arrayList) {
-       Random r = new Random();
+   private int index(ArrayList<?> arrayList) {
        int bot = 0;
        int top = arrayList.size();
-       int i = r.nextInt(top-bot) + bot;
+       int i = random.nextInt(top-bot) + bot;
        return i;
    }
+
+    public Chesspiece chooseRandomPiece(Tile forTile, Color color, ChessPieceFactory chessPieceFactory) {
+        return switch (random.nextInt(4)) {
+            case 0 -> chessPieceFactory.createKnight(color, forTile);
+            case 1 -> chessPieceFactory.createBishop(color, forTile);
+            case 2 -> chessPieceFactory.createRook(color, forTile);
+            case 3 -> chessPieceFactory.createQueen(color, forTile);
+            default -> null;
+        };
+    }
 }

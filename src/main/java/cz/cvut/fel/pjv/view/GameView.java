@@ -13,8 +13,8 @@ public class GameView {
     private final Game game;
     private final BoardView boardView;
     private Scene scene;
-    private final TimerView whiteTimerView;
-    private final TimerView blackTimerView;
+    private TimerView whiteTimerView;
+    private TimerView blackTimerView;
     private final Button saveButton = new Button("Save game");
     private final Button mainMenuButton = new Button("Main menu");
     private final Button startGame = new Button("Start game");
@@ -25,8 +25,11 @@ public class GameView {
     public GameView(Game game) {
         this.game = game;
         boardView = new BoardView(game.getBoard());
-        whiteTimerView = new TimerView(game.getWhiteTimer());
-        blackTimerView = new TimerView((game.getBlackTimer()));
+
+        if (!game.isVersusAi()) {
+            whiteTimerView = new TimerView(game.getWhiteTimer());
+            blackTimerView = new TimerView((game.getBlackTimer()));
+        }
     }
 
     /**
@@ -40,9 +43,13 @@ public class GameView {
         root.setSpacing(10);
         root.setPadding(new Insets(10, 0, 10, 0));
         root.setAlignment(Pos.CENTER);
-        root.getChildren().add(blackTimerView);
+        if (!game.isVersusAi()) {
+            root.getChildren().add(blackTimerView);
+        }
         root.getChildren().add(boardView);
-        root.getChildren().add(whiteTimerView);
+        if (!game.isVersusAi()) {
+            root.getChildren().add(whiteTimerView);
+        }
 
         HBox hBox = new HBox();
         hBox.setSpacing(10);

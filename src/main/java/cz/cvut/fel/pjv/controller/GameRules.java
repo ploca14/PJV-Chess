@@ -128,7 +128,6 @@ public class GameRules implements Serializable {
                 sum += moves.size();
             }
         }
-        System.out.println(sum+"");
         return sum == 0;
     }
 }
