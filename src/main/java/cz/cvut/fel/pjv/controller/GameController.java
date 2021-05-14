@@ -75,8 +75,10 @@ public class GameController {
         // When the user clicks on the save button
         gameView.getSaveButton().setOnAction((event) -> {
             // Stop the timers
-            whiteTimerController.getTimer().setRunning(false);
-            blackTimerController.getTimer().setRunning(false);
+            if (!gameModel.isVersusAi()) {
+                whiteTimerController.getTimer().setRunning(false);
+                blackTimerController.getTimer().setRunning(false);
+            }
 
             // We open the fileChooser save dialog and let the user choose where to save the current game
             Window stage = gameView.getScene().getWindow();
@@ -176,8 +178,16 @@ public class GameController {
     }
 
     public void takeTurn() {
+        // First we switch the players
         gameModel.takeTurn();
+
+        // Then we check the game state
         checkGameState();
+
+        // If the game is finished we do nothing and return
+        if (gameModel.getFinished()) return;
+
+        // If the game is not finished we start the clock for the next player or make a random ai move if the game is against the ai
         if (gameModel.isVersusAi()) {
             Move move = ai.chooseRandomMove(gameModel.getCurrentPlayer(), gameModel.getBoard());
             boardController.makeAiMove(move);
@@ -220,7 +230,8 @@ public class GameController {
 
     private void announceWinner(String message) {
         // Show alert with winner
-        new Alert(Alert.AlertType.INFORMATION, message).show();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
+        alert.show();
 
         gameView.getSaveButton().setDisable(true);
     }
@@ -235,10 +246,19 @@ public class GameController {
     }
 
     public void playerDraw() {
+        gameModel.setFinished(true);
         announceWinner("draw");
     }
 
     public Chesspiece getRandomPiece(TileView forTileView, Color color, ChessPieceFactory chessPieceFactory) {
         return ai.chooseRandomPiece(forTileView.getTileModel(), color, chessPieceFactory);
+    }
+
+    public TimerController getWhiteTimerController() {
+        return whiteTimerController;
+    }
+
+    public TimerController getBlackTimerController() {
+        return blackTimerController;
     }
 }

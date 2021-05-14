@@ -7,7 +7,6 @@ import cz.cvut.fel.pjv.model.chestpieces.ChessPieceFactory;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
-import cz.cvut.fel.pjv.view.TileView;
 
 import java.util.ArrayList;
 import java.util.Random;

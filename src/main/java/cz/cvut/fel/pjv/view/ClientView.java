@@ -13,15 +13,17 @@ import javafx.scene.text.FontWeight;
 
 
 public class ClientView {
+    private Scene scene;
     private final VBox root = new VBox();
     private final VBox menu = new VBox();
     private final Button startGame = new Button("Start local game");
+    private final Button startVsAiGame = new Button("Start game vs computer");
     private final Button loadGame = new Button("Load local game");
     private final Button customGame = new Button("Start custom game");
     private final Label title = new Label("CHESS GAME");
 
-    public Scene getScene() {
-        Scene scene = new Scene(root);
+    public Scene createScene() {
+        scene = new Scene(root);
         createMenuView();
         return scene;
     }
@@ -30,11 +32,13 @@ public class ClientView {
         startGame.setStyle("-fx-background-color: #F5F5DC;");
         loadGame.setStyle("-fx-background-color: #F5F5DC;");
         customGame.setStyle("-fx-background-color: #F5F5DC;");
+        startVsAiGame.setStyle("-fx-background-color: #F5F5DC;");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         title.setPadding(new Insets(10, 0, 50, 0));
-        menu.getChildren().addAll(title, startGame, loadGame, customGame);
+        menu.getChildren().addAll(title, startGame, startVsAiGame, loadGame, customGame);
         menu.setSpacing(20);
         menu.setAlignment(Pos.CENTER);
+        menu.setMinHeight(500);
         root.setStyle("-fx-background-color: #D2B48C;");
         root.getChildren().addAll(menu);
     }
@@ -49,5 +53,11 @@ public class ClientView {
 
     public Button getCustomGame() {
         return customGame;
+    }
+
+    public Button getStartVsAiGame() { return startVsAiGame; }
+
+    public Scene getScene() {
+        return scene;
     }
 }

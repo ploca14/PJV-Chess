@@ -72,4 +72,8 @@ public class TimerController implements Runnable {
         timer.setRunning(false);
         timerView.showDeactivated();
     }
+
+    public void stopThread() {
+        this.stopThread = true;
+    }
 }
