@@ -97,4 +97,8 @@ public class Pawn extends Chesspiece {
     public String toString() {
         return "\u265F";
     }
+
+    public void setPlayingBoard(Board playingBoard) {
+        this.playingBoard = playingBoard;
+    }
 }

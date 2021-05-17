@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv;
 
+import cz.cvut.fel.pjv.controller.network.LobbyController;
 import cz.cvut.fel.pjv.controller.network.ServerController;
 import cz.cvut.fel.pjv.model.network.Server;
 import cz.cvut.fel.pjv.view.ServerView;
@@ -20,5 +21,12 @@ public class ServerApp extends Application {
         stage.show();
 
         serverController = new ServerController(serverView, serverModel);
+
+        stage.setOnCloseRequest(windowEvent -> {
+            for (LobbyController lobby:
+                    serverController.getLobbies()) {
+                lobby.endLobby();
+            }
+        });
     }
 }

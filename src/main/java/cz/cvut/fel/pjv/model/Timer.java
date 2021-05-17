@@ -51,4 +51,8 @@ public class Timer implements Serializable {
     public boolean getTimerFinished() {
         return timerFinished;
     }
+
+    public int getSecondsPassed() {
+        return secondsPassed;
+    }
 }
