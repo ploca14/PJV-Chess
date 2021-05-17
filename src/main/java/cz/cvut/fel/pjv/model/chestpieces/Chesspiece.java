@@ -76,6 +76,8 @@ public abstract class Chesspiece implements Serializable {
      * @return true if compared figures have same color. if the color is differen, returns false
      */
     public boolean isTeammate(Tile[][] b, int x, int y, Color color) {
+        if (b[y][x].currentChessPiece == null) return false;
+
         return (b[y][x].currentChessPiece.getColor()).equals(color);
     }
 
