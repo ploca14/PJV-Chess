@@ -110,6 +110,12 @@ public class GameController extends AbstractGameController {
                 return;
             }
 
+            // Then we check if the game isn!t already over
+            if (getGameModel().getRules().isEndgame(getGameModel().getCurrentPlayer(), getGameModel().getBoard())) {
+                new Alert(Alert.AlertType.ERROR, "Game cannot be started, it's already over").show();
+                return;
+            }
+
             // We set the board to not be editable
             getGameModel().getBoard().setEditable(false);
             // Then we recreate the scene and switch the current window to the recreated scene
