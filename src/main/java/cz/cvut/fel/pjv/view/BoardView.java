@@ -15,7 +15,7 @@ public class BoardView extends GridPane {
         renderBoard();
     }
 
-    private void renderBoard() {
+    public void renderBoard() {
         Tile[][] tiles = boardModel.getBoard();
 
         for (int x = 0; x < tiles.length; x++) {

@@ -7,10 +7,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ServerController {
     private ServerView view;
     private Server model;
+    private List<LobbyController> lobbies = new ArrayList<>();
 
+    /**
+     * @param serverView The server view this controller will be rerendering
+     * @param model The server model this controller will be updating
+     */
     public ServerController(ServerView serverView, Server model) {
         this.view = serverView;
         this.model = model;
@@ -41,6 +49,7 @@ public class ServerController {
 
                         // We add the lobby the the model so it gets represented in the UI
                         model.addLobby(lobby);
+                        lobbies.add(lobbyController);
                     }
 
                 } catch (NumberFormatException e) {
@@ -71,5 +80,9 @@ public class ServerController {
         }
 
         return true;
+    }
+
+    public List<LobbyController> getLobbies() {
+        return lobbies;
     }
 }

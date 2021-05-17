@@ -1,6 +1,7 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Tile implements Serializable {
     private final Color color;
@@ -52,5 +53,18 @@ public class Tile implements Serializable {
         this.currentChessPiece = chesspiece;
         // Set the position of the moving piece to this tile
         currentChessPiece.move(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tile tile = (Tile) o;
+        return x == tile.x && y == tile.y && color == tile.color && Objects.equals(currentChessPiece, tile.currentChessPiece);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, x, y, currentChessPiece);
     }
 }
