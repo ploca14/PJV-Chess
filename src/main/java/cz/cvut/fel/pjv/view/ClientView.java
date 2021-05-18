@@ -18,6 +18,8 @@ public class ClientView {
     private final Button startGame = new Button("Start local game");
     private final Button loadGame = new Button("Load local game");
     private final Button customGame = new Button("Start custom game");
+    private final Button gameStatsOverview = new Button("Show top games");
+    private final Button playerStatsOverview = new Button("Show player statistics");
     private final Label title = new Label("CHESS GAME");
 
     public Scene getScene() {
@@ -30,9 +32,11 @@ public class ClientView {
         startGame.setStyle("-fx-background-color: #F5F5DC;");
         loadGame.setStyle("-fx-background-color: #F5F5DC;");
         customGame.setStyle("-fx-background-color: #F5F5DC;");
+        gameStatsOverview.setStyle("-fx-background-color: #F5F5DC;");
+        playerStatsOverview.setStyle("-fx-background-color: #F5F5DC;");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         title.setPadding(new Insets(10, 0, 50, 0));
-        menu.getChildren().addAll(title, startGame, loadGame, customGame);
+        menu.getChildren().addAll(title, startGame, loadGame, customGame, gameStatsOverview, playerStatsOverview);
         menu.setSpacing(20);
         menu.setAlignment(Pos.CENTER);
         root.setStyle("-fx-background-color: #D2B48C;");
@@ -49,5 +53,13 @@ public class ClientView {
 
     public Button getCustomGame() {
         return customGame;
+    }
+
+    public Button getGameStatsOverview() {
+        return gameStatsOverview;
+    }
+
+    public Button getPlayerStatsOverview() {
+        return playerStatsOverview;
     }
 }
