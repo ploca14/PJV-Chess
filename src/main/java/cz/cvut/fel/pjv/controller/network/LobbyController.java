@@ -36,15 +36,18 @@ public class LobbyController implements Runnable {
     public void run() {
         try {
             // Start server
+            logger.info(lobby.getName() + ": Creating server socket");
             serverSocket = new ServerSocket(lobby.getPort());
-            logger.info(lobby.getName() + " is waiting for players");
 
             // Create new game
+            logger.info(lobby.getName() + ": Creating a new game");
             game = new Game();
             game.getBoard().placeChessPieces();
+            logger.info(lobby.getName() + ": Created the following board.\n" + game.getBoard().toString());
             gameController = new ServerGameController(game, lobby);
 
             // Wait for both players to connect
+            logger.info(lobby.getName() + ": Waiting for players");
             acceptConnections();
 
             startGame();
@@ -53,7 +56,7 @@ public class LobbyController implements Runnable {
             endLobby();
         } catch (IOException e) {
             Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Port already in use").show());
-            logger.info("Lobby: " + lobby.getName() + " cannot be created. Port " + lobby.getPort() + " is already in use");
+            logger.info(lobby.getName() + ": Lobby cannot be created. Port " + lobby.getPort() + " is already in use");
         }
     }
 
@@ -73,12 +76,12 @@ public class LobbyController implements Runnable {
         try {
             serverSocket.close();
         } catch (IOException exception) {
-            logger.info("Unable to close socket.");
+            logger.info(lobby.getName() + ": Unable to close socket");
         }
 
         // Lastly we remove the lobby from the server model
         serverModel.removeLobby(lobby);
-        logger.info("Lobby " + lobby.getName() + " has finished");
+        logger.info(lobby.getName() + ": Lobby has finished");
     }
 
     /**
@@ -89,9 +92,7 @@ public class LobbyController implements Runnable {
             while (lobby.getConnectedPlayersCount() < 2) {
                 Socket clientSocket =  serverSocket.accept(); // Here we wait for a player to connect
 
-                // Once a player connects to the lobby
-                logger.info("Player " + lobby.getConnectedPlayersCount() + " has connected to lobby " + lobby.getName());
-                // We create a new ClientThread from the client socket
+                // Once a player connects to the lobby we create a new ClientThread from the client socket
                 ClientThread clientThread = new ClientThread(clientSocket, getColor());
                 clientThread.start();
 
@@ -102,9 +103,9 @@ public class LobbyController implements Runnable {
             // Once both players are connected  we set the opponent thread for each client thread
             setOpponents();
 
-            logger.info("Lobby " + lobby.getName() + " has started");
+            logger.info(lobby.getName() + ": Lobby has started");
         } catch (IOException e) {
-            logger.info("Connection failed");
+            logger.info(lobby.getName() + ": Connection failed");
         }
     }
 
@@ -146,6 +147,7 @@ public class LobbyController implements Runnable {
      * This method is used to start the game and it will run until the game finishes
      */
     private void startGame() {
+        logger.info(lobby.getName() + ": Starting game");
         try {
             synchronized(syncObject) {
                 // We wait till the game is finished
@@ -189,6 +191,7 @@ public class LobbyController implements Runnable {
                 outputStream.flush();
                 // Then we wait for the players name
                 this.name = (String) inputStream.readObject();
+                logger.info(lobby.getName() + ": " + name + " has connected as " + playingAs);
 
                 // Then we send the names to the opponents
                 sendNames();
@@ -245,10 +248,15 @@ public class LobbyController implements Runnable {
 
         private void receiveAndProcessMove() throws IOException {
             try {
+                logger.info(lobby.getName() + ": Waiting for " + game.getCurrentPlayer() + "s move");
                 // We wait for the user to send a move
-                Move move = NetworkUtilities.parseMove(inputStream.readObject(), gameController.getBoardController().getBoardModel());
+                Move receivedMove = (Move) inputStream.readObject();
+                logger.info(lobby.getName() + ": Received move " + receivedMove.toString());
+                Move move = NetworkUtilities.parseMove(receivedMove, gameController.getBoardController().getBoardModel());
+
                 // Then we check if its a valid move
                 if (gameController.validateMove(move)) {
+                    logger.info(lobby.getName() + ": Performing move " + move.toString());
                     // If it us we perform the move on the game model
                     gameController.makeMove(move);
 
@@ -264,8 +272,10 @@ public class LobbyController implements Runnable {
                         // Is the move is pawn promoting
                         if (move.isPawnPromoting()) {
                             // We wait for the selected piece
+                            logger.info(lobby.getName() + ": Waiting for pawn promoting chess piece");
                             Chesspiece chesspiece = (Chesspiece) inputStream.readObject();
                             // Then we set the selected piece to the ending position tile of the move
+                            logger.info(lobby.getName() + ": Promoting pawn to " + chesspiece);
                             gameController.getBoardController().setChosenChesspiece(move.getEndingPosition(), chesspiece);
                             // We notify the client that the pawn promotion was successful
                             outputStream.writeBoolean(true);
@@ -276,14 +286,16 @@ public class LobbyController implements Runnable {
                             gameController.getBoardController().checkSpecialMoves(move);
                         }
                     }
+                    logger.info(lobby.getName() + ": Move performed, current board:\n" + game.getBoard().toString());
                     // Then we switch the current player in the model
                     gameController.takeTurn();
+                    logger.info(lobby.getName() + ": Taking turns, current player: " + game.getCurrentPlayer());
                 } else {
                     // Or we notify the client that the move wasn't successful
                     outputStream.writeBoolean(false);
                 }
             } catch (ClassNotFoundException e) {
-                logger.warning("Packet could not be deserialized");
+                logger.warning(lobby.getName() + ": Packet could not be deserialized");
                 outputStream.writeBoolean(false);
             }
             outputStream.flush();

@@ -9,8 +9,10 @@ import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ServerController {
+    Logger logger = Logger.getLogger(ServerController.class.getName());
     private ServerView view;
     private Server model;
     private List<LobbyController> lobbies = new ArrayList<>();
@@ -50,6 +52,8 @@ public class ServerController {
                         // We add the lobby the the model so it gets represented in the UI
                         model.addLobby(lobby);
                         lobbies.add(lobbyController);
+
+                        logger.info(lobby.getName() + ": Lobby has been created");
                     }
 
                 } catch (NumberFormatException e) {

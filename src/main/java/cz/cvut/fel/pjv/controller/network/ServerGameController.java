@@ -9,7 +9,10 @@ import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.model.network.Lobby;
 import cz.cvut.fel.pjv.view.GameView;
 
+import java.util.logging.Logger;
+
 public class ServerGameController extends AbstractGameController {
+    private final static Logger logger = Logger.getLogger(ServerGameController.class.getName());
     private ServerBoardController boardController;
     private final Lobby lobby;
 
@@ -89,18 +92,19 @@ public class ServerGameController extends AbstractGameController {
     @Override
     public void announceWinner(String message, Color color) {
         // We check who won
+        int winnerTime;
+        String winnerName;
+        String loserName;
         if (color.equals(Color.WHITE)) {
-            int winnerTime = getGameModel().getWhiteTimer().getSecondsPassed();
-            String winnerName = lobby.getFirstPlayer().getPlayerName();
-            String loserName = lobby.getSecondPlayer().getPlayerName();
-            System.out.println(String.format("%d, %s, %s", winnerTime, winnerName, loserName).toString());
-        } else if (color.equals(Color.BLACK)) {
-            int winnerTime = getGameModel().getBlackTimer().getSecondsPassed();
-            String winnerName = lobby.getSecondPlayer().getPlayerName();
-            String loserName = lobby.getFirstPlayer().getPlayerName();
-            System.out.println(String.format("%d, %s, %s", winnerTime, winnerName, loserName).toString());
+             winnerTime = getGameModel().getWhiteTimer().getSecondsPassed();
+             winnerName = lobby.getFirstPlayer().getPlayerName();
+             loserName = lobby.getSecondPlayer().getPlayerName();
         } else {
-
+            winnerTime = getGameModel().getBlackTimer().getSecondsPassed();
+            winnerName = lobby.getSecondPlayer().getPlayerName();
+            loserName = lobby.getFirstPlayer().getPlayerName();
         }
+        System.out.printf("%d, %s, %s%n", winnerTime, winnerName, loserName);
+        logger.info(lobby.getName() + ": Game ended, it took " + winnerTime + "s for " + winnerName + " to win , " + loserName + " lost");
     }
 }
