@@ -5,6 +5,8 @@ import cz.cvut.fel.pjv.model.JoinRequest;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.view.ClientView;
 import cz.cvut.fel.pjv.view.GameView;
+import cz.cvut.fel.pjv.view.PlayerStatsView;
+import cz.cvut.fel.pjv.view.GamesStatsView;
 import cz.cvut.fel.pjv.view.JoinDialog;
 import cz.cvut.fel.pjv.controller.network.ClientGameController;
 import javafx.event.EventHandler;
@@ -123,6 +125,18 @@ public class ClientController {
                     gameController.getBlackTimerController().stopThread();
                 }
             }
+        });
+
+        Button gameStatsOverview = clientView.getGameStatsOverview();
+        gameStatsOverview.setOnAction(actionEvent -> {
+            GamesStatsView statsView = new GamesStatsView();
+            stage.setScene(statsView.createScene());
+        });
+
+        Button playerStatsOverview = clientView.getPlayerStatsOverview();
+        playerStatsOverview.setOnAction(actionEvent -> {
+            PlayerStatsView playerStatsView = new PlayerStatsView();
+            stage.setScene(playerStatsView.createScene());
         });
     }
 
