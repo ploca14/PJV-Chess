@@ -118,8 +118,10 @@ public class ClientController {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent windowEvent) {
-                gameController.getWhiteTimerController().stopThread();
-                gameController.getBlackTimerController().stopThread();
+                if (!gameController.getGameModel().isVersusAi()) {
+                    gameController.getWhiteTimerController().stopThread();
+                    gameController.getBlackTimerController().stopThread();
+                }
             }
         });
     }
