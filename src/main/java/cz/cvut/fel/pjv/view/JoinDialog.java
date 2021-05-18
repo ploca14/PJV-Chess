@@ -36,9 +36,37 @@ public class JoinDialog extends Dialog<JoinRequest> {
         dialogPane.setContent(grid);
         this.setResultConverter((ButtonType button) -> {
             if (button.equals(ButtonType.OK)) {
-                return new JoinRequest(nameField.getText(), ipField.getText(), portField.getText());
+                if (validateFields()) {
+                    JoinRequest joinRequest = null;
+                    try {
+                        joinRequest = new JoinRequest(nameField.getText(), ipField.getText(), portField.getText());
+                    } catch (NumberFormatException exception) {
+                        new Alert(Alert.AlertType.ERROR, "The port must be a number between 1 and 65535").show();
+                    }
+                    return joinRequest;
+                }
+
             }
             return null;
         });
+    }
+
+    private boolean validateFields() {
+        if (nameField.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "You must specify a name").show();
+            return false;
+        }
+
+        if(ipField.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "You must specify an IP address").show();
+            return false;
+        }
+
+        if(portField.getText().isEmpty()) {
+            new Alert(Alert.AlertType.ERROR, "You must specify a port").show();
+            return false;
+        }
+
+        return true;
     }
 }
