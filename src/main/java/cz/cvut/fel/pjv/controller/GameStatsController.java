@@ -7,14 +7,15 @@ import javafx.scene.control.Alert;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameStatsController {
     private final GamesStatsView gamesStatsView;
 
+    /**
+     * @param gamesStatsView The view this controller will be rerendering
+     */
     public GameStatsController(GamesStatsView gamesStatsView) {
         this.gamesStatsView = gamesStatsView;
 

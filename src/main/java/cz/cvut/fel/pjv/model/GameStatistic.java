@@ -12,8 +12,16 @@ public class GameStatistic implements Serializable {
     @CsvBindByPosition(position = 2)
     private String loser;
 
+    /**
+     * This constructor is used for the CSVReader
+     */
     public GameStatistic() { }
 
+    /**
+     * @param time The time it took the winner to win (in seconds)
+     * @param winner The winner name
+     * @param loser The loser name
+     */
     public GameStatistic(String time, String winner, String loser) {
         this.time = time;
         this.winner = winner;

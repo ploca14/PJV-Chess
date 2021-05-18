@@ -2,9 +2,11 @@ package cz.cvut.fel.pjv.controller;
 
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.JoinRequest;
+import cz.cvut.fel.pjv.model.PlayerStats;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.view.*;
 import cz.cvut.fel.pjv.controller.network.ClientGameController;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -92,12 +94,21 @@ public class ClientController {
             GamesStatsView statsView = new GamesStatsView();
             GameStatsController gameStatsController = new GameStatsController(statsView);
             stage.setScene(gameStatsController.getGameStatsView().createScene());
+
+            gameStatsController.getGameStatsView().getMainMenu().setOnAction(event -> {
+                stage.setScene(clientView.getScene());
+            });
         });
 
         Button playerStatsOverview = clientView.getPlayerStatsOverview();
         playerStatsOverview.setOnAction(actionEvent -> {
             PlayerStatsView playerStatsView = new PlayerStatsView();
-            stage.setScene(playerStatsView.createScene());
+            PlayerStatsController playerStatsController = new PlayerStatsController(playerStatsView);
+            stage.setScene(playerStatsController.getPlayerStatsView().createScene());
+
+            playerStatsController.getPlayerStatsView().getMainMenu().setOnAction(event -> {
+                stage.setScene(clientView.getScene());
+            });
         });
     }
 
@@ -190,7 +201,6 @@ public class ClientController {
                 }
             });
         } catch (IOException | ClassNotFoundException exception) {
-            exception.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Unable to connect").show();
         }
         return null;

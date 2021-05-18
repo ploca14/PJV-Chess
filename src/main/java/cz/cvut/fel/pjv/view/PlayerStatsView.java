@@ -1,7 +1,5 @@
 package cz.cvut.fel.pjv.view;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 import cz.cvut.fel.pjv.model.PlayerStats;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,41 +13,36 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerStatsView {
     private final VBox root = new VBox();
     private final VBox overView = new VBox();
-    private final HBox insertIp = new HBox();
+    private final HBox insertIp = new HBox(10);
     TableView<PlayerStats> tableView;
     Label title = new Label("STATISTICS");
-    TabPane tabPane;
+    private final Button submitBtn = new Button("Load statistics");
+    private final Button mainMenu = new Button("Main menu");
+    private final Label ipLabel = new Label("IP Address: ");
+    private final TextField ipTextField = new TextField();
 
-    public PlayerStatsView() {
-
-    }
-
+    /**
+     * This method is used to create the player stats view scene
+     * @return The player stats view scene
+     */
     public Scene createScene(){
         Scene scene = new Scene(root);
         createStatsOverview();
         return scene;
     }
 
-    public void createStatsOverview() {
+    private void createStatsOverview() {
         title.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         title.setPadding(new Insets(10, 0, 50, 0));
 
-        Label labell = new Label("ip adress: ");
-        TextField ipTextField = new TextField();
-        Button submitBtn = new Button("submit");
+        insertIp.getChildren().addAll(ipLabel, ipTextField, submitBtn, mainMenu);
+        insertIp.setPadding(new Insets(10));
         insertIp.setAlignment(Pos.CENTER);
-
-        insertIp.getChildren().addAll(labell, ipTextField, submitBtn);
-        insertIp.setSpacing(10);
 
         TableColumn<PlayerStats, String> nameColumn = new TableColumn<>("PLAYER NAME");
         nameColumn.setMinWidth(150);
@@ -63,9 +56,7 @@ public class PlayerStatsView {
         winrateColumn.setMinWidth(150);
         winrateColumn.setCellValueFactory(new PropertyValueFactory<>("winrate"));
 
-        tableView = new TableView<>();;
-        tableView.setItems(getPlayersStats());
-        tableView.editingCellProperty();
+        tableView = new TableView<>();
         tableView.getColumns().addAll(nameColumn, gamesPlayedColumn, winrateColumn);
 
         overView.setAlignment(Pos.CENTER);
@@ -74,29 +65,21 @@ public class PlayerStatsView {
         overView.setPadding(new Insets(30,30,30,30));
         root.getChildren().addAll(overView);
     }
-    public ObservableList<PlayerStats> getPlayersStats() {
-        ArrayList<PlayerStats> playersList = new ArrayList<>();
-        List<String[]> allData = null;
-        try (CSVReader csvReader = new CSVReader(new FileReader("C:\\Users\\kristov\\Documents\\chess\\src\\playerStatistics.txt"));) {
-            allData = csvReader.readAll();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CsvException e) {
-            e.printStackTrace();
-        }
 
-        for (String[] row: allData
-        ) {
-            String name = row[0];
-            String gamesPlayed = row[1];
-            String gamesWon = row[2];
-            String gamesLost = row[3];
+    public Button getSubmitBtn() {
+        return submitBtn;
+    }
 
-            playersList.add(new PlayerStats(name, Integer.parseInt(gamesPlayed), Integer.parseInt(gamesWon), Integer.parseInt(gamesLost)));
-        }
+    public TextField getIpField() {
+        return ipTextField;
+    }
 
-        return FXCollections.observableArrayList(playersList);
+    public Button getMainMenu() {
+        return mainMenu;
+    }
+
+    public void setTableViewItems(List<PlayerStats> gameStatsList) {
+        ObservableList<PlayerStats> observableList = FXCollections.observableArrayList(gameStatsList);
+        tableView.setItems(observableList);
     }
 }

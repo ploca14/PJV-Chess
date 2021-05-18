@@ -14,7 +14,7 @@ public class ServerController {
     private ServerView view;
     private Server model;
     private List<LobbyController> lobbies = new ArrayList<>();
-    private StatisticsController statisticsController;
+    private StatisticsController statisticsController = new StatisticsController();
 
     /**
      * @param serverView The server view this controller will be rerendering
@@ -66,7 +66,7 @@ public class ServerController {
     }
 
     private void createStatisticsHandlers() {
-        Thread statisticsThread = new Thread(new StatisticsController());
+        Thread statisticsThread = new Thread(statisticsController);
         statisticsThread.start();
     }
 
