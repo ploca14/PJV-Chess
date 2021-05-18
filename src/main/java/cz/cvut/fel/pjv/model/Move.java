@@ -5,7 +5,9 @@ import cz.cvut.fel.pjv.model.chestpieces.King;
 import cz.cvut.fel.pjv.model.chestpieces.Pawn;
 import cz.cvut.fel.pjv.model.chestpieces.Tile;
 
-public class Move {
+import java.io.Serializable;
+
+public class Move implements Serializable {
     private final Tile startingPosition;
     private final Tile endingPosition;
     private final Chesspiece chesspiece;
@@ -49,5 +51,21 @@ public class Move {
 
     public boolean isPawnPromoting() {
         return isPawnPromoting;
+    }
+
+    public boolean isSpecial() {
+        return isEnPassant || isPawnPromoting || isLongRosada || isShortRosada;
+    }
+
+    @Override
+    public String toString() {
+        return  "from " + startingPosition.getX() + ", " + startingPosition.getY() +
+                " to " + endingPosition.getX() + ", " + endingPosition.getY() +
+                " with  " + chesspiece +
+                " (isPawnPromoting=" + isPawnPromoting +
+                ", isShortRosada=" + isShortRosada +
+                ", isLongRosada=" + isLongRosada +
+                ", isEnPassant=" + isEnPassant +
+                ')';
     }
 }

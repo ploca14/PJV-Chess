@@ -1,7 +1,6 @@
 package cz.cvut.fel.pjv.model.chestpieces;
 
 import cz.cvut.fel.pjv.model.Board;
-import cz.cvut.fel.pjv.model.Game;
 
 import java.util.ArrayList;
 
@@ -96,5 +95,13 @@ public class Pawn extends Chesspiece {
     @Override
     public String toString() {
         return "\u265F";
+    }
+
+    public void setPlayingBoard(Board playingBoard) {
+        this.playingBoard = playingBoard;
+    }
+
+    public boolean isStartingPosition() {
+        return startingPosition;
     }
 }

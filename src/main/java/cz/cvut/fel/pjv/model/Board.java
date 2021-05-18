@@ -80,9 +80,14 @@ public class Board implements Serializable {
          * placement of Pawn Chesspieces
          */
         for (int i = 0; i < 8; i++) {
-            board[1][i].setCurrentChessPiece(new Pawn(Color.BLACK,board[1][i]));
+            Pawn newBlackPawn = new Pawn(Color.BLACK,board[1][i]);
+            newBlackPawn.setPlayingBoard(this);
+            board[1][i].setCurrentChessPiece(newBlackPawn);
             blackPieces.add(board[1][i].getCurrentChessPiece());
-            board[6][i].setCurrentChessPiece(new Pawn(Color.WHITE,board[6][i]));
+
+            Pawn newWhitePawn = new Pawn(Color.WHITE,board[6][i]);
+            newWhitePawn.setPlayingBoard(this);
+            board[6][i].setCurrentChessPiece(newWhitePawn);
             whitePieces.add(board[6][i].getCurrentChessPiece());
         }
 
@@ -149,7 +154,7 @@ public class Board implements Serializable {
      * @param chesspiece The chesspiece to remove from the board
      */
     public void removePiece(Chesspiece chesspiece) {
-        if (chesspiece.getColor().equals(Color.WHITE)) {
+        if ( chesspiece.getColor().equals(Color.WHITE)) {
             whitePieces.remove(chesspiece);
         } else {
             blackPieces.remove(chesspiece);
@@ -181,5 +186,28 @@ public class Board implements Serializable {
             }
         }
         return frequency;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Tile[] tileRow: board) {
+            for (Tile tile: tileRow) {
+                if (tile.currentChessPiece != null) {
+                    if (tile.currentChessPiece.getColor().equals(Color.BLACK)) {
+                        stringBuilder.append("\u001B[31m");
+                    } else {
+                        stringBuilder.append("\u001B[0m");
+                    }
+                    stringBuilder.append(tile.currentChessPiece.toString());
+                }
+                else {
+                    stringBuilder.append(" ");
+                }
+                stringBuilder.append("\t");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
     }
 }

@@ -6,27 +6,36 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class GameView {
-    private final Game game;
+    private Game game;
     private final BoardView boardView;
     private Scene scene;
-    private final TimerView whiteTimerView;
-    private final TimerView blackTimerView;
+    private TimerView whiteTimerView;
+    private TimerView blackTimerView;
     private final Button saveButton = new Button("Save game");
     private final Button mainMenuButton = new Button("Main menu");
     private final Button startGame = new Button("Start game");
     private final Button chooseSide = new Button("Switch colors");
     private final Text currentlyEditing = new Text("Editing white pieces, white will start");
+    private final Text whiteName = new Text();
+    private final Text blackName = new Text();
     private VBox root;
 
     public GameView(Game game) {
         this.game = game;
         boardView = new BoardView(game.getBoard());
-        whiteTimerView = new TimerView(game.getWhiteTimer());
-        blackTimerView = new TimerView((game.getBlackTimer()));
+
+        if (!game.isVersusAi()) {
+            whiteTimerView = new TimerView(game.getWhiteTimer());
+            blackTimerView = new TimerView((game.getBlackTimer()));
+        }
     }
 
     /**
@@ -38,11 +47,11 @@ public class GameView {
         scene = new Scene(root);
 
         root.setSpacing(10);
-        root.setPadding(new Insets(10));
+        root.setPadding(new Insets(10, 0, 10, 0));
         root.setAlignment(Pos.CENTER);
-        root.getChildren().add(blackTimerView);
+        root.getChildren().add(createBar(blackName, blackTimerView));
         root.getChildren().add(boardView);
-        root.getChildren().add(whiteTimerView);
+        root.getChildren().add(createBar(whiteName, whiteTimerView));
 
         HBox hBox = new HBox();
         hBox.setSpacing(10);
@@ -55,6 +64,23 @@ public class GameView {
         root.getChildren().add(hBox);
 
         return scene;
+    }
+
+    private Region createSpacer() {
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        return spacer;
+    }
+
+    private HBox createBar(Text name, Text timer) {
+        HBox bar = new HBox(name);
+        bar.setPadding(new Insets(0, 10 , 0 ,10));
+        name.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        if (!game.isVersusAi()) {
+            bar.getChildren().addAll(createSpacer(), timer);
+        }
+
+        return bar;
     }
 
     /**
@@ -109,5 +135,17 @@ public class GameView {
 
     public TimerView getBlackTimerView() {
         return blackTimerView;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public void setWhiteName(String name) {
+        whiteName.setText(name);
+    }
+
+    public void setBlackName(String name) {
+        blackName.setText(name);
     }
 }

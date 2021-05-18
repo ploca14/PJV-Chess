@@ -13,6 +13,8 @@ public class Game implements Serializable {
     private final Timer whiteTimer = new Timer();
     private final Timer blackTimer = new Timer();
     private boolean finished = false;
+    private boolean versusAi = false;
+    private boolean started = false;
 
     public Board getBoard() {
         return board;
@@ -59,5 +61,21 @@ public class Game implements Serializable {
 
     public boolean getFinished() {
         return finished;
+    }
+
+    public boolean isVersusAi() {
+        return versusAi;
+    }
+
+    public void setVersusAi(boolean versusAi) {
+        this.versusAi = versusAi;
+    }
+
+    public void setStarted(boolean started) {
+        this.started = started;
+    }
+
+    public boolean getStarted() {
+        return started;
     }
 }

@@ -47,8 +47,7 @@ Main Class programu bude Class **Game**. Tato třída se spustí při spuštení
 7. určení vítěze, vypsání statistik
 
 # Client-server architekruta 
-Na straně chce hráč provést tah, jakmile vytvoří svůj tah, tak se na server odešle pomocí TCP souřadnice původního políčka a souřadnice cílového políčka. Server tento tah zvaliduje a pokud je validní tak provede změny v Boardu. Poté server pošle všem klientům serializovaný (PGN?) aktualizovaný Board, klient Board deserializuje, aktualizuje a vykreslí.
-
-TCP protokol - 4 integery - první dva souřadnice původu tahu, další dva souřadnice cíle tahu.
+Na straně chce hráč provést tah, jakmile vytvoří svůj tah, tak se nejdřív serializuje a poté odešle na server pomocí TCP. Server tento tah zvaliduje a pokud je validní tak provede změny 
+u sebe v Boardu. Poté server odpoví TRUE pokud byl tah validní a provedl se nebo FALSE pokud nebyl validní. Pokud server odpoví TRUE, tak klient provede tah i na svém Boardu. Poté server odešle provedený tah i soupeři, který jej poté provede u sebe v Boardu.
 
 ![Class diagram](https://i.imgur.com/efHgpvE.png "Class diagram")

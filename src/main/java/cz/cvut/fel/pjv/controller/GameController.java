@@ -2,10 +2,12 @@ package cz.cvut.fel.pjv.controller;
 
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.Move;
+import cz.cvut.fel.pjv.model.chestpieces.ChessPieceFactory;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
+import cz.cvut.fel.pjv.model.player.Ai;
 import cz.cvut.fel.pjv.view.GameView;
-import javafx.application.Platform;
+import cz.cvut.fel.pjv.view.TileView;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -13,30 +15,37 @@ import javafx.stage.Window;
 
 import java.io.*;
 
-public class GameController {
-    private final Game gameModel;
-    private final GameView gameView;
-    private final BoardController boardController;
-    private final TimerController whiteTimerController;
-    private final TimerController blackTimerController;
+public class GameController extends AbstractGameController {
     private final FileChooser fileChooser = new FileChooser();
-    private Chesspiece selectedPiece;
+    private BoardController boardController;
+    private Ai ai;
 
+    /**
+     * @param gameModel The game model this controller will be updating
+     * @param gameView The game view this controller will be rerendering
+     */
     public GameController(Game gameModel, GameView gameView) {
-        this.gameModel = gameModel;
-        this.gameView = gameView;
+        super(gameModel, gameView);
 
+        // We create a new client board controller fot this board
         boardController = new BoardController(gameModel.getBoard(), gameView.getBoardView());
         boardController.setGameController(this);
 
-        whiteTimerController = new TimerController(gameModel.getWhiteTimer(), gameView.getWhiteTimerView(), this);
-        blackTimerController = new TimerController(gameModel.getBlackTimer(), gameView.getBlackTimerView(), this);
+        if (getGameModel().isVersusAi()) {
+            ai = new Ai(getGameModel().getRules());
+        } else {
+            // We create new timer controllers
+            setWhiteTimerController(new TimerController(getGameModel().getWhiteTimer(), gameView.getWhiteTimerView(), this));
+            setBlackTimerController(new TimerController(getGameModel().getBlackTimer(), gameView.getBlackTimerView(), this));
 
-        Thread whiteTimerThread = new Thread(whiteTimerController);
-        whiteTimerThread.start();
-        Thread blackTimerThread = new Thread(blackTimerController);
-        blackTimerThread.start();
+            // Then we start the timer controllers on a new thread
+            Thread whiteTimerThread = new Thread(getWhiteTimerController());
+            whiteTimerThread.start();
+            Thread blackTimerThread = new Thread(getBlackTimerController());
+            blackTimerThread.start();
+        }
 
+        // Then we initialize the controller
         initController();
     }
 
@@ -53,7 +62,9 @@ public class GameController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Serialized Game File", "*.ser"));
 
         // Start the clock
-        startClock();
+        if (!(getGameModel().getBoard().isEditable() || getGameModel().isVersusAi())) {
+            startClock();
+        }
     }
 
     /**
@@ -61,13 +72,15 @@ public class GameController {
      */
     private void createEventListeners() {
         // When the user clicks on the save button
-        gameView.getSaveButton().setOnAction((event) -> {
+        getGameView().getSaveButton().setOnAction((event) -> {
             // Stop the timers
-            whiteTimerController.getTimer().setRunning(false);
-            blackTimerController.getTimer().setRunning(false);
+            if (!getGameModel().isVersusAi()) {
+                getWhiteTimerController().getTimer().setRunning(false);
+                getBlackTimerController().getTimer().setRunning(false);
+            }
 
             // We open the fileChooser save dialog and let the user choose where to save the current game
-            Window stage = gameView.getScene().getWindow();
+            Window stage = getGameView().getScene().getWindow();
             File file = fileChooser.showSaveDialog(stage);
 
             // Then we save the game to the chosen file
@@ -77,131 +90,87 @@ public class GameController {
         });
 
         //When the user clicks the switch sides button
-        gameView.getChooseSide().setOnAction((actionEvent -> {
+        getGameView().getChooseSide().setOnAction((actionEvent -> {
             // We change the button text
-            if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
-                gameView.getCurrentlyEditing().setText("Editing black pieces, black will start");
+            if (getGameModel().getCurrentPlayer().equals(Color.WHITE)) {
+                getGameView().getCurrentlyEditing().setText("Editing black pieces, black will start");
             } else {
-                gameView.getCurrentlyEditing().setText("Editing white pieces, white will start");
+                getGameView().getCurrentlyEditing().setText("Editing white pieces, white will start");
             }
 
             // And then we switch the current player
-            gameModel.switchPlayer();
+            getGameModel().switchPlayer();
         }));
 
         // When the user click the start game button
-        gameView.getStartGame().setOnAction((event) -> {
+        getGameView().getStartGame().setOnAction((event) -> {
             // First we check if there are two kings on the board, if not we show an error and return
-            if (gameModel.getBoard().getNumberOfKings() < 2) {
+            if (getGameModel().getBoard().getNumberOfKings() < 2) {
                 new Alert(Alert.AlertType.ERROR, "Game cannot be started, there must be two kings on the board").show();
                 return;
             }
 
+            // Then we check if the game isn!t already over
+            if (getGameModel().getRules().isEndgame(getGameModel().getCurrentPlayer(), getGameModel().getBoard())) {
+                new Alert(Alert.AlertType.ERROR, "Game cannot be started, it's already over").show();
+                return;
+            }
+
             // We set the board to not be editable
-            gameModel.getBoard().setEditable(false);
-            // And then we recreate the scene and switch the current window to the recreated scene
-            ((Stage) gameView.getScene().getWindow()).setScene(gameView.createScene());
+            getGameModel().getBoard().setEditable(false);
+            // Then we recreate the scene and switch the current window to the recreated scene
+            ((Stage) getGameView().getScene().getWindow()).setScene(getGameView().createScene());
+            // Then we start the clock
+            startClock();
         });
-    }
-
-    /**
-     * This method is used to save the game to a chosen file
-     * @param file The file to which the game should be saved
-     */
-    private void saveGameToFile(File file) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(gameModel);
-            objectOutputStream.close();
-        } catch (IOException ioException) {
-            // TODO: Logging
-            ioException.printStackTrace();
-        }
-    }
-
-    public Game getGameModel() {
-        return gameModel;
-    }
-
-    public GameView getGameView() {
-        return gameView;
-    }
-
-    /**
-     * This method is used to set the selected chess piece
-     * @param currentChesspiece The selected chess piece
-     */
-    public void setSelectedPiece(Chesspiece currentChesspiece) {
-        this.selectedPiece = currentChesspiece;
-    }
-
-    public Chesspiece getSelectedPiece() {
-        return this.selectedPiece;
     }
 
     /**
      * This method is used to perform the move on the board and rerender the board
      * @param move The move to be performed
      */
-    public void makeMove(Move move) {
-        // Remove the current piece from the starting position
-        move.getStartingPosition().setCurrentChessPiece(null);
+    public boolean makeMove(Move move) {
+        performMoveAndRerender(move);
 
-        // Check if the ending position is occupied
-        Chesspiece endingPositionChesspiece = move.getEndingPosition().getCurrentChessPiece();
-
-        if (endingPositionChesspiece != null) {
-            // If it is occupied then remove the occupying piece
-            gameModel.getBoard().removePiece(endingPositionChesspiece);
-        }
-
-        // Move the current piece to the ending position and rerender the board
-        move.getEndingPosition().movePiece(move.getChesspiece());
-        gameView.getBoardView().rerenderBoard();
+        return true;
     }
 
+    /**
+     * This method is used to switch the current player, check the game state, start the opponents clock or perform an ai move
+     */
+    @Override
     public void takeTurn() {
-        gameModel.takeTurn();
-        startClock();
-    }
+        // First we switch the players
+        getGameModel().takeTurn();
 
-    private void startClock() {
-        if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
-            whiteTimerController.start();
-            blackTimerController.pause();
+        // Then we check the game state
+        checkGameState();
+
+        // If the game is finished we do nothing and return
+        if (getGameModel().getFinished()) return;
+
+        // If the game is not finished we start the clock for the next player or make a random ai move if the game is against the ai
+        if (getGameModel().isVersusAi()) {
+            Move move = ai.chooseRandomMove(getGameModel().getCurrentPlayer(), getGameModel().getBoard());
+            boardController.makeAiMove(move);
+            getGameModel().takeTurn();
+            checkGameState();
         } else {
-            whiteTimerController.pause();
-            blackTimerController.start();
+            startClock();
         }
     }
 
-    public void playerRunOutOfTime() {
-        gameModel.setFinished(true);
-
-        if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
-            announceWinner("Black wins! White has run out of time!");
-        } else {
-            announceWinner("White wins! Black has run out of time!");
-        }
+    /**
+     * @param forTileView the tile for which we want to select a random piece
+     * @param color the color of the randomly selected piece
+     * @param chessPieceFactory a chesspiece factory, so that we can't choose too many pieces
+     * @return the randomly chosen piece
+     */
+    public Chesspiece getRandomPiece(TileView forTileView, Color color, ChessPieceFactory chessPieceFactory) {
+        return ai.chooseRandomPiece(forTileView.getTileModel(), color, chessPieceFactory);
     }
 
-    private void announceWinner(String message) {
-        Platform.runLater(() -> {
-            new Alert(Alert.AlertType.INFORMATION, message).show();
-        });
-    }
-
-    public void playerWon() {
-        gameModel.setFinished(true);
-        if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
-            announceWinner("Black wins!");
-        } else {
-            announceWinner("White wins!");
-        }
-    }
-
-    public void playerDraw() {
-        announceWinner("draw");
+    public BoardController getBoardController() {
+        return boardController;
     }
 }

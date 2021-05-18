@@ -4,13 +4,18 @@ import cz.cvut.fel.pjv.model.Timer;
 import cz.cvut.fel.pjv.view.TimerView;
 
 public class TimerController implements Runnable {
-    private final GameController gameController;
+    private final AbstractGameController gameController;
     private Timer timer;
     private TimerView timerView;
     private boolean stopThread = false;
     private Long previousMilis = 0L;
 
-    public TimerController(Timer timer, TimerView timerView, GameController gameController) {
+    /**
+     * @param timer The timer model this controller will be updating
+     * @param timerView The timer view this controller will be rerendering
+     * @param gameController The game controller that has this time controller
+     */
+    public TimerController(Timer timer, TimerView timerView, AbstractGameController gameController) {
         this.timer = timer;
         this.timerView = timerView;
         this.gameController = gameController;
@@ -71,5 +76,9 @@ public class TimerController implements Runnable {
     public void pause() {
         timer.setRunning(false);
         timerView.showDeactivated();
+    }
+
+    public void stopThread() {
+        this.stopThread = true;
     }
 }
