@@ -200,7 +200,9 @@ public class ClientController {
                     }
                 }
             });
-        } catch (IOException | ClassNotFoundException exception) {
+        } catch (IllegalArgumentException exception) {
+            new Alert(Alert.AlertType.ERROR, "The port must be between 1 and 65535").show();
+        } catch (Exception exception) {
             new Alert(Alert.AlertType.ERROR, "Unable to connect").show();
         }
         return null;
