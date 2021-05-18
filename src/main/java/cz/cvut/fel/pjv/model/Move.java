@@ -56,4 +56,16 @@ public class Move implements Serializable {
     public boolean isSpecial() {
         return isEnPassant || isPawnPromoting || isLongRosada || isShortRosada;
     }
+
+    @Override
+    public String toString() {
+        return  "from " + startingPosition.getX() + ", " + startingPosition.getY() +
+                " to " + endingPosition.getX() + ", " + endingPosition.getY() +
+                " with  " + chesspiece +
+                " (isPawnPromoting=" + isPawnPromoting +
+                ", isShortRosada=" + isShortRosada +
+                ", isLongRosada=" + isLongRosada +
+                ", isEnPassant=" + isEnPassant +
+                ')';
+    }
 }

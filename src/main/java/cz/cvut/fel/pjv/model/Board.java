@@ -187,4 +187,27 @@ public class Board implements Serializable {
         }
         return frequency;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Tile[] tileRow: board) {
+            for (Tile tile: tileRow) {
+                if (tile.currentChessPiece != null) {
+                    if (tile.currentChessPiece.getColor().equals(Color.BLACK)) {
+                        stringBuilder.append("\u001B[31m");
+                    } else {
+                        stringBuilder.append("\u001B[0m");
+                    }
+                    stringBuilder.append(tile.currentChessPiece.toString());
+                }
+                else {
+                    stringBuilder.append(" ");
+                }
+                stringBuilder.append("\t");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
 }
