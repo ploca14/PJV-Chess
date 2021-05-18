@@ -1,9 +1,15 @@
-package cz.cvut.fel.pjv;
+package cz.cvut.fel.pjv.model;
+
+import com.opencsv.bean.CsvBindByPosition;
 
 public class PlayerStats {
+    @CsvBindByPosition(position = 0)
     private String playerName;
+    @CsvBindByPosition(position = 1)
     private Integer gamesPlayed;
+    @CsvBindByPosition(position = 2)
     private Integer gamesWon;
+    @CsvBindByPosition(position = 3)
     private Integer gamesLost;
     private String winrate;
 

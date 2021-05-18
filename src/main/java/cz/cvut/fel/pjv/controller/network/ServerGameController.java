@@ -1,18 +1,25 @@
 package cz.cvut.fel.pjv.controller.network;
 
+import com.opencsv.CSVWriter;
 import cz.cvut.fel.pjv.controller.AbstractGameController;
 import cz.cvut.fel.pjv.controller.TimerController;
 import cz.cvut.fel.pjv.model.Game;
+import cz.cvut.fel.pjv.model.GameStatistic;
 import cz.cvut.fel.pjv.model.Move;
+import cz.cvut.fel.pjv.model.PlayerStats;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.model.network.Lobby;
 import cz.cvut.fel.pjv.view.GameView;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class ServerGameController extends AbstractGameController {
     private final static Logger logger = Logger.getLogger(ServerGameController.class.getName());
+    private static final String GAME_STATISTICS_CSV = "./game-statistics.csv";
+    private static final String PLAYER_STATISTICS_CSV = "./player-statistics.csv";
     private ServerBoardController boardController;
     private final Lobby lobby;
 
@@ -92,19 +99,32 @@ public class ServerGameController extends AbstractGameController {
     @Override
     public void announceWinner(String message, Color color) {
         // We check who won
-        int winnerTime;
+        String winnerTime;
         String winnerName;
         String loserName;
         if (color.equals(Color.WHITE)) {
-             winnerTime = getGameModel().getWhiteTimer().getSecondsPassed();
+             winnerTime = String.valueOf(getGameModel().getWhiteTimer().getSecondsPassed());
              winnerName = lobby.getFirstPlayer().getPlayerName();
              loserName = lobby.getSecondPlayer().getPlayerName();
         } else {
-            winnerTime = getGameModel().getBlackTimer().getSecondsPassed();
+            winnerTime = String.valueOf(getGameModel().getBlackTimer().getSecondsPassed());
             winnerName = lobby.getSecondPlayer().getPlayerName();
             loserName = lobby.getFirstPlayer().getPlayerName();
         }
-        System.out.printf("%d, %s, %s%n", winnerTime, winnerName, loserName);
-        logger.info(lobby.getName() + ": Game ended, it took " + winnerTime + "s for " + winnerName + " to win , " + loserName + " lost");
+        GameStatistic gameStatistic = new GameStatistic(winnerTime, winnerName, loserName);
+        saveGameStatistic(gameStatistic);
+        savePlayerStatistic();
+        logger.info(lobby.getName() + ": Game ended, it took " + winnerTime + "s for " + winnerName + " to win, " + loserName + " lost");
+    }
+
+    private void saveGameStatistic(GameStatistic gameStatistic) {
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(GAME_STATISTICS_CSV));
+            String[] record = {gameStatistic.getTime(), gameStatistic.getWinner(), gameStatistic.getLoser()};
+            writer.writeNext(record);
+            writer.close();
+        } catch (IOException exception) {
+            logger.severe("Unable to save result");
+        }
     }
 }

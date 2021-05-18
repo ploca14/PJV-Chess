@@ -3,8 +3,6 @@ package cz.cvut.fel.pjv.controller.network;
 import cz.cvut.fel.pjv.model.network.Lobby;
 import cz.cvut.fel.pjv.model.network.Server;
 import cz.cvut.fel.pjv.view.ServerView;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
@@ -16,6 +14,7 @@ public class ServerController {
     private ServerView view;
     private Server model;
     private List<LobbyController> lobbies = new ArrayList<>();
+    private StatisticsController statisticsController;
 
     /**
      * @param serverView The server view this controller will be rerendering
@@ -32,40 +31,43 @@ public class ServerController {
      */
     private void initController() {
         // First we create the neccesary event listeners
-        EventHandler<ActionEvent> buttonHandler = new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                // When the user click on create lobby
-                try {
-                    // We get the values from the UI
-                    String nameValue = view.getNameField().getText();
-                    int portValue = Integer.parseInt(view.getPortField().getText());
+        view.getCreateButton().setOnAction((actionEvent -> {
+            // When the user click on create lobby
+            try {
+                // We get the values from the UI
+                String nameValue = view.getNameField().getText();
+                int portValue = Integer.parseInt(view.getPortField().getText());
 
-                    // We validate those values
-                    if (validateName(nameValue) && validatePort(portValue)) {
-                        // If all the values are valid we create a new lobby
-                        Lobby lobby = new Lobby(nameValue, portValue);
-                        LobbyController lobbyController = new LobbyController(lobby, model);
-                        Thread thread = new Thread(lobbyController); // Each lobby runs on its own thread
-                        thread.start();
+                // We validate those values
+                if (validateName(nameValue) && validatePort(portValue)) {
+                    // If all the values are valid we create a new lobby
+                    Lobby lobby = new Lobby(nameValue, portValue);
+                    LobbyController lobbyController = new LobbyController(lobby, model);
+                    Thread thread = new Thread(lobbyController); // Each lobby runs on its own thread
+                    thread.start();
 
-                        // We add the lobby the the model so it gets represented in the UI
-                        model.addLobby(lobby);
-                        lobbies.add(lobbyController);
+                    // We add the lobby the the model so it gets represented in the UI
+                    model.addLobby(lobby);
+                    lobbies.add(lobbyController);
 
-                        logger.info(lobby.getName() + ": Lobby has been created");
-                    }
-
-                } catch (NumberFormatException e) {
-                    new Alert(Alert.AlertType.ERROR, "The port must be a number").show();
+                    logger.info(lobby.getName() + ": Lobby has been created");
                 }
-            }
-        };
 
-        view.getCreateButton().setOnAction(buttonHandler);
+            } catch (NumberFormatException e) {
+                new Alert(Alert.AlertType.ERROR, "The port must be a number").show();
+            }
+        }));
 
         // And we set the data source for our active lobbies table
         view.getTable().setItems(model.getLobbies());
+
+        // Then we create handlers for the statistic sockets
+        createStatisticsHandlers();
+    }
+
+    private void createStatisticsHandlers() {
+        Thread statisticsThread = new Thread(new StatisticsController());
+        statisticsThread.start();
     }
 
     private boolean validatePort(Integer port) {
@@ -88,5 +90,9 @@ public class ServerController {
 
     public List<LobbyController> getLobbies() {
         return lobbies;
+    }
+
+    public void stopStatisticsThreads() {
+        statisticsController.stopThread();
     }
 }

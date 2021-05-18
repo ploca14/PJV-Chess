@@ -2,8 +2,7 @@ package cz.cvut.fel.pjv.view;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import cz.cvut.fel.pjv.GameStatistic;
-import cz.cvut.fel.pjv.PlayerStats;
+import cz.cvut.fel.pjv.model.PlayerStats;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

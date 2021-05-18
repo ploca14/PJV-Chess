@@ -2,12 +2,7 @@ package cz.cvut.fel.pjv.view;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import cz.cvut.fel.pjv.ClientApp;
-import cz.cvut.fel.pjv.GameStatistic;
-import cz.cvut.fel.pjv.PlayerStats;
-import cz.cvut.fel.pjv.controller.ClientController;
-import cz.cvut.fel.pjv.controller.GameController;
-import cz.cvut.fel.pjv.model.Game;
+import cz.cvut.fel.pjv.model.GameStatistic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -19,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -33,14 +27,12 @@ import java.util.List;
 public class GamesStatsView {
     private final VBox root = new VBox();
     private final VBox overView = new VBox();
-    private final HBox insertIp = new HBox();
-    TableView<GameStatistic> tableView;
-    Label title = new Label("STATISTICS");
-    TabPane tabPane;
-
-    public GamesStatsView() {
-
-    }
+    private final HBox insertIp = new HBox(10);
+    private TableView<GameStatistic> tableView;
+    private final Label title = new Label("STATISTICS");
+    private final Button submitBtn = new Button("Load statistics");
+    private final Label ipLabel = new Label("IP Address: ");
+    private final TextField ipTextField = new TextField();
 
     public Scene createScene(){
         Scene scene = new Scene(root);
@@ -52,11 +44,9 @@ public class GamesStatsView {
         title.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         title.setPadding(new Insets(10, 0, 50, 0));
 
-        Label labell = new Label("ip adress: ");
-        TextField ipTextField = new TextField();
-        Button submitBtn = new Button("submit");
+        insertIp.getChildren().addAll(ipLabel, ipTextField, submitBtn);
+        insertIp.setPadding(new Insets(10));
         insertIp.setAlignment(Pos.CENTER);
-
 
         TableColumn<GameStatistic, String> timeColumn = new TableColumn<>("TIME");
         timeColumn.setMinWidth(150);
@@ -70,9 +60,7 @@ public class GamesStatsView {
         loserNameColumn.setMinWidth(150);
         loserNameColumn.setCellValueFactory(new PropertyValueFactory<>("winner"));
 
-        tableView = new TableView<>();;
-        tableView.setItems(getGameStats());
-        tableView.editingCellProperty();
+        tableView = new TableView<>();
         tableView.getColumns().addAll(timeColumn, winnerNameColumn, loserNameColumn);
 
         overView.setAlignment(Pos.CENTER);
@@ -82,29 +70,16 @@ public class GamesStatsView {
         root.getChildren().addAll(overView);
     }
 
-    public ObservableList<GameStatistic> getGameStats() {
-        ArrayList<GameStatistic> gameStatsList = new ArrayList<>();
-        List<String[]> allData = null;
-        try (CSVReader csvReader = new CSVReader(new FileReader("C:\\Users\\kristov\\Documents\\chess\\src\\gameStatistics.txt"));) {
-            allData = csvReader.readAll();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CsvException e) {
-            e.printStackTrace();
-        }
+    public Button getSubmitBtn() {
+        return submitBtn;
+    }
 
-        for (String[] row: allData
-        ) {
-            String time = row[0];
-            String winner = row[1];
-            String loser = row[2];
+    public TextField getIpField() {
+        return ipTextField;
+    }
 
-            gameStatsList.add(new GameStatistic(Integer.parseInt(time), winner, loser));
-        }
-
-        Collections.sort(gameStatsList, Comparator.comparing(GameStatistic::getTime));
-        return FXCollections.observableArrayList(gameStatsList);
+    public void setTableViewItems(List<GameStatistic> gameStatsList) {
+        ObservableList<GameStatistic> observableList = FXCollections.observableArrayList(gameStatsList);
+        tableView.setItems(observableList);
     }
 }
