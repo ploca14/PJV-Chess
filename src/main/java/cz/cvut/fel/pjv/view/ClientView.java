@@ -37,6 +37,8 @@ public class ClientView {
         customGame.setStyle("-fx-background-color: #F5F5DC;");
         startVsAiGame.setStyle("-fx-background-color: #F5F5DC;");
         networkGame.setStyle("-fx-background-color: #F5F5DC;");
+        gameStatsOverview.setStyle("-fx-background-color: #F5F5DC;");
+        playerStatsOverview.setStyle("-fx-background-color: #F5F5DC;");
         title.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         title.setPadding(new Insets(10, 0, 50, 0));
         menu.getChildren().addAll(title, startGame, startVsAiGame, loadGame, customGame, networkGame, gameStatsOverview, playerStatsOverview);

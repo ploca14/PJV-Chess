@@ -27,6 +27,8 @@ public class ServerApp extends Application {
                     serverController.getLobbies()) {
                 lobby.endLobby();
             }
+
+            serverController.stopStatisticsThreads();
         });
     }
 }

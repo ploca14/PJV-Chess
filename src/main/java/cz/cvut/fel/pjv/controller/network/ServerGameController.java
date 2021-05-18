@@ -1,18 +1,36 @@
 package cz.cvut.fel.pjv.controller.network;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+import com.opencsv.exceptions.CsvDataTypeMismatchException;
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import cz.cvut.fel.pjv.controller.AbstractGameController;
 import cz.cvut.fel.pjv.controller.TimerController;
 import cz.cvut.fel.pjv.model.Game;
+import cz.cvut.fel.pjv.model.GameStatistic;
 import cz.cvut.fel.pjv.model.Move;
+import cz.cvut.fel.pjv.model.PlayerStats;
 import cz.cvut.fel.pjv.model.chestpieces.Chesspiece;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
 import cz.cvut.fel.pjv.model.network.Lobby;
 import cz.cvut.fel.pjv.view.GameView;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class ServerGameController extends AbstractGameController {
     private final static Logger logger = Logger.getLogger(ServerGameController.class.getName());
+    private static final String GAME_STATISTICS_CSV = "./game-statistics.csv";
+    private static final String PLAYER_STATISTICS_CSV = "./player-statistics.csv";
     private ServerBoardController boardController;
     private final Lobby lobby;
 
@@ -92,19 +110,75 @@ public class ServerGameController extends AbstractGameController {
     @Override
     public void announceWinner(String message, Color color) {
         // We check who won
-        int winnerTime;
+        String winnerTime;
         String winnerName;
         String loserName;
         if (color.equals(Color.WHITE)) {
-             winnerTime = getGameModel().getWhiteTimer().getSecondsPassed();
+             winnerTime = String.valueOf(getGameModel().getWhiteTimer().getSecondsPassed());
              winnerName = lobby.getFirstPlayer().getPlayerName();
              loserName = lobby.getSecondPlayer().getPlayerName();
         } else {
-            winnerTime = getGameModel().getBlackTimer().getSecondsPassed();
+            winnerTime = String.valueOf(getGameModel().getBlackTimer().getSecondsPassed());
             winnerName = lobby.getSecondPlayer().getPlayerName();
             loserName = lobby.getFirstPlayer().getPlayerName();
         }
-        System.out.printf("%d, %s, %s%n", winnerTime, winnerName, loserName);
-        logger.info(lobby.getName() + ": Game ended, it took " + winnerTime + "s for " + winnerName + " to win , " + loserName + " lost");
+        GameStatistic gameStatistic = new GameStatistic(winnerTime, winnerName, loserName);
+        saveGameStatistic(gameStatistic);
+        savePlayerStatistic(winnerName, loserName);
+        logger.info(lobby.getName() + ": Game ended, it took " + winnerTime + "s for " + winnerName + " to win, " + loserName + " lost");
+    }
+
+    private void savePlayerStatistic(String winnerName, String loserName) {
+        List<PlayerStats> records = new ArrayList<>();
+        try (CSVReader csvReader = new CSVReader(new FileReader(PLAYER_STATISTICS_CSV))) {
+            CsvToBean<PlayerStats> csvToBean = new CsvToBeanBuilder<PlayerStats>(csvReader)
+                    .withType(PlayerStats.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            records = csvToBean.parse();
+        } catch (FileNotFoundException fileNotFoundException) {
+            logger.severe("Statistics: No player statistics file, creating one!");
+        } catch (IOException exception) {
+            logger.severe("Statistics: Unable to read player statistics!");
+            return;
+        }
+
+        Optional<PlayerStats> winner = records.stream().filter((playerStat -> playerStat.getPlayerName().equals(winnerName))).findFirst();
+        Optional<PlayerStats> loser = records.stream().filter((playerStat -> playerStat.getPlayerName().equals(loserName))).findFirst();
+
+        if (winner.isPresent()) {
+            winner.get().increaseGamesWon();
+        } else {
+            records.add(new PlayerStats(winnerName, 1, 1, 0));
+        }
+
+        if (loser.isPresent()) {
+            loser.get().increaseGamesLost();
+        } else {
+            records.add(new PlayerStats(loserName, 1, 0, 1));
+        }
+
+        try (Writer writer = Files.newBufferedWriter(Paths.get(PLAYER_STATISTICS_CSV))) {
+            StatefulBeanToCsv<PlayerStats> beanToCsv = new StatefulBeanToCsvBuilder<PlayerStats>(writer)
+                    .build();
+
+            beanToCsv.write(records);
+
+        } catch (IOException | CsvRequiredFieldEmptyException | CsvDataTypeMismatchException exception) {
+            logger.severe("Unable to save result, trying again");
+        }
+    }
+
+    private void saveGameStatistic(GameStatistic gameStatistic) {
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(GAME_STATISTICS_CSV, true));
+            String[] record = {gameStatistic.getTime(), gameStatistic.getWinner(), gameStatistic.getLoser()};
+            writer.writeNext(record);
+            writer.close();
+        } catch (IOException exception) {
+            logger.severe("Unable to save result, trying again");
+            saveGameStatistic(gameStatistic);
+        }
     }
 }

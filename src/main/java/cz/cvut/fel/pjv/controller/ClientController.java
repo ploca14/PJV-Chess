@@ -2,13 +2,11 @@ package cz.cvut.fel.pjv.controller;
 
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.JoinRequest;
+import cz.cvut.fel.pjv.model.PlayerStats;
 import cz.cvut.fel.pjv.model.chestpieces.Color;
-import cz.cvut.fel.pjv.view.ClientView;
-import cz.cvut.fel.pjv.view.GameView;
-import cz.cvut.fel.pjv.view.PlayerStatsView;
-import cz.cvut.fel.pjv.view.GamesStatsView;
-import cz.cvut.fel.pjv.view.JoinDialog;
+import cz.cvut.fel.pjv.view.*;
 import cz.cvut.fel.pjv.controller.network.ClientGameController;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -90,6 +88,28 @@ public class ClientController {
                 }
             }
         });
+
+        Button gameStatsOverview = clientView.getGameStatsOverview();
+        gameStatsOverview.setOnAction(actionEvent -> {
+            GamesStatsView statsView = new GamesStatsView();
+            GameStatsController gameStatsController = new GameStatsController(statsView);
+            stage.setScene(gameStatsController.getGameStatsView().createScene());
+
+            gameStatsController.getGameStatsView().getMainMenu().setOnAction(event -> {
+                stage.setScene(clientView.getScene());
+            });
+        });
+
+        Button playerStatsOverview = clientView.getPlayerStatsOverview();
+        playerStatsOverview.setOnAction(actionEvent -> {
+            PlayerStatsView playerStatsView = new PlayerStatsView();
+            PlayerStatsController playerStatsController = new PlayerStatsController(playerStatsView);
+            stage.setScene(playerStatsController.getPlayerStatsView().createScene());
+
+            playerStatsController.getPlayerStatsView().getMainMenu().setOnAction(event -> {
+                stage.setScene(clientView.getScene());
+            });
+        });
     }
 
     private Game loadGameFromFile(File file) throws IOException, ClassNotFoundException {
@@ -125,18 +145,6 @@ public class ClientController {
                     gameController.getBlackTimerController().stopThread();
                 }
             }
-        });
-
-        Button gameStatsOverview = clientView.getGameStatsOverview();
-        gameStatsOverview.setOnAction(actionEvent -> {
-            GamesStatsView statsView = new GamesStatsView();
-            stage.setScene(statsView.createScene());
-        });
-
-        Button playerStatsOverview = clientView.getPlayerStatsOverview();
-        playerStatsOverview.setOnAction(actionEvent -> {
-            PlayerStatsView playerStatsView = new PlayerStatsView();
-            stage.setScene(playerStatsView.createScene());
         });
     }
 
@@ -193,7 +201,6 @@ public class ClientController {
                 }
             });
         } catch (IOException | ClassNotFoundException exception) {
-            exception.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Unable to connect").show();
         }
         return null;
