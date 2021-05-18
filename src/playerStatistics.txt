@@ -1,5 +1,0 @@
-kristov,50,40,8,2
-fasdfas,50,30,8,2
-fasf,50,20,8,2
-asfasfas,12,40,8,2
-asfas,50,1,8,2
