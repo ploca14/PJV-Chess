@@ -6,18 +6,31 @@ import java.util.ArrayList;
 
 public class King extends Chesspiece {
     private boolean startingPosition;
-
+    /**
+     * constructor of king piece
+     * @param color color of chesspiece
+     * @param currentPosition current position on the board
+     */
     public King(Color color, Tile currentPosition) {
         super(color, currentPosition);
         startingPosition = true;
     }
 
+    /**
+     * move of the king, after first move change starting position to false
+     * @param endingPosition new position for the king
+     */
     @Override
     public void move(Tile endingPosition) {
         super.move(endingPosition);
         startingPosition = false;
     }
-
+    /**
+     * get all legal moves according to movement rules
+     * @param currentPosition: currentPosition of Chesspiece
+     * @param board: board of Tiles
+     * @return
+     */
     @Override
     public ArrayList<Tile> getLegalMoves(Tile currentPosition, Board board) {
         Color color = currentPosition.getCurrentChessPiece().getColor();
@@ -36,13 +49,15 @@ public class King extends Chesspiece {
          * checking rules for every (x;y)
          * adding legal moves to passed array
          */
-        for (int i = 0; i < 8; i++) {;
+        for (int i = 0; i < 8; i++) {
+            // creating moves for every chesspiece movement from the currentposition
             ArrayList<Tile> knightMovesList = new ArrayList<>();
             ArrayList<Tile> bishopMovesList = new ArrayList<>();
             ArrayList<Tile> rookMovesList = new ArrayList<>();
             ArrayList<Tile> pawnMovesList = new ArrayList<>();
             boolean continueChecking = true;
 
+            // if the tested tile is out of range, stop testing this tile
             if(isOutOfRange(xs[i],ys[i])) {
                 continueChecking = false;
             }
@@ -116,12 +131,19 @@ public class King extends Chesspiece {
                 }
             }
 
+            /**
+             * check the new tile if enemy king is around it
+             */
             if(continueChecking && !isOutOfRange(xs[i], ys[i])) {
                 if(isKingAround(board.getBoard()[ys[i]][xs[i]], board, color)) {
                     continueChecking = false;
                 }
             }
 
+            /**
+             * if the tile is occupied by teammate, dont add as legal move
+             * if the tile is occupied by enemy or is empty, add as legal move
+             */
             if(continueChecking) {
                 if(isOccupied(board.getBoard(), xs[i], ys[i])) {
                     if(isTeammate(board.getBoard(), xs[i], ys[i], currentPosition.getCurrentChessPiece().getColor())) {
@@ -136,22 +158,34 @@ public class King extends Chesspiece {
             }
         }
 
+        // check for short rosada moves
         canDoShortRosada(currentPosition, board.getBoard(), moves);
 
+        // check for long rosada moves
         canDoLongRosada(currentPosition, board.getBoard(), moves);
 
         return moves;
     }
+
+    /**
+     * check if enemy king chesspiece can reach current position
+     * @param currentPosition tested position of the enemy king presence
+     * @param board playing board
+     * @param color color of king which wanted to move on the chesspiece
+     * @return true if enemy king is nearby the current position
+     */
     private boolean isKingAround(Tile currentPosition, Board board, Color color) {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
 
+        // every x and y coordinates, clockwise
         int[] xs = {x , x+1, x+1, x+1, x, x-1, x-1, x-1};
         int[] ys = {y-1, y-1, y, y+1, y+1, y+1, y, y-1};
 
         for (int i = 0; i < 8; i++) {
             if(!isOutOfRange(xs[i], ys[i])) {
                 Tile position = board.getBoard()[ys[i]][xs[i]];
+                // if tested position.currentChesspiece is different color king, return true
                 if(position.getCurrentChessPiece() instanceof King && !position.getCurrentChessPiece().getColor().equals(color)) {
                     return true;
                 }
@@ -170,11 +204,19 @@ public class King extends Chesspiece {
         return "\u265A";
     }
 
+    /**
+     * check if it is possible to make short rosada move
+     * @param currentPosition current position of the king
+     * @param board playing board
+     * @param moves all legal moves of the king
+     */
     private void canDoShortRosada(Tile currentPosition, Tile[][] board, ArrayList<Tile> moves) {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         if(startingPosition) {
             if(!isOutOfRange(x+3,y)) {
+                // check if (x+3;y) is Rook and if the Rook is at its starts position
+                // also check if tiles between rook and king are empty
                 if(board[y][x+3].getCurrentChessPiece() instanceof Rook
                         && ((Rook) board[y][x+3].getCurrentChessPiece()).isStartingPosition()
                         && !isOccupied(board, x+1, y)
@@ -184,11 +226,18 @@ public class King extends Chesspiece {
             }
         }
     }
-
+    /**
+     * check if it is possible to make long rosada move
+     * @param currentPosition current position of the king
+     * @param board playing board
+     * @param moves all legal moves of the king
+     */
     private void canDoLongRosada(Tile currentPosition, Tile[][] board, ArrayList<Tile> moves) {
         int x = currentPosition.getX();
         int y = currentPosition.getY();
         if(startingPosition) {
+            // check if (x-4;y) is Rook and if the Rook is at its starts position
+            // also check if tiles between rook and king are empty
             if(!isOutOfRange(x-3,y) && !isOutOfRange(x-4, y)) {
                 if(board[y][x-4].getCurrentChessPiece() instanceof Rook
                         && ((Rook) board[y][x-4].getCurrentChessPiece()).isStartingPosition()

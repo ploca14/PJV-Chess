@@ -1,6 +1,9 @@
 package cz.cvut.fel.pjv.view;
 
 import cz.cvut.fel.pjv.model.GameStatistic;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+import cz.cvut.fel.pjv.GameStatistic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -37,6 +40,9 @@ public class GamesStatsView {
         return scene;
     }
 
+    /**
+     * create view for the game stats overview
+     */
     private void createStatsOverview() {
         title.setFont(Font.font("Arial", FontWeight.BOLD, 40));
         title.setPadding(new Insets(10, 0, 50, 0));

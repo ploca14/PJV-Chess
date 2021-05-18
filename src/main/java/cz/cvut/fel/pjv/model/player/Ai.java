@@ -19,19 +19,29 @@ public class Ai {
         this.gameRules = gameRules;
     }
 
+    /**
+     * choose random move for the AI
+     * @param color : color of the player who is the move created for
+     * @param board : playing board
+     * @return Move for the AI (current position -> new position)
+     */
     public Move chooseRandomMove(Color color, Board board) {
         ArrayList<Chesspiece> movedArray;
 
+        // choose the array for the random generating
         if(color.equals(Color.WHITE)) {
             movedArray = board.getWhitePieces();
         } else {
             movedArray = board.getBlackPieces();
         }
 
+        // random chesspiece from the movedArray
         int i = index(movedArray);
         Chesspiece cp = movedArray.get(i);
 
+        // legal moves for the chosen chesspiece
         ArrayList<Tile> legalMoves = gameRules.getLegalNotCheckMoves(cp);
+
 
         while (legalMoves.size() == 0) {
             cp = movedArray.get(index(movedArray));
@@ -44,6 +54,11 @@ public class Ai {
         return new Move(cp.getCurrentPosition(), move);
    }
 
+    /**
+     * random number generator
+     * @param arrayList will work with the random number
+     * @return random number betweem 0 and arrayList.size()
+     */
    private int index(ArrayList<?> arrayList) {
        int bot = 0;
        int top = arrayList.size();
