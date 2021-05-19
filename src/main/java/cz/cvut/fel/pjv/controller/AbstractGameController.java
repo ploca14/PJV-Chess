@@ -1,5 +1,6 @@
 package cz.cvut.fel.pjv.controller;
 
+import cz.cvut.fel.pjv.controller.network.LobbyController;
 import cz.cvut.fel.pjv.model.Game;
 import cz.cvut.fel.pjv.model.Move;
 import cz.cvut.fel.pjv.model.chestpieces.ChessPieceFactory;
@@ -11,8 +12,10 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 public abstract class AbstractGameController {
+    private final static Logger logger = Logger.getLogger(LobbyController.class.getName());
     private final Game gameModel;
     private final GameView gameView;
     private TimerController whiteTimerController;
@@ -88,9 +91,11 @@ public abstract class AbstractGameController {
             // If the doesn't have any more legal moves to play we check if he is in check
             if(gameModel.getRules().isCheck(gameModel.getCurrentPlayer(), gameModel.getBoard())) {
                 // If he is in check we announce that the opponent won
+                logger.info("Game over, player " +gameModel.getCurrentPlayer()+" won.");
                 playerWon();
             } else {
                 // If he is not in check then we announce that its a draw
+                logger.info("Game over, draw");
                 playerDraw();
             }
         }

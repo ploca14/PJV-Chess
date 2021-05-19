@@ -36,6 +36,10 @@ public class Tile implements Serializable {
         return currentChessPiece;
     }
 
+    /**
+     * method for asigning chesspiece to the tile
+     * @param currentChessPiece asigned chesspiece
+     */
     public void setCurrentChessPiece(Chesspiece currentChessPiece) {
         this.currentChessPiece = currentChessPiece;
         if (currentChessPiece != null) {
