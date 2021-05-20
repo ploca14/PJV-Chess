@@ -40,6 +40,7 @@ public abstract class AbstractBoardController {
         if (tileView.getTileModel().getCurrentChessPiece() != null) {
             // If it is occupied then remove the occupying piece
             boardModel.removePiece(tileView.getTileModel().getCurrentChessPiece());
+            tileView.getTileModel().getCurrentChessPiece().setCurrentPosition(null);
             tileView.getTileModel().setCurrentChessPiece(null);
         }
 
