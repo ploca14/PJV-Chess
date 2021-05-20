@@ -326,4 +326,51 @@ public class SpecialMovesTest {
         // Check that the correct winner has been announced
         verify(gameController, times(1)).announceWinner(anyString(), eq(Color.WHITE));
     }
+
+    @Test
+    void processSpecialMoves4() {
+        /* ====== Board setup ====== */
+        Board board = game.getBoard();
+        Tile[][] boardTiles = game.getBoard().getBoard();
+
+        King whiteKing = new King(Color.WHITE, boardTiles[2][4]);
+        assertSame(boardTiles[2][4], whiteKing.getCurrentPosition());
+        boardTiles[2][4].setCurrentChessPiece(whiteKing);
+        assertSame(whiteKing, boardTiles[2][4].getCurrentChessPiece());
+        board.addPiece(whiteKing);
+        assertTrue(board.getWhitePieces().contains(whiteKing));
+
+        King blackKing = new King(Color.BLACK, boardTiles[0][4]);
+        assertSame(boardTiles[0][4], blackKing.getCurrentPosition());
+        boardTiles[0][4].setCurrentChessPiece(blackKing);
+        assertSame(blackKing, boardTiles[0][4].getCurrentChessPiece());
+        board.addPiece(blackKing);
+        assertTrue(board.getBlackPieces().contains(blackKing));
+
+        Queen whiteQueen = new Queen(Color.WHITE, boardTiles[2][3]);
+        assertSame(boardTiles[2][3], whiteQueen.getCurrentPosition());
+        boardTiles[2][3].setCurrentChessPiece(whiteQueen);
+        assertSame(whiteQueen, boardTiles[2][3].getCurrentChessPiece());
+        board.addPiece(whiteQueen);
+        assertTrue(board.getWhitePieces().contains(whiteQueen));
+
+        ArrayList<Tile> currentLegalMoves;
+
+        /* ====== Check mate move ====== */
+        boardController.setSelectedPiece(whiteQueen);
+        // Check selected piece
+        assertSame(whiteQueen, boardController.getSelectedPiece());
+        currentLegalMoves = game.getRules().getLegalNotCheckMoves(whiteQueen);
+        // Check legal moves
+        assertEquals(21, currentLegalMoves.size());
+        boardController.makeMove(gameView.getBoardView().getNodeByRowColumnIndex(1, 4));
+        // Check that the chess piece has been moved from this tile
+        assertNull(boardTiles[2][3].getCurrentChessPiece());
+        // Check that the chess piece has been moved to this tile
+        assertSame(whiteQueen, boardTiles[1][4].getCurrentChessPiece());
+
+        gameController.checkGameState();
+        // Check that the correct winner has been announced
+        verify(gameController, times(1)).announceWinner(anyString(), eq(Color.WHITE));
+    }
 }
