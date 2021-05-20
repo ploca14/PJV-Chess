@@ -173,4 +173,8 @@ public class GameController extends AbstractGameController {
     public BoardController getBoardController() {
         return boardController;
     }
+
+    public void setBoardController(BoardController boardController) {
+        this.boardController = boardController;
+    }
 }

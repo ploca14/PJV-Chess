@@ -120,4 +120,12 @@ public class Pawn extends Chesspiece {
     public boolean isStartingPosition() {
         return startingPosition;
     }
+
+    public void setStartingPosition(boolean startingPosition) {
+        this.startingPosition = startingPosition;
+    }
+
+    public void setMoveCount(int moveCount) {
+        this.moveCount = moveCount;
+    }
 }

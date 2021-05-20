@@ -91,7 +91,6 @@ public abstract class AbstractGameController {
             // If the doesn't have any more legal moves to play we check if he is in check
             if(gameModel.getRules().isCheck(gameModel.getCurrentPlayer(), gameModel.getBoard())) {
                 // If he is in check we announce that the opponent won
-                logger.info("Game over, player " +gameModel.getCurrentPlayer()+" won.");
                 playerWon();
             } else {
                 // If he is not in check then we announce that its a draw
@@ -153,8 +152,10 @@ public abstract class AbstractGameController {
         gameModel.setFinished(true);
         if (gameModel.getCurrentPlayer().equals(Color.WHITE)) {
             announceWinner("Black wins!", Color.BLACK);
+            logger.info("Game over, player BLACK won.");
         } else {
             announceWinner("White wins!", Color.WHITE);
+            logger.info("Game over, player WHITE won.");
         }
     }
 
