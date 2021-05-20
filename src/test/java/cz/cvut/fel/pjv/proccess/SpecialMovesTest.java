@@ -33,7 +33,7 @@ public class SpecialMovesTest {
         boardController = spy(gameController.getBoardController());
         gameController.setBoardController(boardController);
 
-        //LogManager.getLogManager().reset();
+        LogManager.getLogManager().reset();
     }
 
     @Test
@@ -329,6 +329,69 @@ public class SpecialMovesTest {
     }
 
     @Test
+    void processSpecialMoves3() {
+        /* ====== Board setup ====== */
+        Board board = game.getBoard();
+        Tile[][] boardTiles = game.getBoard().getBoard();
+
+        King whiteKing = new King(Color.WHITE, boardTiles[7][4]);
+        assertSame(boardTiles[7][4], whiteKing.getCurrentPosition());
+        boardTiles[7][4].setCurrentChessPiece(whiteKing);
+        assertSame(whiteKing, boardTiles[7][4].getCurrentChessPiece());
+        board.addPiece(whiteKing);
+        assertTrue(board.getWhitePieces().contains(whiteKing));
+
+        King blackKing = new King(Color.BLACK, boardTiles[7][0]);
+        assertSame(boardTiles[7][0], blackKing.getCurrentPosition());
+        boardTiles[7][0].setCurrentChessPiece(blackKing);
+        assertSame(blackKing, boardTiles[7][0].getCurrentChessPiece());
+        board.addPiece(blackKing);
+        assertTrue(board.getBlackPieces().contains(blackKing));
+
+        Rook whiteRook = new Rook(Color.WHITE, boardTiles[7][7]);
+        assertSame(boardTiles[7][7], whiteRook.getCurrentPosition());
+        boardTiles[7][7].setCurrentChessPiece(whiteRook);
+        assertSame(whiteRook, boardTiles[7][7].getCurrentChessPiece());
+        board.addPiece(whiteRook);
+        assertTrue(board.getWhitePieces().contains(whiteRook));
+
+        Queen whiteQueen = new Queen(Color.WHITE, boardTiles[5][1]);
+        assertSame(boardTiles[5][1], whiteQueen.getCurrentPosition());
+        boardTiles[5][1].setCurrentChessPiece(whiteQueen);
+        assertSame(whiteQueen, boardTiles[5][1].getCurrentChessPiece());
+        board.addPiece(whiteQueen);
+        assertTrue(board.getWhitePieces().contains(whiteQueen));
+
+        ArrayList<Tile> currentLegalMoves;
+
+        /* ====== Castling move ====== */
+        boardController.setSelectedPiece(whiteKing);
+        // Check selected piece
+        assertSame(whiteKing, boardController.getSelectedPiece());
+        currentLegalMoves = game.getRules().getLegalNotCheckMoves(whiteKing);
+        // Check legal moves
+        assertEquals(6, currentLegalMoves.size());
+        assertTrue(currentLegalMoves.contains(boardTiles[6][3]));
+        assertTrue(currentLegalMoves.contains(boardTiles[6][4]));
+        assertTrue(currentLegalMoves.contains(boardTiles[6][5]));
+        assertTrue(currentLegalMoves.contains(boardTiles[7][3]));
+        assertTrue(currentLegalMoves.contains(boardTiles[7][5]));
+        assertTrue(currentLegalMoves.contains(boardTiles[7][6]));
+        boardController.makeMove(gameView.getBoardView().getNodeByRowColumnIndex(7, 6));
+        // Check that the chess piece has been moved from this tile
+        assertNull(boardTiles[7][4].getCurrentChessPiece());
+        // Check that the chess piece has been moved to this tile
+        assertSame(whiteKing, boardTiles[7][6].getCurrentChessPiece());
+        // Check that the rook has been moved
+        assertNull(boardTiles[7][7].getCurrentChessPiece());
+        assertSame(whiteRook, boardTiles[7][5].getCurrentChessPiece());
+
+        gameController.checkGameState();
+        // Check that the correct winner has been announced
+        verify(gameController, times(1)).announceWinner(anyString(), eq(Color.WHITE));
+    }
+
+    @Test
     void processSpecialMoves4() {
         /* ====== Board setup ====== */
         Board board = game.getBoard();
@@ -492,6 +555,58 @@ public class SpecialMovesTest {
         assertEquals(King.class, boardTiles[0][4].getCurrentChessPiece().getClass());
         assertEquals(boardTiles[0][4], boardTiles[0][4].getCurrentChessPiece().getCurrentPosition());
         assertTrue(board.getBlackPieces().contains(boardTiles[0][4].getCurrentChessPiece()));
+    }
+
+    @Test
+    void processSpecialMoves6() {
+        /* ====== Board setup ====== */
+        Board board = game.getBoard();
+        Tile[][] boardTiles = board.getBoard();
+
+        King whiteKing = new King(Color.WHITE, boardTiles[7][4]);
+        assertSame(boardTiles[7][4], whiteKing.getCurrentPosition());
+        boardTiles[7][4].setCurrentChessPiece(whiteKing);
+        assertSame(whiteKing, boardTiles[7][4].getCurrentChessPiece());
+        board.addPiece(whiteKing);
+        assertTrue(board.getWhitePieces().contains(whiteKing));
+
+        King blackKing = new King(Color.BLACK, boardTiles[0][4]);
+        assertSame(boardTiles[0][4], blackKing.getCurrentPosition());
+        boardTiles[0][4].setCurrentChessPiece(blackKing);
+        assertSame(blackKing, boardTiles[0][4].getCurrentChessPiece());
+        board.addPiece(blackKing);
+        assertTrue(board.getBlackPieces().contains(blackKing));
+
+        Rook whiteRook = new Rook(Color.WHITE, boardTiles[7][7]);
+        assertSame(boardTiles[7][7], whiteRook.getCurrentPosition());
+        boardTiles[7][7].setCurrentChessPiece(whiteRook);
+        assertSame(whiteRook, boardTiles[7][7].getCurrentChessPiece());
+        board.addPiece(whiteRook);
+        assertTrue(board.getWhitePieces().contains(whiteRook));
+
+        ArrayList<Tile> currentLegalMoves;
+
+        /* ====== Castling move ====== */
+        boardController.setSelectedPiece(whiteKing);
+        // Check selected piece
+        assertSame(whiteKing, boardController.getSelectedPiece());
+        currentLegalMoves = game.getRules().getLegalNotCheckMoves(whiteKing);
+        // Check legal moves
+        assertEquals(6, currentLegalMoves.size());
+        assertTrue(currentLegalMoves.contains(boardTiles[6][3]));
+        assertTrue(currentLegalMoves.contains(boardTiles[6][4]));
+        assertTrue(currentLegalMoves.contains(boardTiles[6][5]));
+        assertTrue(currentLegalMoves.contains(boardTiles[7][3]));
+        assertTrue(currentLegalMoves.contains(boardTiles[7][5]));
+        assertTrue(currentLegalMoves.contains(boardTiles[7][6]));
+        boardController.makeMove(gameView.getBoardView().getNodeByRowColumnIndex(7, 6));
+        // Check that the chess piece has been moved from this tile
+        assertNull(boardTiles[7][4].getCurrentChessPiece());
+        // Check that the chess piece has been moved to this tile
+        assertSame(whiteKing, boardTiles[7][6].getCurrentChessPiece());
+        // Check that the rook has been moved
+        assertNull(boardTiles[7][7].getCurrentChessPiece());
+        assertSame(whiteRook, boardTiles[7][5].getCurrentChessPiece());
     }
 
     @Test
