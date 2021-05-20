@@ -259,4 +259,71 @@ public class SpecialMovesTest {
         // Check that the correct winner has been announced
         verify(gameController, times(1)).announceWinner(anyString(), eq(Color.BLACK));
     }
+
+    @Test
+    void processSpecialMoves2() {
+        /* ====== Board setup ====== */
+        Board board = game.getBoard();
+        Tile[][] boardTiles = game.getBoard().getBoard();
+
+        King whiteKing = new King(Color.WHITE, boardTiles[7][4]);
+        assertSame(boardTiles[7][4], whiteKing.getCurrentPosition());
+        boardTiles[7][4].setCurrentChessPiece(whiteKing);
+        assertSame(whiteKing, boardTiles[7][4].getCurrentChessPiece());
+        board.addPiece(whiteKing);
+        assertTrue(board.getWhitePieces().contains(whiteKing));
+
+        King blackKing = new King(Color.BLACK, boardTiles[0][4]);
+        assertSame(boardTiles[0][4], blackKing.getCurrentPosition());
+        boardTiles[0][4].setCurrentChessPiece(blackKing);
+        assertSame(blackKing, boardTiles[0][4].getCurrentChessPiece());
+        board.addPiece(blackKing);
+        assertTrue(board.getBlackPieces().contains(blackKing));
+
+        Rook whiteRook = new Rook(Color.WHITE, boardTiles[1][7]);
+        assertSame(boardTiles[1][7], whiteRook.getCurrentPosition());
+        boardTiles[1][7].setCurrentChessPiece(whiteRook);
+        assertSame(whiteRook, boardTiles[1][7].getCurrentChessPiece());
+        board.addPiece(whiteRook);
+        assertTrue(board.getWhitePieces().contains(whiteRook));
+
+        Rook blackRook = new Rook(Color.BLACK, boardTiles[0][5]);
+        assertSame(boardTiles[0][5], blackRook.getCurrentPosition());
+        boardTiles[0][5].setCurrentChessPiece(blackRook);
+        assertSame(blackRook, boardTiles[0][5].getCurrentChessPiece());
+        board.addPiece(blackRook);
+        assertTrue(board.getBlackPieces().contains(blackRook));
+
+        Pawn whitePawn = new Pawn(Color.WHITE, boardTiles[1][2]);
+        assertSame(boardTiles[1][2], whitePawn.getCurrentPosition());
+        boardTiles[1][2].setCurrentChessPiece(whitePawn);
+        assertSame(whitePawn, boardTiles[1][2].getCurrentChessPiece());
+        board.addPiece(whitePawn);
+        assertTrue(board.getWhitePieces().contains(whitePawn));
+
+        ArrayList<Tile> currentLegalMoves;
+
+        /* ====== Pawn promoting move ====== */
+        boardController.setSelectedPiece(whitePawn);
+        // Check selected piece
+        assertSame(whitePawn, boardController.getSelectedPiece());
+        currentLegalMoves = game.getRules().getLegalNotCheckMoves(whitePawn);
+        // Check legal moves
+        assertEquals(1, currentLegalMoves.size());
+        assertTrue(currentLegalMoves.contains(boardTiles[0][2]));
+        doNothing().when(boardController).choosePieceForTile(any(TileView.class), anyBoolean());
+        boardController.makeMove(gameView.getBoardView().getNodeByRowColumnIndex(0, 2));
+        // Check that the choosePieceForTile method has been called
+        verify(boardController, times(1)).choosePieceForTile(any(TileView.class), anyBoolean());
+        Chesspiece promotedPiece = new Queen(Color.WHITE, boardTiles[0][2]);
+        boardController.setChosenChesspieceAndRerender(gameView.getBoardView().getNodeByRowColumnIndex(0, 2), promotedPiece);
+        // Check that the chess piece has been moved from this tile
+        assertNull(boardTiles[1][2].getCurrentChessPiece());
+        // Check that the chess piece has been moved to this tile
+        assertSame(promotedPiece, boardTiles[0][2].getCurrentChessPiece());
+
+        gameController.checkGameState();
+        // Check that the correct winner has been announced
+        verify(gameController, times(1)).announceWinner(anyString(), eq(Color.WHITE));
+    }
 }
