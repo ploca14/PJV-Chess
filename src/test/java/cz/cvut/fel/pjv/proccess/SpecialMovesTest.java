@@ -373,4 +373,123 @@ public class SpecialMovesTest {
         // Check that the correct winner has been announced
         verify(gameController, times(1)).announceWinner(anyString(), eq(Color.WHITE));
     }
+
+    @Test
+    void processSpecialMoves5() {
+        /* ====== Board setup ====== */
+        Board board = game.getBoard();
+        Tile[][] boardTiles = board.getBoard();
+        board.placeChessPieces();
+
+        // Checking placement of Pawn Chess pieces
+        for (int i = 0; i < 8; i++) {
+            // Checking white pawns
+            assertEquals(Color.WHITE, boardTiles[6][i].getCurrentChessPiece().getColor());
+            assertEquals(Pawn.class, boardTiles[6][i].getCurrentChessPiece().getClass());
+            assertEquals(boardTiles[6][i], boardTiles[6][i].getCurrentChessPiece().getCurrentPosition());
+            assertTrue(board.getWhitePieces().contains(boardTiles[6][i].getCurrentChessPiece()));
+
+            // Checking black pawns
+            assertEquals(Color.BLACK, boardTiles[1][i].getCurrentChessPiece().getColor());
+            assertEquals(Pawn.class, boardTiles[1][i].getCurrentChessPiece().getClass());
+            assertEquals(boardTiles[1][i], boardTiles[1][i].getCurrentChessPiece().getCurrentPosition());
+            assertTrue(board.getBlackPieces().contains(boardTiles[1][i].getCurrentChessPiece()));
+        }
+
+        // Checking placement of Rook Chess pieces
+        // Checking white Rooks
+        assertEquals(Color.WHITE, boardTiles[7][0].getCurrentChessPiece().getColor());
+        assertEquals(Rook.class, boardTiles[7][0].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][0], boardTiles[7][0].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][0].getCurrentChessPiece()));
+
+        assertEquals(Color.WHITE, boardTiles[7][7].getCurrentChessPiece().getColor());
+        assertEquals(Rook.class, boardTiles[7][7].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][7], boardTiles[7][7].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][7].getCurrentChessPiece()));
+
+        // Checking black Rooks
+        assertEquals(Color.BLACK, boardTiles[0][0].getCurrentChessPiece().getColor());
+        assertEquals(Rook.class, boardTiles[0][0].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][0], boardTiles[0][0].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][0].getCurrentChessPiece()));
+
+        assertEquals(Color.BLACK, boardTiles[0][7].getCurrentChessPiece().getColor());
+        assertEquals(Rook.class, boardTiles[0][7].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][7], boardTiles[0][7].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][7].getCurrentChessPiece()));
+
+        // Checking placement of Knight Chess pieces
+        // Checking white Knights
+        assertEquals(Color.WHITE, boardTiles[7][1].getCurrentChessPiece().getColor());
+        assertEquals(Knight.class, boardTiles[7][1].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][1], boardTiles[7][1].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][1].getCurrentChessPiece()));
+
+        assertEquals(Color.WHITE, boardTiles[7][6].getCurrentChessPiece().getColor());
+        assertEquals(Knight.class, boardTiles[7][6].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][6], boardTiles[7][6].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][6].getCurrentChessPiece()));
+
+        // Checking black Knights
+        assertEquals(Color.BLACK, boardTiles[0][1].getCurrentChessPiece().getColor());
+        assertEquals(Knight.class, boardTiles[0][1].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][1], boardTiles[0][1].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][1].getCurrentChessPiece()));
+
+        assertEquals(Color.BLACK, boardTiles[0][6].getCurrentChessPiece().getColor());
+        assertEquals(Knight.class, boardTiles[0][6].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][6], boardTiles[0][6].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][6].getCurrentChessPiece()));
+
+        // Checking placement of Bishop Chess pieces
+        // Checking white Bishops
+        assertEquals(Color.WHITE, boardTiles[7][2].getCurrentChessPiece().getColor());
+        assertEquals(Bishop.class, boardTiles[7][2].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][2], boardTiles[7][2].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][2].getCurrentChessPiece()));
+
+        assertEquals(Color.WHITE, boardTiles[7][5].getCurrentChessPiece().getColor());
+        assertEquals(Bishop.class, boardTiles[7][5].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][5], boardTiles[7][5].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][5].getCurrentChessPiece()));
+
+        // Checking black Bishops
+        assertEquals(Color.BLACK, boardTiles[0][2].getCurrentChessPiece().getColor());
+        assertEquals(Bishop.class, boardTiles[0][2].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][2], boardTiles[0][2].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][2].getCurrentChessPiece()));
+
+        assertEquals(Color.BLACK, boardTiles[0][5].getCurrentChessPiece().getColor());
+        assertEquals(Bishop.class, boardTiles[0][5].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][5], boardTiles[0][5].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][5].getCurrentChessPiece()));
+
+        // Checking placement of Queen Chess pieces
+        // Checking white Queen
+        assertEquals(Color.WHITE, boardTiles[7][3].getCurrentChessPiece().getColor());
+        assertEquals(Queen.class, boardTiles[7][3].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][3], boardTiles[7][3].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][3].getCurrentChessPiece()));
+
+        // Checking black Queen
+        assertEquals(Color.BLACK, boardTiles[0][3].getCurrentChessPiece().getColor());
+        assertEquals(Queen.class, boardTiles[0][3].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][3], boardTiles[0][3].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][3].getCurrentChessPiece()));
+
+        // Checking placement of King Chess pieces
+        // Checking white king
+        assertEquals(Color.WHITE, boardTiles[7][4].getCurrentChessPiece().getColor());
+        assertEquals(King.class, boardTiles[7][4].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[7][4], boardTiles[7][4].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getWhitePieces().contains(boardTiles[7][4].getCurrentChessPiece()));
+
+
+        // Checking black king
+        assertEquals(Color.BLACK, boardTiles[0][4].getCurrentChessPiece().getColor());
+        assertEquals(King.class, boardTiles[0][4].getCurrentChessPiece().getClass());
+        assertEquals(boardTiles[0][4], boardTiles[0][4].getCurrentChessPiece().getCurrentPosition());
+        assertTrue(board.getBlackPieces().contains(boardTiles[0][4].getCurrentChessPiece()));
+    }
 }
